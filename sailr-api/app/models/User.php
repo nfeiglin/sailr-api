@@ -49,4 +49,39 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->email;
 	}
 
+    public function items(){
+        return $this->hasMany('Item');
+    }
+
+    public function following() {
+        return $this->hasMany('Relationship', 'user_id');
+    }
+
+    public function relationship() {
+        return $this->hasMany('Relationship', 'user_id');
+    }
+    public function followers() {
+        return $this->hasMany('Relationship', 'follows_user_id');
+    }
+
+    public static function Authenticate($credentials) {
+        if (Auth::attempt(array(
+            'username' => $credentials['username'],
+            'password' => $credentials['password']
+        ), true)) {
+            return true;
+        }
+
+        elseif (Auth::attempt(array(
+            'email' => $credentials['email'],
+            'password' => $credentials['password']
+        ), true)) {
+            return true;
+        }
+
+        else {
+            return false;
+        }
+    }
+
 }
