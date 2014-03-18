@@ -1,26 +1,23 @@
 <?php
-
+use Faker\Factory as Faker;
 class ItemsTableSeeder extends Seeder {
+
 
 	public function run()
 	{
 		// Uncomment the below to wipe the table clean before populating
 		// DB::table('items')->truncate();
+        $faker = Faker::create();
+        foreach(range(1, 10) as $index) {
+            Item::create([
+                'user_id' => $index,
+                'description' => 'An incredible, amazing, cool, life-changing description goes here! ' . $index,
+                'title' => 'A life-changing title goes here!',
+                'currency' => 'AUD',
+                'initial_units' => $index
 
-		$items = array(
-            array(
-                'user_id' => '1',
-                'description' => 'Amazing new hand bag. Ships in 3 days in Australia. Great condition. Bright red! Amazing gift.',
-                'quantity' => 1
-            ),
-
-            array(
-                'user_id' => '1',
-                'description' => 'Apple 11 inch Macbook Air 2012 edition',
-                'quantity' => 1,
-                'price' => 999.99
-            ),
-        );
+            ]);
+        }
 
 		// Uncomment the below to run the seeder
 		// DB::table('items')->insert($items);
