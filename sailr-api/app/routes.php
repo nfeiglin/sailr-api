@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -37,8 +38,9 @@ Route::get('user/{id}', function($id) {
     return Response::json($res);
 });
 
-Route::get('user/{id}/stream', function($id) {
+Route::get('user/{id}/stream/', function($id) {
    $user = User::findOrFail($id);
+    //$user = Auth::user();
     $following = Relationship::where('user_id', '=', $user->id)->get(array('follows_user_id'));
     $following = $following->toArray();
 //dd($following);
@@ -51,7 +53,7 @@ Route::get('user/{id}/stream', function($id) {
         $counter = $counter + 1;
     }
 
-  $items = Item::whereIn('user_id', $arrayOne)->get()->toArray();
+  $items = Item::whereIn('user_id', $arrayOne)->with('User')->orderBy('created_at', 'dsc')->get()->toArray();
 
 
   return Response::json($items);

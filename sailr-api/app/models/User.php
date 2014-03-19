@@ -64,6 +64,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->hasMany('Relationship', 'follows_user_id');
     }
 
+    public function ProfileImg() {
+        return $this->hasMany('ProfileImg');
+    }
     public static function Authenticate($credentials) {
         if (Auth::attempt(array(
             'username' => $credentials['username'],
