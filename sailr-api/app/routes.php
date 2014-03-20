@@ -48,7 +48,10 @@ Route::post('item', function () {
      *
      * TODO: Add image validation!
      */
-    $photoTypes = array('full_res' => [612, 75], 'thumbnail' => [150, 60]);
+    $photoTypes = array(
+        'full_res' => [612, 75],
+        'thumbnail' => [150, 60]
+    );
 
     foreach ($photos as $photo) {
         $originalPhoto = $photo;
@@ -56,7 +59,9 @@ Route::post('item', function () {
         foreach ($photoTypes as $type => $size) {
             $photo = $originalPhoto->getRealPath();
             $path = Photo::generateUniquePath();
-            $photo = Image::make($photo)->resize($size[0], $size[0], false)->encode('jpg', $size[1]);
+            $photo = Image::make($photo);
+            $photo->resize($size[0], $size[0], false);
+            $photo->encode('jpg', $size[1]);
             $photo->save($path);
 
             $photoDB = new Photo();
@@ -67,7 +72,7 @@ Route::post('item', function () {
             $photoDB->save();
         }
     }
-
+        //return Response::json()
 });
 
 
@@ -89,7 +94,6 @@ Route::get('user/{id}/stream/', function ($id) {
     //$user = Auth::user();
     $following = Relationship::where('user_id', '=', $user->id)->get(array('follows_user_id'));
     $following = $following->toArray();
-//dd($following);
 
     $arrayOne = array();
 
@@ -100,7 +104,13 @@ Route::get('user/{id}/stream/', function ($id) {
     }
 
     $items = Item::whereIn('user_id', $arrayOne)->with('User')->orderBy('created_at', 'dsc')->get()->toArray();
+    $res = array(
+        'meta' => array(
+            'statuscode' => 200
+        ),
 
+        'data' => $items
+    );
 
-    return Response::json($items);
+    return Response::json($res);
 });
