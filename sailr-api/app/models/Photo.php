@@ -20,7 +20,7 @@ class Photo extends \Eloquent
 
             if (!is_dir($directory)) {
                 $isUnique = true;
-                mkdir('path/to/directory');
+                mkdir($directory);
             }
         } while (!$isUnique);
 

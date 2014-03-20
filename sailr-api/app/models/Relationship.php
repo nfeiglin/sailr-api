@@ -1,9 +1,11 @@
 <?php
 
-class Relationship extends \Eloquent {
-	protected $fillable = [];
+class Relationship extends \Eloquent
+{
+    protected $fillable = [];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('User');
     }
 }

@@ -63,7 +63,7 @@ Route::post('item', function () {
             $photoDB->user_id = $user_id;
             $photoDB->item_id = $item->id;
             $photoDB->type = $type;
-            $photoDB->url = $path;
+            $photoDB->url = asset($path);
             $photoDB->save();
         }
     }

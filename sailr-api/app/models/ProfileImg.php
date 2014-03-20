@@ -1,9 +1,11 @@
 <?php
 
-class ProfileImg extends \Eloquent {
-	protected $fillable = [];
+class ProfileImg extends \Eloquent
+{
+    protected $fillable = [];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('User');
     }
 }
