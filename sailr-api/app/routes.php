@@ -21,8 +21,28 @@ Route::get('/', function () {
     return View::make('hello');
 });
 
+
+Route::get('login', function() {
+    return "login.create";
+});
+
+Route::post('login', 'AuthController@store');
+
 Route::group(array('prefix' => 'api'), function() {
-    Route::resource('items', 'ItemsController');
-    Route::resource('user', 'UsersController');
-    Route::get('user/self/feed', 'UsersController@self_feed');
+   // Route::resource('auth', 'AuthController', array('only' => array('store', 'destroy')));
+
+    /*
+    Route::delete('session', 'AuthController@destroy');
+    Route::post('login', 'AuthController@store');
+    Route::get('logout', 'AuthController@destroy');
+*/
+    Route::get('{username}/{item_id}', 'ItemsController@show');
+
+    Route::group(array(), function() {
+        Route::resource('items', 'ItemsController');
+        Route::resource('user', 'UsersController');
+        Route::get('user/self/feed', 'UsersController@self_feed');
+        Route::post('user/profileimage', 'UsersController@set_profile_image');
+    });
+
 });
