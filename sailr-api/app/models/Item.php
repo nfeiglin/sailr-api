@@ -2,7 +2,7 @@
 
 class Item extends Eloquent
 {
-    protected $guarded = array();
+    protected $hidden = array('updated_at', 'deleted_at', 'user_id');
     protected $fillable = array('');
     protected $softDeletes = true;
 
@@ -13,7 +13,7 @@ class Item extends Eloquent
 
     public function photos()
     {
-        return $this->hasMany('Photo', 'item_id');
+        return $this->hasMany('Photo');
     }
 
     public static $rules = array(
