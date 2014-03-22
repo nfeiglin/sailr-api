@@ -16,14 +16,16 @@ class Photo extends \Eloquent
         do {
             $unique1 = uniqid('10510997103101', true);
             $unique2 = uniqid('5841', true);
-            $directory = $unique1 . '/' . $unique2;
-
-            if (!is_dir($directory)) {
+            $directory = '/' . $unique2;
+            $testdir = public_path() . '/' . $unique2;
+            print "DIR is: ";
+            print $directory;
+            if (!is_dir($testdir)) {
                 $isUnique = true;
-                mkdir($directory);
+                mkdir($testdir);
             }
         } while (!$isUnique);
 
-        return $directory . '.jpg';
+        return $testdir . '/' . $unique1 . '.jpg';
     }
 }
