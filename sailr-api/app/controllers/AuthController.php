@@ -1,6 +1,6 @@
 <?php
 
-class SessionsController extends \BaseController
+class AuthController extends BaseController
 {
 
     /**
@@ -11,7 +11,9 @@ class SessionsController extends \BaseController
     public function store()
     {
         $input = Input::all();
-        if (Auth::attempt($input, true)) {
+        //User::where('username', '=', 'mz');
+        $a = Auth::attempt($input, true);
+        if (!$a) {
             $res = array(
                 'meta' => array(
                     'statuscode' => 401,
