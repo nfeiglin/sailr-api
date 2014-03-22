@@ -32,15 +32,29 @@ class UsersController extends \BaseController
      */
     public function store()
     {
-        $validator = Validator::make($data = Input::all(), User::$rules);
-
+        $input = Input::all();
+        $validator = Validator::make($input, User::$rules);
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 400,
+                    'message' => 'Invalid data',
+                    'errors' => $validator->messages()->all()
+                )
+            );
+            return Response::json($res, 400);
         }
 
-        User::create($data);
+        $user = User::create($input);
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200,
+                'message' => 'Account successfully created'
+            ),
 
-        return Redirect::route('users.index');
+            'data' => $user
+        );
+        return Response::json($res);
     }
 
     /**
@@ -51,9 +65,42 @@ class UsersController extends \BaseController
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        //$user = User::where('id', '=', $id)->get(array('id', 'name', 'email', 'username', 'bio'));
+        $user = User::where('id', '=', $id)->first(array('id', 'name', 'email', 'username', 'bio'));
+        if (!$user) {
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 404,
+                    'message' => 'User not found'
+                )
+            );
+            return Response::json($res, 404);
+        }
 
-        return View::make('users.show', compact('user'));
+        $following = Relationship::where('user_id', '=', $id)->count();
+        $followers = Relationship::where('follows_user_id', '=', $id)->count();
+        $res['data']['counts'] = [
+            'following' => $following,
+            'followers' => $followers
+        ];
+
+        $res = array(
+            'meta' => array(
+                'responsecode' => 200,
+                'url' => 'http://sailr.co/' . $user->username,
+            ),
+            'data' => array(
+                $user->toArray(),
+                'counts' => array(
+                    'following' => $following,
+                    'followers' => $followers
+                )
+            )
+        );
+        // $res = $user->toArray();
+
+
+        return Response::json($res);
     }
 
     /**
@@ -101,6 +148,43 @@ class UsersController extends \BaseController
         User::destroy($id);
 
         return Redirect::route('users.index');
+    }
+
+    public function self_feed()
+    {
+        $user = User::findOrFail($id);
+        //$user = Auth::user();
+        $following = Relationship::where('user_id', '=', $user->id)->get(array('follows_user_id'));
+        $following = $following->toArray();
+
+        $arrayOne = array();
+
+        $counter = 0;
+        foreach ($following as $key => $value) {
+            $arrayOne[$counter] = $value['follows_user_id'];
+            $counter = $counter + 1;
+        }
+
+        $items = Item::whereIn('user_id', $arrayOne)->with(array(
+
+            'Photos' => function ($y) {
+                    $y->select(['item_id', 'type', 'url']);
+                },
+
+            'User' => function ($q) {
+                    $q->select(['id', 'username', 'name']);
+                }
+
+        ))->orderBy('created_at', 'dsc')->get()->toArray();
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200
+            ),
+
+            'data' => $items
+        );
+
+        return Response::json($res);
     }
 
 }

@@ -18,10 +18,6 @@ class ItemsController extends BaseController
      *
      * @return Response
      */
-    public function create()
-    {
-        return View::make('items.create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -30,9 +26,76 @@ class ItemsController extends BaseController
      */
     public function store()
     {
-        $input = Input::json()->all();
-        $item = Item::create($input);
-        return Response::json($item, 200);
+        /*
+    *
+    * TODO $user_id = Auth::user()->id;
+   */
+
+        $user_id = 3;
+        $input = Input::all();
+        $photos = Request::instance()->files->all(array('photos'));
+        print_r($photos);
+        // die();
+
+        $validator = Validator::make($input, Item::$rules);
+
+        if ($validator->fails()) {
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 400,
+                    'message' => 'Invalid data',
+                    'errors' => $validator->messages()->all()
+                )
+            );
+            return Response::json($res, 400);
+        }
+
+        $item = new Item();
+        $item->user_id = $user_id;
+        $item->title = $input['title'];
+        $item->description = $input['description'];
+        $item->price = $input['price'];
+        $item->currency = $input['currency'];
+        $item->initial_units = $input['initial_units'];
+
+        $item->save();
+
+        /*
+         *
+         * TODO: Add image validation!
+         */
+        $photoTypes = array(
+            'full_res' => [612, 75],
+            'thumbnail' => [150, 60]
+        );
+
+        foreach ($photos as $photo) {
+            $originalPhoto = $photo;
+
+            foreach ($photoTypes as $type => $size) {
+                print "Photo upload loop";
+                $photo = $originalPhoto->getRealPath();
+                $path = Photo::generateUniquePath();
+                $photo = Image::make($photo);
+                $photo->resize($size[0], $size[0], false);
+                $photo->encode('jpg', $size[1]);
+                $photo->save($path);
+
+                $photoDB = new Photo();
+                $photoDB->user_id = $user_id;
+                $photoDB->item_id = $item->id;
+                $photoDB->type = $type;
+                $photoDB->url = $path;
+                $photoDB->save();
+            }
+        }
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200,
+                'message' => 'Item successfully posted!'
+            )
+        );
+        return Response::json($res);
 
     }
 
