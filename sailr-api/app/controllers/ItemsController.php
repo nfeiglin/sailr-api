@@ -26,12 +26,7 @@ class ItemsController extends BaseController
      */
     public function store()
     {
-        /*
-    *
-    * TODO $user_id = Auth::user()->id;
-   */
-
-        $user_id = 3;
+        $user_id = Auth::user()->id;
         $input = Input::all();
         $photos = Request::instance()->files->all(array('photos'));
         print_r($photos);
@@ -105,9 +100,30 @@ class ItemsController extends BaseController
      * @param  int $id
      * @return Response
      */
-    public function show($id)
+    public function show($username, $item_id)
     {
-        return View::make('items.show');
+        $user = new User();
+        $user->whereUsername($username);
+
+        $items = Item::where('user_id', '=', $user->id, 'and')->where('id', '=', $item_id)
+            ->with(array
+            (
+                'Photos' => function ($y) {
+                        $y->select(['item_id', 'type', 'url']);
+                    },
+                'User' => function ($q) {
+                        $q->select(['id', 'username', 'name']);
+                    }
+            ))->first()->toArray();
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200
+            ),
+
+            'data' => $items
+        );
+
+        return Response::json($res);
     }
 
     /**
