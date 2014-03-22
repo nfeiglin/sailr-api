@@ -18,8 +18,8 @@ class Photo extends \Eloquent
             $unique2 = uniqid('5841', true);
             $directory = '/' . $unique2;
             $testdir = public_path() . '/' . $unique2;
-            print "DIR is: ";
-            print $directory;
+           // print "DIR is: ";
+          //  print $directory;
             if (!is_dir($testdir)) {
                 $isUnique = true;
                 mkdir($testdir);
