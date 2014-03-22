@@ -46,6 +46,7 @@ class UsersController extends \BaseController
         }
 
         $user = User::create($input);
+        $user = User::findOrFail($user->id);
         $res = array(
             'meta' => array(
                 'statuscode' => 200,
@@ -54,6 +55,7 @@ class UsersController extends \BaseController
 
             'data' => $user
         );
+        User::Authenticate(array('username' => $input['username'], 'password' => $input['password']));
         return Response::json($res);
     }
 
@@ -65,7 +67,6 @@ class UsersController extends \BaseController
      */
     public function show($id)
     {
-        //$user = User::where('id', '=', $id)->get(array('id', 'name', 'email', 'username', 'bio'));
         $user = User::where('id', '=', $id)->first(array('id', 'name', 'email', 'username', 'bio'));
         if (!$user) {
             $res = array(
@@ -97,7 +98,6 @@ class UsersController extends \BaseController
                 )
             )
         );
-        // $res = $user->toArray();
 
 
         return Response::json($res);
@@ -124,15 +124,7 @@ class UsersController extends \BaseController
      */
     public function update($id)
     {
-        $user = User::findOrFail($id);
 
-        $validator = Validator::make($data = Input::all(), User::$rules);
-
-        if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator)->withInput();
-        }
-
-        $user->update($data);
 
         return Redirect::route('users.index');
     }
@@ -152,8 +144,7 @@ class UsersController extends \BaseController
 
     public function self_feed()
     {
-        $user = User::findOrFail($id);
-        //$user = Auth::user();
+        $user = Auth::user();
         $following = Relationship::where('user_id', '=', $user->id)->get(array('follows_user_id'));
         $following = $following->toArray();
 
@@ -187,4 +178,11 @@ class UsersController extends \BaseController
         return Response::json($res);
     }
 
+    public function set_profile_image() {
+        $user = User::findOrFail(User::getUserFromSession()->id);
+        $user->ProfileImg->url = 'http://test.com';
+        $user->ProfileImg->type = 'tpye';
+
+
+    }
 }
