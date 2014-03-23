@@ -28,9 +28,7 @@ class ItemsController extends BaseController
     {
         $user_id = Auth::user()->id;
         $input = Input::all();
-        $photos = Request::instance()->files->all(array('photos'));
-        print_r($photos);
-        // die();
+        $photos = Input::file('photos');
 
         $validator = Validator::make($input, Item::$rules);
 
@@ -70,7 +68,8 @@ class ItemsController extends BaseController
             foreach ($photoTypes as $type => $size) {
                 print "Photo upload loop";
                 $photo = $originalPhoto->getRealPath();
-                $path = Photo::generateUniquePath();
+                $path = 'img/' . sha1(microtime()) . '.jpg';
+                //$path = Photo::generateUniquePath();
                 $photo = Image::make($photo);
                 $photo->resize($size[0], $size[0], false);
                 $photo->encode('jpg', $size[1]);
@@ -86,11 +85,13 @@ class ItemsController extends BaseController
         }
         $res = array(
             'meta' => array(
-                'statuscode' => 200,
+                'statuscode' => 201,
                 'message' => 'Item successfully posted!'
-            )
+            ),
+
+            'data' => $item
         );
-        return Response::json($res);
+        return Response::json($res, 201);
 
     }
 
@@ -109,8 +110,8 @@ class ItemsController extends BaseController
         $user = User::where('username', '=', $username)->firstOrFail(array('id', 'username', 'name', 'bio'))->toArray();
         $items = Item::with(array(
             'Photos' => function ($y) {
-                 $y->select(['item_id', 'type', 'url']);
-            },
+                    $y->select(['item_id', 'type', 'url']);
+                },
         ))->where('id', '=', $item_id)->where('user_id', '=', $user['id'])->firstOrFail()->toArray();
 
         /*
@@ -158,7 +159,26 @@ class ItemsController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $item = Item::findOrFail($id);
+        if (!$item->user_id == Auth::user()->id) {
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 401,
+                    'message' => 'Not authorised to delete that post'
+                )
+            );
+
+            return Response::json($res, 401);
+        }
+
+        $photos = Photo::where('item_id', '=', $item->id);
+        $photos->delete();
+        $item->delete();
+
+        /*
+         * TODO: When calling these from buyer's panel, use "whereTrashed"
+         */
+
     }
 
 }
