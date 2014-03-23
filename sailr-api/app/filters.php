@@ -35,6 +35,17 @@ Route::filter('auth', function () {
     if (Auth::guest()) return Redirect::guest('login');
 });
 
+Route::filter('json_auth', function() {
+   if(Auth::guest()) {
+       $res = array(
+           'meta' => array(
+               'statuscode' => 401,
+               'message' => 'Please sign in'
+           )
+       );
+       return Response::json($res, 201);
+   }
+});
 
 Route::filter('auth.basic', function () {
     return Auth::basic();
