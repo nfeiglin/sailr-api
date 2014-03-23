@@ -5,13 +5,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface
 {
-    public static $rules = array(
-        'name' => 'required|min:2|max:99',
-        'email' => 'required|email|max:99|unique:users,email',
-        'username' => 'required|alpha_num|max:99|unique:users,username',
-        'password' => 'required|min:6'
-    );
-
+    protected $softDelete = true;
 
     /**
      * The database table used by the model.
@@ -28,6 +22,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     public $hidden = array('password', 'created_at', 'updated_at', 'deleted_at');
 
     public $guarded = array('id', 'created_at', 'updated_at');
+
+
+    public static $rules = array(
+        'name' => 'required|min:2|max:99',
+        'email' => 'required|email|max:99|unique:users,email',
+        'username' => 'required|alpha_num|max:99|unique:users,username',
+        'password' => 'required|min:6'
+    );
 
     /**
      * Get the unique identifier for the user.
@@ -84,7 +86,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         return $this->hasMany('ProfileImg');
     }
 
-    public function whereUsername($username) {
-    return $this->where('username', '=', $username)->firstOrFail();
-}
+    public function whereUsername($username)
+    {
+        return $this->where('username', '=', $username)->firstOrFail();
+    }
 }

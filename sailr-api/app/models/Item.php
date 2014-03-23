@@ -4,7 +4,7 @@ class Item extends Eloquent
 {
     protected $hidden = array('updated_at', 'deleted_at', 'user_id');
     protected $fillable = array('');
-    protected $softDeletes = true;
+    protected $softDelete = true;
 
     public function user()
     {
