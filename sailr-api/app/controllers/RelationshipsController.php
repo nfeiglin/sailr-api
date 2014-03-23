@@ -138,10 +138,13 @@ class RelationshipsController extends \BaseController
         $res = array(
             'meta' => array(
                 'statuscode' => 200,
+            ),
+
+            'data' => array(
+                'follows_you' => RelationshipHelpers::follows_you($checkUser),
+                'you_follow' => RelationshipHelpers::you_follow($checkUser)
             )
         );
-        $res['follows_you'] = RelationshipHelpers::follows_you($checkUser);
-        $res['you_follow'] = RelationshipHelpers::you_follow($checkUser);
 
         return Response::json($res, 200);
     }
