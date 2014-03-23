@@ -18,31 +18,38 @@ Event::listen('illuminate.query', function ($query, $params, $time, $conn) {
 });
 
 Route::get('/', function () {
-    return View::make('hello');
+    //return View::make('hello');
+    RelationshipHelpers::findSuggestedFriends();
 });
 
 
-Route::get('login', function() {
+Route::get('login', function () {
     return "login.create";
 });
 
 Route::post('login', 'AuthController@store');
 
-Route::group(array('prefix' => 'api'), function() {
-   // Route::resource('auth', 'AuthController', array('only' => array('store', 'destroy')));
+Route::group(array('prefix' => 'api'), function () {
+    // Route::resource('auth', 'AuthController', array('only' => array('store', 'destroy')));
 
-    /*
-    Route::delete('session', 'AuthController@destroy');
+
     Route::post('login', 'AuthController@store');
     Route::get('logout', 'AuthController@destroy');
-*/
-    Route::get('{username}/{item_id}', 'ItemsController@show');
 
-    Route::group(array(), function() {
-        Route::resource('items', 'ItemsController');
-        Route::resource('user', 'UsersController');
-        Route::get('user/self/feed', 'UsersController@self_feed');
-        Route::post('user/profileimage', 'UsersController@set_profile_image');
-    });
+    Route::post('relationship/show', 'RelationshipsController@show');
+    Route::post('relationship/store', 'RelationshipsController@store');
+    Route::post('relationship/destroy', 'RelationshipsController@destroy');
+
+
+    Route::resource('items', 'ItemsController');
+    Route::delete('item/{id}', 'ItemsController@destroy');
+
+    Route::resource('user', 'UsersController');
+    Route::get('user/{id}', 'UsersController@show');
+
+    Route::get('{username}/{item_id}', 'ItemsController@show');
+    Route::get('user/self/feed', 'UsersController@self_feed');
+    Route::post('user/profile/image', 'UsersController@set_profile_image');
+
 
 });
