@@ -10,9 +10,12 @@ class AuthController extends BaseController
      */
     public function store()
     {
+
         $input = Input::all();
+        //$input['password'] = Hash::make($input['password']);
         //User::where('username', '=', 'mz');
-        $a = Auth::attempt($input, true);
+        $a = Auth::attempt($input, true, true);
+        print json_encode($input);
         if (!$a) {
             $res = array(
                 'meta' => array(
