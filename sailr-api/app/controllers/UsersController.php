@@ -44,19 +44,19 @@ class UsersController extends \BaseController
             );
             return Response::json($res, 400);
         }
-
+        $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
         $user = User::findOrFail($user->id);
         $res = array(
             'meta' => array(
-                'statuscode' => 200,
+                'statuscode' => 201,
                 'message' => 'Account successfully created'
             ),
 
             'data' => $user
         );
-        User::Authenticate(array('username' => $input['username'], 'password' => $input['password']));
-        return Response::json($res);
+        Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
+        return Response::json($res, 201);
     }
 
     /**
@@ -67,7 +67,7 @@ class UsersController extends \BaseController
      */
     public function show($id)
     {
-        $user = User::where('id', '=', $id)->first(array('id', 'name', 'email', 'username', 'bio'));
+        $user = User::where('id', '=', $id)->firstOrFail(array('id', 'name', 'username', 'bio'));
         if (!$user) {
             $res = array(
                 'meta' => array(
@@ -80,53 +80,33 @@ class UsersController extends \BaseController
 
         $following = Relationship::where('user_id', '=', $id)->count();
         $followers = Relationship::where('follows_user_id', '=', $id)->count();
-        $res['data']['counts'] = [
-            'following' => $following,
-            'followers' => $followers
-        ];
 
+        $userArray = $user->toArray();
+        $userArray['follows_you'] = RelationshipHelpers::follows_you($user);
+        $userArray['you_follow'] = RelationshipHelpers::you_follow($user);
+
+        $items = Item::where('user_id', '=', $id)->with(array(
+            'Photos' => function ($y) {
+                    $y->select(['item_id', 'type', 'url']);
+                },
+        ))->orderBy('created_at', 'dsc')->get()->toArray();
         $res = array(
             'meta' => array(
                 'responsecode' => 200,
                 'url' => 'http://sailr.co/' . $user->username,
             ),
             'data' => array(
-                $user->toArray(),
+                'user' => $userArray,
                 'counts' => array(
                     'following' => $following,
                     'followers' => $followers
-                )
+                ),
+                'items' => $items
             )
         );
 
 
         return Response::json($res);
-    }
-
-    /**
-     * Show the form for editing the specified user.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $user = User::find($id);
-
-        return View::make('users.edit', compact('user'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function update($id)
-    {
-
-
-        return Redirect::route('users.index');
     }
 
     /**
@@ -156,6 +136,10 @@ class UsersController extends \BaseController
             $counter = $counter + 1;
         }
 
+        /*
+         * The following line makes sure the the user's own posts show up in the feed!
+         */
+        $arrayOne[(count($arrayOne) + 1)] = Auth::user()->id;
         $items = Item::whereIn('user_id', $arrayOne)->with(array(
 
             'Photos' => function ($y) {
@@ -178,8 +162,13 @@ class UsersController extends \BaseController
         return Response::json($res);
     }
 
-    public function set_profile_image() {
-        $user = User::findOrFail(User::getUserFromSession()->id);
+    public function set_profile_image()
+    {
+        /*
+         *
+         * TODO: make this work!
+         */
+        $user = Auth::user();
         $user->ProfileImg->url = 'http://test.com';
         $user->ProfileImg->type = 'tpye';
 
