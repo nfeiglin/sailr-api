@@ -28,8 +28,8 @@ class ItemsController extends BaseController
     {
         $user_id = Auth::user()->id;
         $input = Input::all();
-        $photos = Input::file('photos');
-
+        $photos = Input::file();
+        
         $validator = Validator::make($input, Item::$rules);
 
         if ($validator->fails()) {
@@ -66,14 +66,11 @@ class ItemsController extends BaseController
             $originalPhoto = $photo;
 
             foreach ($photoTypes as $type => $size) {
-                print "Photo upload loop";
-                $photo = $originalPhoto->getRealPath();
+                $photoOriginal = $originalPhoto->getRealPath();
                 $path = 'img/' . sha1(microtime()) . '.jpg';
-                //$path = Photo::generateUniquePath();
-                $photo = Image::make($photo);
-                $photo->resize($size[0], $size[0], false);
-                $photo->encode('jpg', $size[1]);
-                $photo->save($path);
+                $interventionPhoto = Image::make($photoOriginal)->resize($size[0], $size[0], false);
+                $interventionPhoto->encode('jpg', $size[1]);
+                $interventionPhoto->save($path);
 
                 $photoDB = new Photo();
                 $photoDB->user_id = $user_id;
@@ -81,6 +78,10 @@ class ItemsController extends BaseController
                 $photoDB->type = $type;
                 $photoDB->url = $path;
                 $photoDB->save();
+
+                if (isset($photoDB)) {
+                    unset($photo);
+                }
             }
         }
         $res = array(
