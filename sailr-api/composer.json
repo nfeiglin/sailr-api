@@ -8,7 +8,8 @@
 		"doctrine/dbal": "dev-master",
 		"way/generators": "dev-master",
         "fzaninotto/faker": "v1.3.0",
-        "intervention/image": "1.*"
+        "intervention/image": "1.*",
+        "imagine/imagine": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
