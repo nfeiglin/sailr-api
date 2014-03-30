@@ -28,8 +28,8 @@ class ItemsController extends BaseController
     {
         $user_id = Auth::user()->id;
         $input = Input::all();
-        $photos = Input::file();
-        
+        $photos = Request::instance()->files->getIterator();
+
         $validator = Validator::make($input, Item::$rules);
 
         if ($validator->fails()) {
