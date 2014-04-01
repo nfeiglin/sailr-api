@@ -11,11 +11,12 @@ use Intervention\Image\Facades;
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
+/*
 Event::listen('illuminate.query', function ($query, $params, $time, $conn) {
     print_r(array($query, $params, $time, $conn));
     print('End of Queary <br>');
 });
+*/
 
 Route::get('/', function () {
     return View::make('hello');
