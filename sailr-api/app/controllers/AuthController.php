@@ -15,7 +15,6 @@ class AuthController extends BaseController
         //$input['password'] = Hash::make($input['password']);
         //User::where('username', '=', 'mz');
         $a = Auth::attempt($input, true, true);
-        print json_encode($input);
         if (!$a) {
             $res = array(
                 'meta' => array(
