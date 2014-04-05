@@ -19,13 +19,11 @@ class AuthController extends BaseController
         try {
             if ($input['username'][0] == '@') $input['username'] = ltrim($input['username'], '@');
             $user = User::where('username', '=', $input['username'])->orWhere('email', '=', $input['username'])->firstOrFail();
-            if(Hash::check($input['password'], $user->password)) {
+            if (Hash::check($input['password'], $user->password)) {
                 $a = Auth::loginUsingId($user->id);
             }
 
-        }
-
-        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Return User::loginFailResponse();
         }
 
