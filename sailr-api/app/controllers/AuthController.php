@@ -18,28 +18,19 @@ class AuthController extends BaseController
 
         try {
             if ($input['username'][0] == '@') $input['username'] = ltrim($input['username'], '@');
-            $user = User::where('username', '=', $input['username'])->orWhere('email', '=', $input['username'])->where('password', '=', Hash::make($input['password']))->firstOrFail(array('id', 'username', 'name'))->toArray();
-            $a = Auth::loginUsingId($user['id']);
+            $user = User::where('username', '=', $input['username'])->orWhere('email', '=', $input['username'])->firstOrFail();
+            if(Hash::check($input['password'], $user->password)) {
+                $a = Auth::loginUsingId($user->id);
+            }
+
         }
 
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 401,
-                    'message' => 'Username, email, or password is incorrect'
-                )
-            );
-            return Response::json($res, 401);
+            Return User::loginFailResponse();
         }
 
         if (!$a) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 401,
-                    'message' => 'Username, email, or password is incorrect'
-                )
-            );
-            return Response::json($res, 401);
+            return User::loginFailResponse();
         }
 
         $res = array(
@@ -48,7 +39,7 @@ class AuthController extends BaseController
                 'message' => 'Logged in successfully'
             ),
 
-            'data' => $user
+            'data' => $user->toArray()
         );
         return Response::json($res);
     }

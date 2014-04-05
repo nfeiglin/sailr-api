@@ -19,7 +19,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
      *
      * @var array
      */
-    public $hidden = array('password', 'created_at', 'updated_at', 'deleted_at');
+    public $hidden = array('password', 'created_at', 'updated_at', 'deleted_at', 'email');
 
     public $guarded = array('id', 'created_at', 'updated_at');
 
@@ -89,5 +89,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     public function whereUsername($username)
     {
         return $this->where('username', '=', $username)->firstOrFail();
+    }
+
+    public static function loginFailResponse() {
+        $res = array(
+            'meta' => array(
+                'statuscode' => 401,
+                'message' => 'Username, email, or password is incorrect'
+            )
+        );
+        return Response::json($res, 401);
     }
 }
