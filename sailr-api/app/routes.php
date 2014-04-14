@@ -27,6 +27,8 @@ Route::get('login', function () {
     return "login.create";
 });
 
+Route::controller('password', 'RemindersController');
+
 Route::post('login', 'AuthController@store');
 
 Route::group(array('prefix' => 'api'), function () {
@@ -34,7 +36,7 @@ Route::group(array('prefix' => 'api'), function () {
 
     Route::post('login', 'AuthController@store');
     Route::get('logout', 'AuthController@destroy');
-    Route::controller('password', 'RemindersController');
+
 
     Route::post('relationship/show', 'RelationshipsController@show');
     Route::post('relationship/store', 'RelationshipsController@store');
