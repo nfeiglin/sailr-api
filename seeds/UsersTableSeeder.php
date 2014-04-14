@@ -9,7 +9,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        /*
+
                 foreach(range(1, 10) as $index)
                 {
                     User::create([
@@ -20,7 +20,12 @@ class UsersTableSeeder extends Seeder
                     ]);
                 }
 
-        */
+        User::create([
+            'name' => 'Nathan Feiglin',
+            'username' => 'nfeiglin',
+            'email' => 'nathan.f1234@gmail.com',
+            'password' => Hash::make('1231231231')
+        ]);
     }
 
 }
