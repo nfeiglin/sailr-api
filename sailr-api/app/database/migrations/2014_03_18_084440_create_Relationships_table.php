@@ -13,7 +13,7 @@ class CreateRelationshipsTable extends Migration
      */
     public function up()
     {
-        Schema::create('Relationships', function (Blueprint $table) {
+        Schema::create('relationships', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('follows_user_id');
@@ -29,7 +29,7 @@ class CreateRelationshipsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('Relationships');
+        Schema::drop('relationships');
     }
 
 }
