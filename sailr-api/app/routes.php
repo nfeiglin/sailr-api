@@ -30,6 +30,7 @@ Route::get('login', function () {
 Route::controller('password', 'RemindersController');
 
 Route::post('login', 'AuthController@store');
+Route::get('logout', 'AuthController@destroy');
 
 Route::group(array('prefix' => 'api'), function () {
     // Route::resource('auth', 'AuthController', array('only' => array('store', 'destroy')));
