@@ -46,14 +46,14 @@ class UsersController extends \BaseController
         }
         $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
-        $user = User::findOrFail($user->id);
+
         $res = array(
             'meta' => array(
                 'statuscode' => 201,
                 'message' => 'Account successfully created'
             ),
 
-            'data' => $user
+            'data' => $user->toArray()
         );
         Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
         return Response::json($res, 201);
