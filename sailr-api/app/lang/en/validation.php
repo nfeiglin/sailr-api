@@ -66,7 +66,7 @@ return array(
         "string" => "The :attribute must be :size characters.",
         "array" => "The :attribute must contain :size items.",
     ),
-    "unique" => "The :attribute has already been taken.",
+    "unique" => "An account with this :attribute already exists.",
     "url" => "The :attribute format is invalid.",
 
     /*
@@ -80,7 +80,7 @@ return array(
     |
     */
 
-    'custom' => array(),
+    'custom' => array('email.unique' => 'You already have an account with this email address'),
 
     /*
     |--------------------------------------------------------------------------
