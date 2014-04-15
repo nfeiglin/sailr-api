@@ -43,18 +43,10 @@ class ItemsController extends BaseController
             return Response::json($res, 400);
         }
 
-        $item = new Item();
-        $item->user_id = $user_id;
-        $item->title = $input['title'];
-        $item->description = $input['description'];
-        $item->price = $input['price'];
-        $item->currency = $input['currency'];
-        $item->initial_units = $input['initial_units'];
+        $item = $this->doItemCreationFromInput($input, $user_id);
 
-        $item->save();
 
         /*
-         *
          * TODO: Add image validation!
          */
         $photoTypes = array(
@@ -181,5 +173,19 @@ class ItemsController extends BaseController
          */
 
     }
+
+    public function doItemCreationFromInput(array $input, $user_id) {
+
+        $item = new Item();
+        $item->user_id = $user_id;
+        $item->title = $input['title'];
+        $item->description = $input['description'];
+        $item->price = $input['price'];
+        $item->currency = $input['currency'];
+        $item->initial_units = $input['initial_units'];
+
+        $item->save();
+        return $item;
+}
 
 }
