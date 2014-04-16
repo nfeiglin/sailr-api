@@ -32,7 +32,7 @@ Route::controller('password', 'RemindersController');
 Route::post('login', 'AuthController@store');
 Route::get('logout', 'AuthController@destroy');
 
-Route::group(array('prefix' => 'api'), function () {
+Route::group(array('prefix' => 'api', 'before' => 'json_auth'), function () {
     // Route::resource('auth', 'AuthController', array('only' => array('store', 'destroy')));
 
     Route::post('login', 'AuthController@store');
