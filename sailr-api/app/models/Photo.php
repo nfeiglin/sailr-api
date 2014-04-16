@@ -2,7 +2,7 @@
 
 class Photo extends \Eloquent
 {
-    protected $fillable = [];
+    protected $fillable = ['user_id', 'item_id', 'type', 'url'];
     protected $softDelete = true;
 
     public function item()
