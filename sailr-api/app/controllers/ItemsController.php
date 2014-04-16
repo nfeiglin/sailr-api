@@ -50,7 +50,7 @@ class ItemsController extends BaseController
         if (!$p) {
             $res = array(
                 'meta' => array(
-                    'statuscode' => 400,
+                    'statuscode' => 415,
                     'message' => 'Invalid images',
                     'errors' => ['Your images are an invalid format']
                 )
