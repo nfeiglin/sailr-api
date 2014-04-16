@@ -32,6 +32,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         'bio' => 'sometimes|max:240'
     );
 
+    public static $updateRules = array(
+        'name' => 'sometimes|min:2|max:99',
+        'email' => 'sometimes|email|max:99|unique:users,email',
+        'username' => 'sometimes|alpha_num|max:99|unique:users,username',
+        'password' => 'sometimes|min:6',
+        'bio' => 'sometimes|max:240'
+    );
+
     /**
      * Get the unique identifier for the user.
      *

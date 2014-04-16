@@ -117,9 +117,44 @@ class UsersController extends \BaseController
      */
     public function destroy($id)
     {
-        User::destroy($id);
+        //User::destroy($id);
 
         return Redirect::route('users.index');
+    }
+
+    public function update () {
+        $input = Input::all();
+        $validator = Validator::make($input, User::$updateRules);
+        if ($validator->fails()) {
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 400,
+                    'message' => 'Invalid data',
+                    'errors' => $validator->messages()->all()
+                )
+            );
+            return Response::json($res, 400);
+        }
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        if (isset($input['name'])) $user->name = $input['name'];
+        if (isset($input['username'])) $user->username = $input['username'];
+        if (isset($input['email'])) $user->email = $input['email'];
+        if (isset($input['bio'])) $user->bio = $input['bio'];
+        if (isset($input['password'])) $user->password = Hash::make($input['password']);
+
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200,
+                'message' => 'User successfully updated'
+            ),
+
+            'data' => $user->toArray()
+        );
+        return Response::json($res, 200);
+
+
     }
 
     public function self_feed()
