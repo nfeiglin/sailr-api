@@ -122,8 +122,12 @@ class UsersController extends \BaseController
         return Redirect::route('users.index');
     }
 
-    public function update () {
+    public function update()
+    {
         $input = Input::all();
+        $input = array_filter($input);
+        $user = User::find(Auth::user()->id);
+
         $validator = Validator::make($input, User::$updateRules);
         if ($validator->fails()) {
             $res = array(
@@ -136,13 +140,13 @@ class UsersController extends \BaseController
             return Response::json($res, 400);
         }
 
-        $user = User::findOrFail(Auth::user()->id);
 
-        if (isset($input['name'])) $user->name = $input['name'];
-        if (isset($input['username'])) $user->username = $input['username'];
-        if (isset($input['email'])) $user->email = $input['email'];
-        if (isset($input['bio'])) $user->bio = $input['bio'];
-        if (isset($input['password'])) $user->password = Hash::make($input['password']);
+        if (isset($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        }
+
+        $user->fill($input);
+        $user->save();
 
         $res = array(
             'meta' => array(
