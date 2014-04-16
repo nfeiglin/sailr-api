@@ -27,8 +27,9 @@ class ItemsController extends BaseController
     public function store()
     {
         $user_id = Auth::user()->id;
+        //$files = Request::instance()->files->getIterator();
+        /*
         $input = Input::all();
-        $files = Request::instance()->files->getIterator();
 
         $validator = Validator::make($input, Item::$rules);
 
@@ -44,7 +45,7 @@ class ItemsController extends BaseController
         }
 
         $item = $this->doItemCreationFromInput($input, $user_id);
-
+        */
 
         /*
          * TODO: Add image validation!
@@ -55,24 +56,38 @@ class ItemsController extends BaseController
         );
 
         $photoQualities = ['full_res' => 75, 'thumbnail' => 60];
+        //$files = Input::file('photos');
+        $files = Request::instance()->files->get('photos');
+        //dd($files);
+
 
         foreach ($files as $image) {
             foreach ($photoSizes as $key => $size) {
                 foreach ($photoQualities as $photoSize => $quality) {
                     $newPath = 'img/' . sha1(microtime()) . '.jpg';
-                    $encodedImage = Image::make($image->getRealPath()->resize($size, $size, false))->encode('jpg', $quality)->save($newPath);
+                    echo('<br>' . $image->getRealPath());
+                   $encodedImage = Image::make($image->getRealPath());
+
+                    $encodedImage->resize($size, $size, false);
+                     $encodedImage->encode('jpg', $quality);
+                         $encodedImage->save($newPath);
+
+                    echo($image->getRealPath());
 
                     Photo::create([
                         'user_id' => $user_id,
-                        'item_id' => $item->id,
+                        'item_id' => 999,
                         'type' => $photoSize,
                         'url' => $newPath
                     ]);
+
                 }
 
             }
 
         }
+
+        return;
         $res = array(
             'meta' => array(
                 'statuscode' => 201,
