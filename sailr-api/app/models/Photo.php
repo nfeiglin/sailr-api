@@ -29,7 +29,7 @@ class Photo extends \Eloquent
         return $testdir . '/' . $unique1 . '.jpg';
     }
 
-    public static function validateImages(array $files) {
+    public static function validateImages(\Symfony\Component\HttpFoundation\File\UploadedFile $files) {
         $valid_mime_types = array(
             "image/gif",
             "image/png",
@@ -49,7 +49,7 @@ class Photo extends \Eloquent
 
         return true;
     }
-    public static function resizeAndStoreUploadedImages (array $files, Item $item) {
+    public static function resizeAndStoreUploadedImages (\Symfony\Component\HttpFoundation\File\UploadedFile $files, Item $item) {
 
         $photoSizes = array(
             'full_res' => ['size' => 612, 'quality' => 80],
