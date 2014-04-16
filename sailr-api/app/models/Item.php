@@ -3,7 +3,7 @@
 class Item extends Eloquent
 {
     protected $hidden = array('updated_at', 'deleted_at', 'user_id');
-    protected $fillable = array('');
+    protected $fillable = ['user_id', 'price', 'currency', 'initial_units', 'description', 'title'];
     protected $softDelete = true;
 
     public function user()

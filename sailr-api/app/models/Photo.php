@@ -28,4 +28,54 @@ class Photo extends \Eloquent
 
         return $testdir . '/' . $unique1 . '.jpg';
     }
+
+    public static function validateImages(array $files) {
+        $valid_mime_types = array(
+            "image/gif",
+            "image/png",
+            "image/jpeg",
+            "image/x-jpeg",
+            "image/pjpeg",
+            'image/x-jpeg2000-image',
+            "image/x-png",
+        );
+
+        //Check that the uploaded file is actually an image (by MIME)
+        foreach ($files as $file) {
+            if (!in_array($file->getMimeType(), $valid_mime_types)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public static function resizeAndStoreUploadedImages (array $files, Item $item) {
+
+        $photoSizes = array(
+            'full_res' => ['size' => 612, 'quality' => 80],
+            'thumbnail' => ['size' => 150, 'quality' => 60]
+        );
+        foreach ($files as $image) {
+            foreach ($photoSizes as $type => $sizeAndQuality) {
+                $newPath = 'img/' . sha1(microtime()) . '.jpg';
+                $encodedImage = Image::make($image->getRealPath());
+                $encodedImage->resize($sizeAndQuality['size'], $sizeAndQuality['size'], false);
+                $encodedImage->encode('jpg', $sizeAndQuality['quality']);
+                $encodedImage->save($newPath);
+
+
+                Photo::create([
+                    'user_id' => $item->user_id,
+                    'item_id' => $item->id,
+                    'type' => $type,
+                    'url' => asset($newPath)
+                ]);
+
+            }
+
+        }
+
+        return true;
+    }
+
 }

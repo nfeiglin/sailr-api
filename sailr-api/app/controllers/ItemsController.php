@@ -27,10 +27,9 @@ class ItemsController extends BaseController
     public function store()
     {
         $user_id = Auth::user()->id;
-        //$files = Request::instance()->files->getIterator();
-        /*
-        $input = Input::all();
 
+        $input = Input::all();
+        $files = Request::instance()->files->get('photos');
         $validator = Validator::make($input, Item::$rules);
 
         if ($validator->fails()) {
@@ -45,56 +44,28 @@ class ItemsController extends BaseController
         }
 
         $item = $this->doItemCreationFromInput($input, $user_id);
-        */
 
-        /*
-         * TODO: Add image validation!
-         */
-        $photoSizes = array(
-            'full_res' => 612,
-            'thumbnail' => 150
-        );
+        $p = Photo::validateImages($files);
 
-        $photoQualities = ['full_res' => 75, 'thumbnail' => 60];
-        //$files = Input::file('photos');
-        $files = Request::instance()->files->get('photos');
-        //dd($files);
-
-
-        foreach ($files as $image) {
-            foreach ($photoSizes as $key => $size) {
-                foreach ($photoQualities as $photoSize => $quality) {
-                    $newPath = 'img/' . sha1(microtime()) . '.jpg';
-                    echo('<br>' . $image->getRealPath());
-                   $encodedImage = Image::make($image->getRealPath());
-
-                    $encodedImage->resize($size, $size, false);
-                     $encodedImage->encode('jpg', $quality);
-                         $encodedImage->save($newPath);
-
-                    echo($image->getRealPath());
-
-                    Photo::create([
-                        'user_id' => $user_id,
-                        'item_id' => 999,
-                        'type' => $photoSize,
-                        'url' => $newPath
-                    ]);
-
-                }
-
-            }
-
+        if (!$p) {
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 400,
+                    'message' => 'Invalid images',
+                    'errors' => ['Your images are an invalid format']
+                )
+            );
+            return Response::json($res, 400);
         }
+        Photo::resizeAndStoreUploadedImages($files, $item);
 
-        return;
         $res = array(
             'meta' => array(
                 'statuscode' => 201,
                 'message' => 'Item successfully posted!'
             ),
 
-            'data' => $item
+            'data' => $item->toArray()
         );
         return Response::json($res, 201);
 
