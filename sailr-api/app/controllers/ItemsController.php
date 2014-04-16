@@ -28,7 +28,7 @@ class ItemsController extends BaseController
     {
         $user_id = Auth::user()->id;
         $input = Input::all();
-        $photos = Request::instance()->files->getIterator();
+        $files = Request::instance()->files->getIterator();
 
         $validator = Validator::make($input, Item::$rules);
 
@@ -49,32 +49,29 @@ class ItemsController extends BaseController
         /*
          * TODO: Add image validation!
          */
-        $photoTypes = array(
-            'full_res' => [612, 75],
-            'thumbnail' => [150, 60]
+        $photoSizes = array(
+            'full_res' => 612,
+            'thumbnail' => 150
         );
 
-        foreach ($photos as $photo) {
-            $originalPhoto = $photo;
+        $photoQualities = ['full_res' => 75, 'thumbnail' => 60];
 
-            foreach ($photoTypes as $type => $size) {
-                $photoOriginal = $originalPhoto->getRealPath();
-                $path = 'img/' . sha1(microtime()) . '.jpg';
-                $interventionPhoto = Image::make($photoOriginal)->resize($size[0], $size[0], false);
-                $interventionPhoto->encode('jpg', $size[1]);
-                $interventionPhoto->save($path);
+        foreach ($files as $image) {
+            foreach ($photoSizes as $key => $size) {
+                foreach ($photoQualities as $photoSize => $quality) {
+                    $newPath = 'img/' . sha1(microtime()) . '.jpg';
+                    $encodedImage = Image::make($image->getRealPath()->resize($size, $size, false))->encode('jpg', $quality)->save($newPath);
 
-                $photoDB = new Photo();
-                $photoDB->user_id = $user_id;
-                $photoDB->item_id = $item->id;
-                $photoDB->type = $type;
-                $photoDB->url = $path;
-                $photoDB->save();
-
-                if (isset($photoDB)) {
-                    unset($photo);
+                    Photo::create([
+                        'user_id' => $user_id,
+                        'item_id' => $item->id,
+                        'type' => $photoSize,
+                        'url' => $newPath
+                    ]);
                 }
+
             }
+
         }
         $res = array(
             'meta' => array(
@@ -174,7 +171,8 @@ class ItemsController extends BaseController
 
     }
 
-    public function doItemCreationFromInput(array $input, $user_id) {
+    public function doItemCreationFromInput(array $input, $user_id)
+    {
 
         $item = new Item();
         $item->user_id = $user_id;
@@ -186,6 +184,6 @@ class ItemsController extends BaseController
 
         $item->save();
         return $item;
-}
+    }
 
 }
