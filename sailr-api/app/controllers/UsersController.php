@@ -48,7 +48,7 @@ class UsersController extends \BaseController
 
         $input['name'] = e($input['name']);
 
-        if(array_key_exists('bio', $input)) {
+        if (array_key_exists('bio', $input)) {
             $input['bio'] = e($input['bio']);
         }
         $user = User::create($input);
@@ -93,15 +93,39 @@ class UsersController extends \BaseController
         $userArray['follows_you'] = RelationshipHelpers::follows_you($user);
         $userArray['you_follow'] = RelationshipHelpers::you_follow($user);
 
+
+        $res = array(
+            'meta' => array(
+                'responsecode' => 200,
+                'url' => 'http://sailr.co/' . $user->username,
+            ),
+            'data' => array(
+                'user' => $userArray,
+
+            )
+        );
+
+
+        return Response::json($res);
+    }
+
+    /**
+     * Display the user's recent listings
+     * @param int $id
+     * @return Response
+     */
+    public function items($id)
+    {
+
         $items = Item::where('user_id', '=', $id)->with(array(
             'Photos' => function ($y) {
                     $y->select(['item_id', 'type', 'url']);
                 },
         ))->orderBy('created_at', 'dsc')->get()->toArray();
+
         $res = array(
             'meta' => array(
                 'responsecode' => 200,
-                'url' => 'http://sailr.co/' . $user->username,
             ),
             'data' => $items
         );
@@ -123,8 +147,18 @@ class UsersController extends \BaseController
         return Redirect::route('users.index');
     }
 
-    public function update()
+    public function update($id)
     {
+        if (!$id == Auth::user()->id) {
+            $res = array(
+                'meta' => array(
+                    'statuscode' => 403,
+                    'message' => 'Not authorised',
+                    'errors' => ['Sorry, you can only update your own account.']
+                )
+            );
+            return Response::json($res, 403);
+        }
         $input = Input::all();
         $input = array_filter($input);
         $user = User::find(Auth::user()->id);
@@ -147,11 +181,11 @@ class UsersController extends \BaseController
         }
 
 
-        if(array_key_exists('bio', $input)) {
+        if (array_key_exists('bio', $input)) {
             $input['bio'] = e($input['bio']);
         }
 
-        if(array_key_exists('name', $input)) {
+        if (array_key_exists('name', $input)) {
             $input['name'] = e($input['name']);
         }
 
@@ -213,5 +247,5 @@ class UsersController extends \BaseController
 
         return Response::json($res);
     }
-    
+
 }
