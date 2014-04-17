@@ -76,6 +76,23 @@ class CommentsController extends \BaseController
 
 
     /**
+     * Display comments for the specified item.
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function item_comments($id) {
+        $comments = Comment::where('item_id', '=', $id)->with('User')->get();
+
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200,
+            ),
+            'data' => $comments->toArray()
+        );
+        return Response::json($res, 200);
+    }
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int $id
