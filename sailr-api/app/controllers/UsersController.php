@@ -220,17 +220,5 @@ class UsersController extends \BaseController
 
         return Response::json($res);
     }
-
-    public function set_profile_image()
-    {
-        /*
-         *
-         * TODO: make this work!
-         */
-        $user = Auth::user();
-        $user->ProfileImg->url = 'http://test.com';
-        $user->ProfileImg->type = 'tpye';
-
-
-    }
+    
 }
