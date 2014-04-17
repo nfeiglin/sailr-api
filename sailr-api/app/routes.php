@@ -30,21 +30,20 @@ Route::get('logout', 'SessionController@destroy');
 
 Route::group(array('prefix' => 'api', 'before' => 'json_auth'), function () {
     // Route::resource('auth', 'SessionController', array('only' => array('store', 'destroy')));
-    Route::resource('user/profile/image', 'ProfileImageController', ['only' => ['store', 'destroy']]);
+    Route::resource('users/profile/image', 'ProfileImageController', ['only' => ['store', 'destroy']]);
     Route::resource('users', 'UsersController');
-    Route::get('users/{id}', 'UsersController@show');
+
 
     Route::get('users/self/feed', 'UsersController@self_feed');
-    Route::post('user/profile/image', 'UsersController@set_profile_image');
 
     Route::resource('comment', 'CommentsController', ['only' => ['store','show', 'destroy']]);
     Route::post('login', 'SessionController@store');
     Route::get('logout', 'SessionController@destroy');
 
 
-    Route::any('relationship/show', 'RelationshipsController@show');
-    Route::any('relationship/store', 'RelationshipsController@store');
-    Route::any('relationship/destroy', 'RelationshipsController@destroy');
+    Route::match(['GET', 'POST'], 'relationship/show', 'RelationshipsController@show');
+    Route::match(['GET', 'POST'], 'relationship/store', 'RelationshipsController@store');
+    Route::match(['GET', 'POST'], 'relationship/destroy', 'RelationshipsController@destroy');
 
 
     Route::resource('items', 'ItemsController');
