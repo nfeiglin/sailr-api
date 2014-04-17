@@ -8,6 +8,7 @@ class ProfileImgsTableSeeder extends Seeder
 
     public function run()
     {
+        /*
         $faker = Faker::create();
 
         foreach (range(1, 10) as $index) {
@@ -15,6 +16,13 @@ class ProfileImgsTableSeeder extends Seeder
 
             ]);
         }
+        */
+
+        $users = User::all();
+        foreach ($users as $user) {
+            ProfileImg::setDefaultProfileImages($user);
+        }
+
     }
 
 }
