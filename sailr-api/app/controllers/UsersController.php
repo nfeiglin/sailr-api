@@ -103,14 +103,7 @@ class UsersController extends \BaseController
                 'responsecode' => 200,
                 'url' => 'http://sailr.co/' . $user->username,
             ),
-            'data' => array(
-                'user' => $userArray,
-                'counts' => array(
-                    'following' => $following,
-                    'followers' => $followers
-                ),
-                'items' => $items
-            )
+            'data' => $items
         );
 
 

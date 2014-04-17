@@ -22,7 +22,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     public $hidden = array('password', 'created_at', 'updated_at', 'deleted_at', 'email');
 
     public $guarded = array('id', 'created_at', 'updated_at');
-
+    protected $appends = ['counts'];
 
     public static $rules = array(
         'name' => 'required|min:2|max:99',
@@ -39,6 +39,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         'password' => 'sometimes|min:6',
         'bio' => 'sometimes|max:240'
     );
+
+    public function getCountsAttribute() {
+        $following = Relationship::where('user_id', '=', $this->getAuthIdentifier())->count();
+        $followers = Relationship::where('follows_user_id', '=', $this->getAuthIdentifier())->count();
+
+        return $this->attributes['counts'] = [
+            'following' => $following,
+            'followers' => $followers
+        ];
+    }
 
     /**
      * Get the unique identifier for the user.
