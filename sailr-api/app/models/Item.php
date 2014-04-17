@@ -16,6 +16,10 @@ class Item extends Eloquent
         return $this->hasMany('Photo');
     }
 
+    public function comment() {
+        return $this->hasMany('Comment');
+    }
+
     public static $rules = array(
         'title' => 'required|max:40',
         'description' => 'required|max:240',
