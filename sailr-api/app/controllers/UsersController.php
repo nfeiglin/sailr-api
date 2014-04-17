@@ -56,6 +56,8 @@ class UsersController extends \BaseController
             'data' => $user->toArray()
         );
         Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
+        ProfileImg::setDefaultProfileImages($user);
+
         return Response::json($res, 201);
     }
 
@@ -67,7 +69,7 @@ class UsersController extends \BaseController
      */
     public function show($id)
     {
-        $user = User::where('id', '=', $id)->firstOrFail(array('id', 'name', 'username', 'bio'));
+        $user = User::where('id', '=', $id)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
         if (!$user) {
             $res = array(
                 'meta' => array(
@@ -178,6 +180,7 @@ class UsersController extends \BaseController
         /*
          * The following line makes sure the the user's own posts show up in the feed!
          */
+
         $arrayOne[(count($arrayOne) + 1)] = Auth::user()->id;
         $items = Item::whereIn('user_id', $arrayOne)->with(array(
 
@@ -186,7 +189,9 @@ class UsersController extends \BaseController
                 },
 
             'User' => function ($q) {
+                    $q->with('ProfileImg');
                     $q->select(['id', 'username', 'name']);
+
                 }
 
         ))->orderBy('created_at', 'dsc')->get()->toArray();

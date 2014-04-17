@@ -3,6 +3,7 @@
 class Photo extends \Eloquent
 {
     protected $fillable = ['user_id', 'item_id', 'type', 'url'];
+    protected $hidden = ['item_id'];
     protected $softDelete = true;
 
     public function item()
@@ -29,7 +30,7 @@ class Photo extends \Eloquent
         return $testdir . '/' . $unique1 . '.jpg';
     }
 
-    public static function validateImages(\Symfony\Component\HttpFoundation\File\UploadedFile $files) {
+    public static function validateImages($files) {
         $valid_mime_types = array(
             "image/gif",
             "image/png",
@@ -49,7 +50,7 @@ class Photo extends \Eloquent
 
         return true;
     }
-    public static function resizeAndStoreUploadedImages (\Symfony\Component\HttpFoundation\File\UploadedFile $files, Item $item) {
+    public static function resizeAndStoreUploadedImages ($files, Item $item) {
 
         $photoSizes = array(
             'full_res' => ['size' => 612, 'quality' => 80],
