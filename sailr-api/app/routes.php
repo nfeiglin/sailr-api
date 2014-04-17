@@ -23,39 +23,35 @@ Route::get('/', function () {
 });
 
 
-Route::get('login', function () {
-    return "login.create";
-});
-
 Route::controller('password', 'RemindersController');
 
-Route::post('login', 'AuthController@store');
-Route::get('logout', 'AuthController@destroy');
+Route::post('login', 'SessionController@store');
+Route::get('logout', 'SessionController@destroy');
 
 Route::group(array('prefix' => 'api', 'before' => 'json_auth'), function () {
-    // Route::resource('auth', 'AuthController', array('only' => array('store', 'destroy')));
+    // Route::resource('auth', 'SessionController', array('only' => array('store', 'destroy')));
     Route::resource('user/profile/image', 'ProfileImageController', ['only' => ['store', 'destroy']]);
+    Route::resource('users', 'UsersController');
+    Route::get('users/{id}', 'UsersController@show');
+
+    Route::get('users/self/feed', 'UsersController@self_feed');
+    Route::post('user/profile/image', 'UsersController@set_profile_image');
 
     Route::resource('comment', 'CommentsController', ['only' => ['store','show', 'destroy']]);
+    Route::post('login', 'SessionController@store');
+    Route::get('logout', 'SessionController@destroy');
 
-    Route::post('login', 'AuthController@store');
-    Route::get('logout', 'AuthController@destroy');
 
-
-    Route::post('relationship/show', 'RelationshipsController@show');
-    Route::post('relationship/store', 'RelationshipsController@store');
-    Route::post('relationship/destroy', 'RelationshipsController@destroy');
+    Route::any('relationship/show', 'RelationshipsController@show');
+    Route::any('relationship/store', 'RelationshipsController@store');
+    Route::any('relationship/destroy', 'RelationshipsController@destroy');
 
 
     Route::resource('items', 'ItemsController');
-    Route::delete('item/{id}', 'ItemsController@destroy');
+    Route::get('items/{id}/comments', 'CommentsController@item_comments');
+    Route::get('users/{id}/items', 'UsersController@items');
 
-    Route::resource('user', 'UsersController');
-    Route::get('user/{id}', 'UsersController@show');
 
-    Route::get('{username}/{item_id}', 'ItemsController@show');
-    Route::get('user/self/feed', 'UsersController@self_feed');
-    Route::post('user/profile/image', 'UsersController@set_profile_image');
 
 
 });
