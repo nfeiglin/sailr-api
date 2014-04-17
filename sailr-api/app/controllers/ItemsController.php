@@ -43,6 +43,10 @@ class ItemsController extends BaseController
             return Response::json($res, 400);
         }
 
+        /* Running HTML entities over the text input to minimise risk of XSS */
+        $input['title'] = e($input['title']);
+        $input['description'] = e($input['description']);
+
         $item = $this->doItemCreationFromInput($input, $user_id);
 
         $p = Photo::validateImages($files);
@@ -105,16 +109,6 @@ class ItemsController extends BaseController
         return Response::json($res);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        return View::make('items.edit');
-    }
 
     /**
      * Update the specified resource in storage.

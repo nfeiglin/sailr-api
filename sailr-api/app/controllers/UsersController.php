@@ -45,6 +45,12 @@ class UsersController extends \BaseController
             return Response::json($res, 400);
         }
         $input['password'] = Hash::make($input['password']);
+
+        $input['name'] = e($input['name']);
+
+        if(array_key_exists('bio', $input)) {
+            $input['bio'] = e($input['bio']);
+        }
         $user = User::create($input);
 
         $res = array(
@@ -145,6 +151,15 @@ class UsersController extends \BaseController
 
         if (isset($input['password'])) {
             $input['password'] = Hash::make($input['password']);
+        }
+
+
+        if(array_key_exists('bio', $input)) {
+            $input['bio'] = e($input['bio']);
+        }
+
+        if(array_key_exists('name', $input)) {
+            $input['name'] = e($input['name']);
         }
 
         $user->fill($input);
