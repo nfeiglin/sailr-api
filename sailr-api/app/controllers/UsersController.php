@@ -99,10 +99,7 @@ class UsersController extends \BaseController
                 'responsecode' => 200,
                 'url' => 'http://sailr.co/' . $user->username,
             ),
-            'data' => array(
-                'user' => $userArray,
-
-            )
+            'data' => $userArray
         );
 
 
