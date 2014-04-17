@@ -6,7 +6,8 @@ class Comment extends \Eloquent {
     protected $softDelete = true;
 
     public static $rules = [
-        'comment' => ['required', 'max:400']
+        'comment' => ['required', 'max:400'],
+        'item_id' => ['required', 'exists:items,id']
     ];
     public function user() {
         return $this->belongsTo('User');
