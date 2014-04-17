@@ -55,7 +55,7 @@ class ItemsController extends BaseController
                     'errors' => ['Your images are an invalid format']
                 )
             );
-            return Response::json($res, 400);
+            return Response::json($res, 415);
         }
         Photo::resizeAndStoreUploadedImages($files, $item);
 
