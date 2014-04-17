@@ -78,48 +78,38 @@ class ItemsController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  string $username
-     * @param int $item_id
+     * @param int $id
      * @return Response
      */
-    public function show($username, $item_id)
+    public function show($id)
     {
         /*
          * Find the item listing from the DB
          */
-        $user = User::where('username', '=', $username)->firstOrFail(array('id', 'username', 'name', 'bio'))->toArray();
-        $items = Item::with(array(
+        $item = Item::with(array(
             'Photos' => function ($y) {
                     $y->select(['item_id', 'type', 'url']);
                 },
-        ))->where('id', '=', $item_id)->where('user_id', '=', $user['id'])->firstOrFail()->toArray();
+            'User' => function($x) {
+                    $x->with('ProfileImg');
+                  $x->select(['id', 'name', 'username']);
+                },
+        ))->where('id', '=', $id)->firstOrFail();
 
         /*
          * Generate and output the JSON response
          */
-        $items['user'] = $user;
         $res = array(
             'meta' => array(
                 'statuscode' => 200
             ),
 
-            'data' => $items
+            'data' => $item->toArray()
         );
 
         return Response::json($res);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
