@@ -27,7 +27,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     public static $rules = array(
         'name' => 'required|min:2|max:99',
         'email' => 'required|email|max:99|unique:users,email',
-        'username' => 'required|alpha_num|max:99|unique:users,username',
+        'username' => 'required|alpha_dash|max:99|unique:users,username',
         'password' => 'required|min:6',
         'bio' => 'sometimes|max:240'
     );
@@ -93,6 +93,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     public function ProfileImg()
     {
         return $this->hasMany('ProfileImg');
+    }
+
+    public function comments(){
+        return $this->hasMany('Comment');
     }
 
     public function whereUsername($username)
