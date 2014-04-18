@@ -53,6 +53,9 @@ class UsersController extends \BaseController
         }
         $user = User::create($input);
 
+        //We don't want to see the just created user's following / followers!
+        $user->setAppends(array());
+
         $res = array(
             'meta' => array(
                 'statuscode' => 201,
@@ -85,21 +88,13 @@ class UsersController extends \BaseController
             );
             return Response::json($res, 404);
         }
-
-        $following = Relationship::where('user_id', '=', $id)->count();
-        $followers = Relationship::where('follows_user_id', '=', $id)->count();
-
-        $userArray = $user->toArray();
-        $userArray['follows_you'] = RelationshipHelpers::follows_you($user);
-        $userArray['you_follow'] = RelationshipHelpers::you_follow($user);
-
-
+        $user->setAppends(['counts']);
         $res = array(
             'meta' => array(
                 'responsecode' => 200,
                 'url' => 'http://sailr.co/' . $user->username,
             ),
-            'data' => $userArray
+            'data' => $user->toArray()
         );
 
 
@@ -220,7 +215,7 @@ class UsersController extends \BaseController
          * The following line makes sure the the user's own posts show up in the feed!
          */
 
-        $arrayOne[(count($arrayOne) + 1)] = Auth::user()->id;
+        $arrayOne[(count($arrayOne) + 1)] = $user->id;
         $items = Item::whereIn('user_id', $arrayOne)->with(array(
 
             'Photos' => function ($y) {
