@@ -36,7 +36,7 @@ return array(
     "email" => "The :attribute format is invalid.",
     "exists" => "The selected :attribute is invalid.",
     "image" => "The :attribute must be an image.",
-    "in" => "The selected :attribute is invalid.",
+    "in" => "The selected :attribute is not supported.",
     "integer" => "The :attribute must be an integer.",
     "ip" => "The :attribute must be a valid IP address.",
     "max" => array(
@@ -80,7 +80,9 @@ return array(
     |
     */
 
-    'custom' => array('email.unique' => 'You already have an account with this email address'),
+    'custom' => array(
+        'email.unique' => 'You already have an account with this email address',
+    ),
 
     /*
     |--------------------------------------------------------------------------
