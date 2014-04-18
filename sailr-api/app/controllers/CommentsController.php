@@ -24,17 +24,6 @@ class CommentsController extends \BaseController
             return Response::json($res, 400);
         }
 
-        $date = \Carbon\Carbon::now()->subMinutes(90);
-        if (DB::table('comments')->where('comment', '=', $input['comment'])->where('user_id', '=', Auth::user()->id)->where('created_at', '<', $date)->count() >= 1) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Comment not posted... hmm...',
-                    'errors' => ['We sense that you have posted the same comment recently']
-                )
-            );
-            return Response::json($res, 400);
-        }
 
         $comment = Comment::create([
                 'user_id' => Auth::user()->id,
@@ -43,14 +32,14 @@ class CommentsController extends \BaseController
             ]
         );
 
-        Event::fire('comment.store', $comment->with('User'));
+        Event::fire('comment.store', $comment);
 
         $res = array(
             'meta' => array(
                 'statuscode' => 201,
                 'message' => 'Comment successfully created'
             ),
-            'data' => $comment->with('User')->toArray()
+            'data' => $comment->toArray()
         );
         return Response::json($res, 201);
     }
