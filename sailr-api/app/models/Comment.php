@@ -2,8 +2,9 @@
 
 class Comment extends \Eloquent {
 	protected $fillable = ['user_id', 'item_id', 'comment'];
-    protected $hidden = ['id', 'item_id'];
+   protected $hidden = ['updated_at', 'deleted_at'];
     protected $softDelete = true;
+    //protected $appends = ['user'];
 
     public static $rules = [
         'comment' => ['required', 'max:400'],
@@ -16,4 +17,11 @@ class Comment extends \Eloquent {
     public function item() {
         return $this->belongsTo('Item');
     }
+
+
+    public function getUserAttribute() {
+        return User::find($this->user_id)->toArray();
+    }
+
 }
+
