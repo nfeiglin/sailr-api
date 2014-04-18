@@ -11,12 +11,15 @@ use Intervention\Image\Facades;
 | and give it the Closure to execute when that URI is requested.
 |
 */
-/*
+
+
 Event::listen('illuminate.query', function ($query, $params, $time, $conn) {
-    print_r(array($query, $params, $time, $conn));
-    print('End of Queary <br>');
+    echo '<pre>';
+    json_encode(print_r(array($query, $params, $time, $conn)));
+    echo '</pre>';
+
 });
-*/
+
 
 Route::get('/', function () {
     return View::make('hello');
@@ -29,14 +32,15 @@ Route::post('login', 'SessionController@store');
 Route::get('logout', 'SessionController@destroy');
 
 Route::group(array('prefix' => 'api', 'before' => 'json_auth'), function () {
-    // Route::resource('auth', 'SessionController', array('only' => array('store', 'destroy')));
+
+    Route::resource('session', 'SessionController', array('only' => array('store', 'destroy')));
     Route::resource('users/profile/image', 'ProfileImageController', ['only' => ['store', 'destroy']]);
     Route::resource('users', 'UsersController');
 
 
     Route::get('users/self/feed', 'UsersController@self_feed');
 
-    Route::resource('comment', 'CommentsController', ['only' => ['store','show', 'destroy']]);
+    Route::resource('comments', 'CommentsController', ['only' => ['store','show', 'destroy']]);
     Route::post('login', 'SessionController@store');
     Route::get('logout', 'SessionController@destroy');
 
