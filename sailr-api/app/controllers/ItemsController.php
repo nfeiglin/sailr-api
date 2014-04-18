@@ -123,12 +123,12 @@ class ItemsController extends BaseController
         if (!$item->user_id == Auth::user()->id) {
             $res = array(
                 'meta' => array(
-                    'statuscode' => 401,
+                    'statuscode' => 403,
                     'message' => 'Not authorised to delete that post'
                 )
             );
 
-            return Response::json($res, 401);
+            return Response::json($res, 403);
         }
 
         $photos = Photo::where('item_id', '=', $item->id);
@@ -138,6 +138,15 @@ class ItemsController extends BaseController
         /*
          * TODO: When calling these from buyer's panel, use "whereTrashed"
          */
+
+        $res = array(
+            'meta' => array(
+                'statuscode' => 200,
+                'message' => $item->title . ' deleted successfully'
+            )
+        );
+
+        return Response::json($res, 200);
 
     }
 
