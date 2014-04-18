@@ -22,7 +22,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     public $hidden = array('password', 'created_at', 'updated_at', 'deleted_at', 'email');
 
     public $guarded = array('id', 'created_at', 'updated_at');
-    protected $appends = ['counts'];
+    //protected $appends = ['counts'];
 
     public static $rules = array(
         'name' => 'required|min:2|max:99',
@@ -49,6 +49,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
             'followers' => $followers
         ];
     }
+
 
     /**
      * Get the unique identifier for the user.
