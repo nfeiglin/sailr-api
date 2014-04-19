@@ -23,6 +23,15 @@ ClassLoader::addDirectories(array(
 ));
 
 /*
+ * Validation resolvers for custom validation rules
+ */
+
+Validator::resolver(function($translator, $data, $rules, $messages)
+{
+    return new CountryValidator($translator, $data, $rules, $messages);
+});
+
+/*
 |--------------------------------------------------------------------------
 | Application Error Logger
 |--------------------------------------------------------------------------
