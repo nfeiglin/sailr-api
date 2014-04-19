@@ -49,7 +49,7 @@ class ProfileImg extends \Eloquent
     public static function setDefaultProfileImages(User $user)
     {
 
-        $urls = ['default-lg', 'default-md', 'default-sm'];
+        $urls = ['default-sm', 'default-md', 'default-lg'];
         $counter = 0;
 
         foreach (ProfileImg::$photoSizes as $type => $sizeAndQuality) {
