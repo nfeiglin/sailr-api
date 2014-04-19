@@ -164,7 +164,7 @@ class ItemsController extends BaseController
         $item->price = $input['price'];
         $item->currency = $input['currency'];
         $item->initial_units = $input['initial_units'];
-
+        $item->country = $input['country'];
         $item->save();
         return $item;
     }
