@@ -68,6 +68,7 @@ return array(
     ),
     "unique" => "An account with this :attribute already exists.",
     "url" => "The :attribute format is invalid.",
+    "country" => "The :attribute must be a country",
 
     /*
     |--------------------------------------------------------------------------

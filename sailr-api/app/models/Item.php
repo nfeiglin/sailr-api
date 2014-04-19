@@ -31,6 +31,7 @@ class Item extends Eloquent
         'price' => 'required|numeric|min:0.00|max:999999999',
         'currency' => 'required|alpha|min:3|max:3|in:AUD,CAD,EUR,GBP,JPY,USD,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,ILS,MXN,PHP,TWD,THB,RUB',
         'initial_units' => 'required|min:1|max:9999999',
+        'country' => 'required|country',
         'domestic_shipping_price' => 'required|numeric|min:0|max:9999',
         'domestic_shipping_desc' => 'required|max:400',
         'international_shipping_price' => 'required|numeric|min:0|max:9990',
