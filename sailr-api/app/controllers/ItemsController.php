@@ -43,12 +43,6 @@ class ItemsController extends BaseController
             return Response::json($res, 400);
         }
 
-        /* Running HTML entities over the text input to minimise risk of XSS */
-        $input['title'] = e($input['title']);
-        $input['description'] = e($input['description']);
-
-        $item = $this->doItemCreationFromInput($input, $user_id);
-
         $p = Photo::validateImages($files);
 
         if (!$p) {
@@ -61,6 +55,13 @@ class ItemsController extends BaseController
             );
             return Response::json($res, 415);
         }
+
+        /* Running HTML entities over the text input to minimise risk of XSS */
+        $input['title'] = e($input['title']);
+        $input['description'] = e($input['description']);
+
+        $item = $this->doItemCreationFromInput($input, $user_id);
+        $this->doShippingFromInput($input, $item->id);
         Photo::resizeAndStoreUploadedImages($files, $item);
 
         $res = array(
@@ -93,6 +94,9 @@ class ItemsController extends BaseController
             'User' => function($x) {
                     $x->with('ProfileImg');
                   $x->select(['id', 'name', 'username']);
+                },
+            'Shipping' => function($z) {
+                    $z->select(['type', 'price', 'desc', 'item_id']);
                 },
         ))->where('id', '=', $id)->firstOrFail();
 
@@ -163,6 +167,21 @@ class ItemsController extends BaseController
 
         $item->save();
         return $item;
+    }
+
+    public function doShippingFromInput(array $input, $item_id)
+    {
+        foreach(Shipping::$shippingTypes as $name => $values) {
+            $priceKey = $values[0];
+            $descKey = $values[1];
+
+            $shipping = new Shipping();
+            $shipping->item_id = $item_id;
+            $shipping->type = $name;
+            $shipping->price = $input[$priceKey];
+            $shipping->desc = e($input[$descKey]);
+            $shipping->save();
+        }
     }
 
 }
