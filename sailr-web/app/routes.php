@@ -13,20 +13,13 @@ use Intervention\Image\Facades;
 */
 
 
-Event::listen('illuminate.query', function ($query, $params, $time, $conn) {
-    echo '<pre>';
-    json_encode(print_r(array($query, $params, $time, $conn)));
-    echo '</pre>';
-
-});
-
-
 Route::get('/', function () {
     return View::make('hello');
 });
 
 
 Route::controller('password', 'RemindersController');
+Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 
 Route::post('login', 'SessionController@store');
 Route::get('logout', 'SessionController@destroy');
