@@ -12,20 +12,25 @@ class UsersTableSeeder extends Seeder
 
                 foreach(range(1, 10) as $index)
                 {
-                    User::create([
+                    $u = User::create([
                     'name' => $faker->name,
                     'username' => $faker->userName,
                     'email' => $faker->email,
+                     'bio' =>  $faker->sentence(),
                     'password' => Hash::make('1231231231')
                     ]);
+
+                    ProfileImg::setDefaultProfileImages($u);
                 }
 
-        User::create([
+        $x = User::create([
             'name' => 'Nathan Feiglin',
             'username' => 'nfeiglin',
             'email' => 'nathan.f1234@gmail.com',
             'password' => Hash::make('1231231231')
         ]);
+
+        ProfileImg::setDefaultProfileImages($x);
     }
 
 }
