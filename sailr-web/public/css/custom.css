@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+@media (min-width: 768px) {
+    .row { margin-right: 0; margin-left: 0; }
+}
+
+body {
+    background-color: #ffffff;
+}
+.white-depth {
+    z-index: 25;
+    background-color: #dfdfdf;
+    border-top: 1px solid #dddddd;
+
+
+}
+nav {
+    margin-bottom: 0 !important;
+}
+#backgroundSwag {
+    z-index: 400;
+    background: url('../images/swag-bg.jpg') no-repeat;
+    /* http://i.imgur.com/sSVfDpU.jpg */
+    position: relative;
+    padding-top: 150px;
+    padding-bottom: 0px;
+}
+
+#backgroundSwag h1 {
+    color: #ffffff;
+}
+
+#backgroundSwag .container h1 {
+    margin-bottom: 0;
+}
+
+.btn .clear {
+    background-color: inherit;
+    border-radius: 3px 3px 3px 3px;
+    border-color: #ffffff;
+}
