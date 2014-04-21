@@ -16,6 +16,7 @@ class CreatePayresponsesTable extends Migration {
 		{
 			$table->increments('id');
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('item_id');
 			$table->string('paymentExecStatus', 50);
 			$table->string('payKey');
 			$table->timestamps();

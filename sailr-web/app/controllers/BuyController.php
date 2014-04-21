@@ -18,7 +18,7 @@ class BuyController extends \BaseController
                 },
             'User' => function ($y) {
                 }
-        ])->get();
+        ])->firstOrFail();
 
         $domesticShippingPrice = $item->shipping->type->Domestic->price;
         $internationalShippingPrice = $item->shipping->type->International->price;
@@ -101,6 +101,7 @@ class BuyController extends \BaseController
         $dbPayResponse->paymentExecStatus = $payResponse->paymentExecStatus;
         $dbPayResponse->payKey = $payResponse->payKey;
         $dbPayResponse->user_id = Auth::user()->id;
+        $dbPayResponse->item_id = $item->id;
         $dbPayResponse->save();
 
         //Now, redirect user to Paypal, where they can complete the payment.
