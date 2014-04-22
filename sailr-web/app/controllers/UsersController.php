@@ -3,17 +3,6 @@
 class UsersController extends \BaseController
 {
 
-    /**
-     * Display a listing of users
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        $users = User::all();
-
-        return View::make('users.index', compact('users'));
-    }
 
     /**
      * Show the form for creating a new user
@@ -33,6 +22,7 @@ class UsersController extends \BaseController
     public function store()
     {
         $input = Input::all();
+
         $validator = Validator::make($input, User::$rules);
         if ($validator->fails()) {
             $res = array(

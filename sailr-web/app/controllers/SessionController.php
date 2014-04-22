@@ -3,6 +3,9 @@
 class SessionController extends BaseController
 {
 
+    public function create() {
+        return View::make('session.create')->with('title', 'Login');
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -28,22 +31,14 @@ class SessionController extends BaseController
             }
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return User::loginFailResponse();
+
         }
 
         if (!$a) {
-            return User::loginFailResponse();
+            return Redirect::back()->with('message', 'Username , email or password is incorrect')->withInput($input);
         }
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => 'Logged in successfully'
-            ),
-
-            'data' => $user->toArray()
-        );
-        return Response::json($res);
+        return Redirect::back()->with('message', 'Logged in :)');
     }
 
 
