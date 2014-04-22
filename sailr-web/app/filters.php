@@ -13,12 +13,35 @@
 
 App::before(function ($request) {
     //
+
+
 });
 
 
 App::after(function ($request, $response) {
     //
 });
+
+
+View::composer('session.create', function (\Illuminate\View\View $view) {
+       $view->with('hasNavbar', 0);
+
+
+});
+
+View::composer('user.create', function (\Illuminate\View\View $view) {
+    $view->with('hasNavbar', 0);
+
+
+});
+
+View::composer('password.remind', function (\Illuminate\View\View $view) {
+    $view->with('hasNavbar', 0);
+
+
+});
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,16 +58,16 @@ Route::filter('auth', function () {
     if (Auth::guest()) return Redirect::guest('login');
 });
 
-Route::filter('json_auth', function() {
-   if(Auth::guest()) {
-       $res = array(
-           'meta' => array(
-               'statuscode' => 401,
-               'message' => 'Please sign in'
-           )
-       );
-       return Response::json($res, 201);
-   }
+Route::filter('json_auth', function () {
+    if (Auth::guest()) {
+        $res = array(
+            'meta' => array(
+                'statuscode' => 401,
+                'message' => 'Please sign in'
+            )
+        );
+        return Response::json($res, 201);
+    }
 });
 
 Route::filter('auth.basic', function () {
