@@ -9,15 +9,19 @@
 </head>
 
 <body>
-    @include('parts.navbar')
-    <div id="backgroundSwag" class="jumbotron">
-        <div class="container">
-            <h1>{{ $title }}</h1>
+    @if($hasNavbar == 1)
+        @include('parts.navbar')
+        <div id="backgroundSwag" class="jumbotron">
+            <div class="container">
+                <h1>{{ $title }}</h1>
+            </div>
         </div>
-     </div>
+    @endif
+
     <div class="row">
             <div class="container">
-                <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12 white-depth">
+                @if(isset($message))<div class="alert alert-warning">{{ $message}}</div> @endif
+                <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
 
                     @yield('content')
                 </div>
