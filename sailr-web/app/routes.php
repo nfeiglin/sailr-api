@@ -25,6 +25,7 @@ Route::get('test', function() {
 Route::controller('password', 'RemindersController');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 
-Route::post('login', 'SessionController@store');
+Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
+Route::get('login', 'SessionController@create');
 Route::get('logout', 'SessionController@destroy');
 
