@@ -35,10 +35,10 @@ class SessionController extends BaseController
         }
 
         if (!$a) {
-            return Redirect::back()->with('message', 'Username , email or password is incorrect')->withInput($input);
+            return Redirect::back()->with('message', 'Username, email or password is incorrect')->withInput(Input::only('username'));
         }
 
-        return Redirect::back()->with('message', 'Logged in :)');
+        return Redirect::action('UsersController@self_feed');
     }
 
 

@@ -13,16 +13,7 @@ class ProfileImageController extends \BaseController
         $files = Request::instance()->files->get('photos');
         $p = Photo::validateImages($files);
 
-        if (!$p) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 415,
-                    'message' => 'Invalid image',
-                    'errors' => ['Your image is an invalid format']
-                )
-            );
-            return Response::json($res, 415);
-        }
+            return Redirect::back()->with('errror', 'Invalid image');
 
         ProfileImg::resizeAndStoreUploadedImages($files, Auth::user());
 

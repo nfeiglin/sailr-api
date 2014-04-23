@@ -13,19 +13,30 @@ use Intervention\Image\Facades;
 */
 
 
+View::composer('*', function($view) {
+	if(!array_key_exists('hasNavbar', $view->getData())) {
+		$view->with('hasNavbar', 1);
+	}
+});
+
 Route::get('/', function () {
     return View::make('index');
 });
 
 Route::get('test', function() {
-   return View::make('test')->with('title', 'Test title');
+   return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
 });
 
 
 Route::controller('password', 'RemindersController');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 
+Route::resource('user', 'UsersController', ['only' => ['create', 'store', 'show']]);
+
 Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
 Route::get('login', 'SessionController@create');
 Route::get('logout', 'SessionController@destroy');
+
+
+Route::get('/', 'UsersController@self_feed', ['before' => ['auth']]);
 

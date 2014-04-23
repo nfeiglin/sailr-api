@@ -29,7 +29,7 @@ View::composer('session.create', function (\Illuminate\View\View $view) {
 
 });
 
-View::composer('user.create', function (\Illuminate\View\View $view) {
+View::composer('users.create', function (\Illuminate\View\View $view) {
     $view->with('hasNavbar', 0);
 
 
@@ -40,7 +40,6 @@ View::composer('password.remind', function (\Illuminate\View\View $view) {
 
 
 });
-
 
 
 /*

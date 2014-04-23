@@ -23,9 +23,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call('UsersTableSeeder');
         $this->call('RelationshipsTableSeeder');
-        $this->call('ItemsTableSeeder');
         */
-        $this->call('ProfileImgsTableSeeder');
+        
+        $this->call('ItemsTableSeeder');
+        
+        //$this->call('ProfileImgsTableSeeder');
     }
 
 }

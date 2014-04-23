@@ -3,7 +3,6 @@ body {
     padding-bottom: 40px;
     /* background-color: #eee; */
     background: url('../images/swag-bg.jpg');
-    overflow: hidden;
 }
 
 .form-signin {
@@ -50,4 +49,9 @@ form .form-signin img {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.register input {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

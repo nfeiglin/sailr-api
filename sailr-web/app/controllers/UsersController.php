@@ -11,7 +11,7 @@ class UsersController extends \BaseController
      */
     public function create()
     {
-        return View::make('users.create');
+        return View::make('users.create')->with('title', 'Sign up');
     }
 
     /**
@@ -22,18 +22,13 @@ class UsersController extends \BaseController
     public function store()
     {
         $input = Input::all();
+        Input::flash();
 
         $validator = Validator::make($input, User::$rules);
         if ($validator->fails()) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Invalid data',
-                    'errors' => $validator->messages()->all()
-                )
-            );
-            return Response::json($res, 400);
+            return Redirect::back()->withErrors($validator);
         }
+
         $input['password'] = Hash::make($input['password']);
 
         $input['name'] = e($input['name']);
@@ -44,20 +39,11 @@ class UsersController extends \BaseController
         $user = User::create($input);
 
         //We don't want to see the just created user's following / followers!
-        $user->setAppends(array());
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 201,
-                'message' => 'Account successfully created'
-            ),
-
-            'data' => $user->toArray()
-        );
         Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
         ProfileImg::setDefaultProfileImages($user);
 
-        return Response::json($res, 201);
+        return Redirect::to('/')->with('message', 'Signed up! Welcome to Sailr');
     }
 
     /**
@@ -210,6 +196,7 @@ class UsersController extends \BaseController
 
             'Photos' => function ($y) {
                     $y->select(['item_id', 'type', 'url']);
+                    $y->where(['type', '=', 'full_res']);
                 },
 
             'User' => function ($q) {
@@ -227,7 +214,7 @@ class UsersController extends \BaseController
             'data' => $items
         );
 
-        return Response::json($res);
+        return View::make('users.feed')->with('items', $items)->with('title', 'Home');
     }
 
 }
