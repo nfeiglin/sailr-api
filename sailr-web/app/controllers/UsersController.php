@@ -49,12 +49,12 @@ class UsersController extends \BaseController
     /**
      * Display the specified user.
      *
-     * @param  int $id
+     * @param  string $username
      * @return Response
      */
-    public function show($id)
+    public function show($username)
     {
-        $user = User::where('id', '=', $id)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
+        $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
         if (!$user) {
             $res = array(
                 'meta' => array(
@@ -174,7 +174,10 @@ class UsersController extends \BaseController
     }
 
     public function self_feed()
-    {
+    {   
+        //How many results per page?
+        $resultsPerPage = 30;
+        
         $user = Auth::user();
         $following = Relationship::where('user_id', '=', $user->id)->get(array('follows_user_id'));
         $following = $following->toArray();
@@ -192,29 +195,52 @@ class UsersController extends \BaseController
          */
 
         $arrayOne[(count($arrayOne) + 1)] = $user->id;
+
         $items = Item::whereIn('user_id', $arrayOne)->with(array(
 
             'Photos' => function ($y) {
+                    $y->where('type', '=', 'full_res');
                     $y->select(['item_id', 'type', 'url']);
-                    $y->where(['type', '=', 'full_res']);
+                    
                 },
 
             'User' => function ($q) {
-                    $q->with('ProfileImg');
+                    $q->with([
+                            'ProfileImg' => function($z) {
+                                $z->where('type', '=', 'small');
+                                $z->first();
+                            }
+                        ]);
                     $q->select(['id', 'username', 'name']);
 
                 }
 
-        ))->orderBy('created_at', 'dsc')->get()->toArray();
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200
-            ),
+        ))->orderBy('created_at', 'dsc');
 
-            'data' => $items
-        );
+        $nextPageNumber = 2;
+        if(isset($_GET['page'])) {
+            $nextPageNumber = Input::get('page') + 1;
+        }
+        
+        $paginator = $items->paginate($resultsPerPage);
 
-        return View::make('users.feed')->with('items', $items)->with('title', 'Home');
+        $next_url = $paginator->getUrl($nextPageNumber);
+        $current_page = $paginator->getCurrentPage();
+        $max_page = $paginator->getLastPage();
+
+        $items = $items->get()->toArray();
+
+        echo $next_url;
+/*
+    $items['current_page'] = $current_page;
+    $items['max_page'] = $max_page;
+    $items['next_url'] = $next_url;
+*/
+
+        return View::make('users.feed')
+            ->with('items', $items)
+            ->with('title', 'Home')
+            ->with('paginator', $paginator);
     }
 
 }

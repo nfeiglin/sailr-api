@@ -32,6 +32,8 @@ Route::get('test', function() {
    return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
 });
 
+Route::get('buy/{id}/create', 'BuyController@create');
+Route::get('user/{username}', 'UsersController@show');
 
 Route::controller('password', 'RemindersController');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);

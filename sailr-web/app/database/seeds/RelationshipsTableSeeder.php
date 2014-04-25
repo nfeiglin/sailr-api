@@ -54,6 +54,17 @@ class RelationshipsTableSeeder extends Seeder
             'follows_user_id' => 3
         ]);
 
+        $nathan = User::where('username', '=', 'nfeiglin')->firstOrFail();
+
+        foreach (range(1, 10) as $i) {
+            Relationship::create([
+                'user_id' => $nathan->id,
+                'follows_user_id' => $i
+                ]
+            );
+
+        }
+
 
     }
 }

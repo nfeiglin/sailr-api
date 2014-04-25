@@ -56,3 +56,37 @@ nav {
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
 }
+
+.item-user {
+    /*
+    position: fixed;
+    height: 100px;
+    margin-bottom: 20px !important;
+    padding-bottom: 25px;
+*/
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #ffffff !important;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.item-user .username {
+    color: rgba(64, 64, 64, 1);
+}
+img .item-user {
+    height: 43px;
+    width: 43px;
+    float: left;
+
+}
+.item-user img {
+
+}
+
+.post-comment {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
