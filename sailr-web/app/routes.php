@@ -23,6 +23,11 @@ Route::get('/', function () {
     return View::make('index');
 });
 
+if (Auth::check()) {
+	Route::get('/', 'UsersController@self_feed', ['before' => ['auth']]);
+}
+
+
 Route::get('test', function() {
    return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
 });
@@ -38,5 +43,5 @@ Route::get('login', 'SessionController@create');
 Route::get('logout', 'SessionController@destroy');
 
 
-Route::get('/', 'UsersController@self_feed', ['before' => ['auth']]);
+
 
