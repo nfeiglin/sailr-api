@@ -82,11 +82,32 @@ img .item-user {
     float: left;
 
 }
-.item-user img {
 
+img.profile-img {
+    height: 30px;
+    width: 30px;
+    vertical-align: middle;
 }
 
 .post-comment {
     margin-top: 15px;
     margin-bottom: 15px;
+}
+
+.comment {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 0;
+    border-color: transparent;
+
+}
+
+button.del-btn {
+    margin: 0;
+    text-align: right;
+    float: right;
+    vertical-align: middle;
+    bottom: 0;
 }
