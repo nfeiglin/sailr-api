@@ -8,8 +8,8 @@
 			{{-- <pre> json_encode($item) </pre> --}}
 			<div class="item" id="{{ $item['id'] }}">
 				<div class="item-user panel panel-default">
-						<a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img"></a>
-						<a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
+						<a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
+						<a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username text-primary">{{ '@' . $item['user']['username'] }}</a>
 				</div>
 
 				<div class="thumbnail">
@@ -30,7 +30,7 @@
         				<a href="{{ action('BuyController@create', $item['id']) }}" class="btn btn-primary btn-lg btn-block h3" role="button">Buy now for {{$item['currency']}}{{$item['price']}}</a>
        						@if($item['user']['id'] == Auth::user()->id)
 							{{ Form::open(['action' => array('ItemsController@destroy', $item['id']), 'method' => 'delete']) }}
-							{{Form::toke()}}
+							{{Form::token()}}
 								<button value="submit" class="glyphicon glyphicon-trash btn btn-danger btn-sm del-btn"></button>
 							{{Form::close()}}
 						@endif
@@ -46,7 +46,7 @@
         				@foreach($item['comment'] as $comment)
         					<?php $comment['user']['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
 	        				<div class="panel panel-default item-user comment">
-	        					<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"><img src="{{ $comment['user']['profile_img'][0]['url'] }}" class="profile-img"></a>
+	        					<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"><img src="{{ $comment['user']['profile_img'][0]['url'] }}" class="profile-img img-circle"></a>
 								<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"class="h6 text-primary">{{ '@' . $comment['user']['username'] }}</a>
 								<span class="h6">{{{ $comment['comment'] }}}</span>
 

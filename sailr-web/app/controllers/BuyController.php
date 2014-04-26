@@ -13,17 +13,36 @@ class BuyController extends \BaseController
      */
     public function create($id)
     {
-        $item = Item::findOrFail($id)->with([
+        echo 'ID IS :::';
+        echo $id;
+        $item = Item::where('id', '=', $id)->with([
             'Shipping' => function ($x) {
+                $x->select(['item_id', 'type', 'price', 'desc']);
                 },
             'User' => function ($y) {
-                }
+                $y->with([
+                            'ProfileImg' => function($z) {
+                                $z->where('type', '=', 'small');
+                                $z->first();
+                            }
+                        ]);
+                    $y->select(['id', 'username', 'name']);
+                },
+
+                'Photos' => function ($y) {
+                    $y->where('type', '=', 'full_res');
+                    $y->select(['item_id', 'type', 'url']);
+                    
+                },
         ])->firstOrFail();
 
-        $domesticShippingPrice = $item->shipping->type->Domestic->price;
-        $internationalShippingPrice = $item->shipping->type->International->price;
+        //$domesticShippingPrice = $item->shipping->type->Domestic->price;
+        //$internationalShippingPrice = $item->shipping->type->International->price;
 
-        //return View::make('buy.create')
+        return View::make('buy.create')
+        ->with('title', 'Buying: ' .  $item->title)
+        ->with('item', $item->toArray());
+        ;
     }
 
     /**

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         Item::truncate();
         */
 
-        $this->call('CommentsTableSeeder');
+        //$this->call('CommentsTableSeeder');
         //$this->call('UsersTableSeeder');
         //$this->call('RelationshipsTableSeeder');
 
@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
         //$this->call('ItemsTableSeeder');
         
         //$this->call('ProfileImgsTableSeeder');
+
+        $this->call('ShippingsTableSeeder');
     }
 
 }
