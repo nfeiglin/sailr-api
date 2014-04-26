@@ -13,8 +13,7 @@ class BuyController extends \BaseController
      */
     public function create($id)
     {
-        echo 'ID IS :::';
-        echo $id;
+
         $item = Item::where('id', '=', $id)->with([
             'Shipping' => function ($x) {
                 $x->select(['item_id', 'type', 'price', 'desc']);
@@ -53,6 +52,7 @@ class BuyController extends \BaseController
      */
     public function store($id)
     {
+        return Redirect::back()->with('fail', 'test message mz');
         $input = Input::all();
         $item = Item::findOrFail($id)->with([
             'Shipping' => function ($x) {

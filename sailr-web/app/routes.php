@@ -12,9 +12,10 @@ use Intervention\Image\Facades;
 |
 */
 
+/*
 Event::listen('illuminate.query', function($sql, $bindings, $time){
-    echo $sql;          // select * from my_table where id=? 
-    print_r($bindings); // Array ( [0] => 4 )
+    //echo $sql;          // select * from my_table where id=? 
+    //print_r($bindings); // Array ( [0] => 4 )
     echo $time;         // 0.58 
 
     // To get the full sql query with bindings inserted
@@ -22,6 +23,8 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
     $full_sql = vsprintf($sql, $bindings);
     echo '<pre>' . $full_sql . '</pre>';
 });
+*/
+
 View::composer('*', function($view) {
 	if(!array_key_exists('hasNavbar', $view->getData())) {
 		$view->with('hasNavbar', 1);
@@ -33,7 +36,7 @@ Route::get('/', function () {
 });
 
 if (Auth::check()) {
-	Route::get('/', 'UsersController@self_feed', ['before' => ['auth']]);
+	Route::get('/', 'UsersController@self_feed');
 }
 
 
@@ -45,9 +48,12 @@ Route::get('buy/{id}/create', 'BuyController@create');
 Route::get('user/{username}', 'UsersController@show');
 
 Route::controller('password', 'RemindersController');
+
+Route::post('buy/{id}', 'BuyController@store');
+
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
-Route::resource('user', 'UsersController', ['only' => ['create', 'store', 'show']]);
+Route::resource('self/user', 'UsersController', ['only' => ['create', 'store', 'show']]);
 Route::resource('items', 'ItemsController');
 
 Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);

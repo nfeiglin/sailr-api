@@ -111,3 +111,17 @@ button.del-btn {
     vertical-align: middle;
     bottom: 0;
 }
+
+.item {
+    padding-bottom: 20px;
+}
+
+button.paypal-btn {
+    background: url('../images/pp.png') no-repeat;
+    background-size: contain;
+    color: transparent;
+}
+
+button.paypal-btn:hover {
+    color: transparent;
+}

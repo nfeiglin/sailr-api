@@ -9,7 +9,7 @@ class RemindersController extends Controller {
 	 */
 	public function getRemind()
 	{
-		return View::make('password.remind');
+		return View::make('password.remind')->with('title', 'Forgot password');
 	}
 
 	/**
@@ -22,7 +22,7 @@ class RemindersController extends Controller {
 		switch ($response = Password::remind(Input::only('email')))
 		{
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', Lang::get($response));
+				return Redirect::back()->with('message', Lang::get($response));
 
 			case Password::REMINDER_SENT:
 				return Redirect::back()->with('status', Lang::get($response));
@@ -68,7 +68,7 @@ class RemindersController extends Controller {
 				return Redirect::back()->with('error', Lang::get($response));
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/');
+				return Redirect::to('/login')->with('success', 'Password successfully reset.');
 		}
 	}
 
