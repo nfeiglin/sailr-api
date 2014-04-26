@@ -7,14 +7,22 @@ class CommentsTableSeeder extends Seeder {
 
 	public function run()
 	{
+		Comment::truncate();
 		$faker = Faker::create();
 
-		foreach(range(1, 10) as $index)
-		{
-			Comment::create([
+	foreach (User::all() as $user) {
 
-			]);
+			foreach(Item::all() as $item)
+			{
+				Comment::create([
+					'item_id' => $item->id,
+					'user_id' => $user->id,
+					'comment' => 'Srsly an amazing comment my gawd'
+				]);
+
+			}
 		}
+
 	}
 
 }

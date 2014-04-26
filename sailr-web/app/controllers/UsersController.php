@@ -213,7 +213,24 @@ class UsersController extends \BaseController
                         ]);
                     $q->select(['id', 'username', 'name']);
 
+                },
+
+            'Comment' => function($comment) {
+                $comment->select(['id', 'item_id', 'user_id', 'comment', 'created_at']);
+                $comment->orderBy('created_at', 'dsc');
+
+                $comment->with([
+                    'User' => function($user) {
+                       $user->select(['id', 'name', 'username']);
+                        $user->with([
+                            'ProfileImg' => function($img) {
+                                $img->where('type', '=', 'small');
+                            }
+                        ]);  
                 }
+
+                ]);
+}
 
         ))->orderBy('created_at', 'dsc');
 
@@ -230,7 +247,7 @@ class UsersController extends \BaseController
 
         $items = $items->get()->toArray();
 
-        echo $next_url;
+        //echo $next_url;
 /*
     $items['current_page'] = $current_page;
     $items['max_page'] = $max_page;

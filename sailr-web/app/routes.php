@@ -37,8 +37,9 @@ Route::get('user/{username}', 'UsersController@show');
 
 Route::controller('password', 'RemindersController');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
-
+Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
 Route::resource('user', 'UsersController', ['only' => ['create', 'store', 'show']]);
+Route::resource('items', 'ItemsController');
 
 Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
 Route::get('login', 'SessionController@create');

@@ -22,8 +22,9 @@ class DatabaseSeeder extends Seeder
         Item::truncate();
         */
 
+        $this->call('CommentsTableSeeder');
         //$this->call('UsersTableSeeder');
-        $this->call('RelationshipsTableSeeder');
+        //$this->call('RelationshipsTableSeeder');
 
         
         //$this->call('ItemsTableSeeder');
