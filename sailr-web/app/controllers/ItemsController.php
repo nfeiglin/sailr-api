@@ -123,16 +123,9 @@ class ItemsController extends BaseController
      */
     public function destroy($id)
     {
-        $item = Item::findOrFail($id);
-        if (!$item->user_id == Auth::user()->id) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 403,
-                    'message' => 'Not authorised to delete that post'
-                )
-            );
-
-            return Response::json($res, 403);
+        $item = Item::where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+        if ($item->user_id != Auth::user()->id) {
+            return Redirect::back()->with('message', 'Not authorised to delete that post');
         }
 
         $photos = Photo::where('item_id', '=', $item->id);
@@ -143,14 +136,7 @@ class ItemsController extends BaseController
          * TODO: When calling these from buyer's panel, use "whereTrashed"
          */
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => $item->title . ' deleted successfully'
-            )
-        );
-
-        return Response::json($res, 200);
+        return Redirect::back()->with('success', $item->title . ' deleted successfully');
 
     }
 

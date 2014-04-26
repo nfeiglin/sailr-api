@@ -14,14 +14,7 @@ class CommentsController extends \BaseController
         $validator = Validator::make($input, Comment::$rules);
 
         if ($validator->fails()) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Oh no! There is an issue with your comment',
-                    'errors' => $validator->messages()->all()
-                )
-            );
-            return Response::json($res, 400);
+            return Redirect::back()->with('message', 'Oh no! There is an issue with your comment.')->withErrors($validator);
         }
 
 
@@ -34,14 +27,7 @@ class CommentsController extends \BaseController
 
         Event::fire('comment.store', $comment);
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 201,
-                'message' => 'Comment successfully created'
-            ),
-            'data' => $comment->toArray()
-        );
-        return Response::json($res, 201);
+        return Redirect::back()->with('success', 'Woo! Comment posted successfully!');
     }
 
     /**
@@ -93,14 +79,7 @@ class CommentsController extends \BaseController
         Event::fire('comment.destroy', $comment);
         $comment->delete();
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => 'Comment successfully deleted'
-            ),
-
-        );
-        return Response::json($res, 200);
+        return Redirect::back()->with('success', 'Comment successfully deleted.');
     }
 
 }
