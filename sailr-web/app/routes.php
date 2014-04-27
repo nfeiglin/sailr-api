@@ -45,7 +45,10 @@ Route::get('test', function() {
 });
 
 Route::get('buy/{id}/create', 'BuyController@create');
-Route::get('user/{username}', 'UsersController@show');
+Route::get('/{username}', 'UsersController@show');
+Route::get('/@{username}', function($username) {
+    return Redirect::to(action('UsersController@show', $username));
+});
 
 Route::controller('password', 'RemindersController');
 

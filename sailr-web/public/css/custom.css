@@ -125,3 +125,9 @@ button.paypal-btn {
 button.paypal-btn:hover {
     color: transparent;
 }
+
+.swag {
+    background-color: red;
+    background: url('.../images/swag-bg.jpg') no-repeat;
+    background-size: cover;
+}

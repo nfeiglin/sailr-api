@@ -54,27 +54,28 @@ class UsersController extends \BaseController
      */
     public function show($username)
     {
+        //How many results per page?
+        $resultsPerPage = 30;
+        
         $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
         if (!$user) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 404,
-                    'message' => 'User not found'
-                )
-            );
-            return Response::json($res, 404);
+
+            return App::abort(404);
         }
+        $items = Item::where('user_id', '=', $user->id)->with('Photos');
+
+        $paginator = $items->paginate($resultsPerPage);
+        $items->get()->toArray();
+
         $user->setAppends(['counts']);
-        $res = array(
-            'meta' => array(
-                'responsecode' => 200,
-                'url' => 'http://sailr.co/' . $user->username,
-            ),
-            'data' => $user->toArray()
-        );
+        $user->toArray();
 
-
-        return Response::json($res);
+        return View::make('users.show')
+        ->with('title', $user['username'])
+        ->with('user', $user)
+        ->with('items', $items)
+        ->with('paginator', $paginator)
+        ;
     }
 
     /**

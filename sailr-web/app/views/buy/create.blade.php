@@ -9,13 +9,13 @@
 			<h2>Item Info</h2>
 				<div class="row">
 
-      				<h3>Price</h3>
-      				<p class="h4">{{ $item['currency']}}{{$item['price']}}</p>
+      				<h4>Price</h4>
+      				<p>{{ $item['currency']}}{{$item['price']}}</p>
       				
-      				<h3>Shipping</h3>
+      				<h4>Shipping</h4>
       					@foreach($item['shipping'] as $shipping)
       						<div class="col-md-6 col-lg-6">
-      								<h4>{{ $shipping['type'] }}</h4>
+      								<h5 class="text-primary">{{ $shipping['type'] }}</h5>
       								<p class="h5">{{ $item['currency']}}{{$shipping['price']}}</p>
       								<p class="h5">{{{ $shipping['desc'] }}}</p>
       						</div>
@@ -48,8 +48,8 @@
  	</div>
 
     	<h2>Your Info</h2>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-sm-5 col-xs-12 panel panel-primary">
-    	{{ Form::open(['action' => ['BuyController@store', $item['id']], 'class' => 'form-horizontal', 'autocomplete', 'off']) }}
+    <div class="col-lg-6 col-md-6 col-sm-6 col-sm-5 col-xs-12 jumbotron swag" style="background: url('{{ URL::asset('images/swag-bg.jpg') }}' no-repeat;">
+    	{{ Form::open(['action' => ['BuyController@store', $item['id']], 'class' => 'form-horizontal', 'autocomplete' => 'off', 'validate', 'validate']) }}
     	{{ Form::token() }}
     	<h3>The Basics</h3>
     	<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -88,7 +88,7 @@
     		<input type="text" placeholder="Country" name="country" class="form-control" id="country" required="required">
     	</div>
 </div>
-	<p class="h4 form-control-static col-md-8">Total price (including shipping):</p><p class="h4 form-control-static col-md-4" id="total-price">Enter address to calculate...</p>
+	<p class="form-control-static col-md-10 col-sm-8 col-lg-10">Total price (including shipping):</p><p class="form-control-static col-md-2 col-sm-4 col-lg-12" id="total-price"></p>
 	<button value="submit" class="btn btn-lg btn-block paypal-btn">Checkout with Paypal</button>
     	{{ Form::close() }}
     </div>
