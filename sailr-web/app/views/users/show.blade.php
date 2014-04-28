@@ -1,18 +1,17 @@
 @extends('layout.main')
 	@section('content')
-	HELLO
 	<pre>{{ print_r($items) }}</pre>
 	<pre>{{ print_r($user) }}</pre>
 
 		<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 well well-sm">
 			
 			@foreach($items as $item)
-			<?php $item['user']['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
+			<?php $user['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
 			{{-- <pre> json_encode($item) </pre> --}}
 			<div class="item" id="{{ $item['id'] }}">
 				<div class="item-user panel panel-default">
-						<a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
-						<a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username text-primary">{{ '@' . $item['user']['username'] }}</a>
+						<a href="{{ action('UsersController@show', $user['username']) }}"><img src="{{ $user['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
+						<a href="{{ action('UsersController@show', $user['username']) }}" class="h4 name">{{ $user['name'] }} </a> <a href="{{ action('UsersController@show', $user['username']) }}"class="h5 username text-primary">{{ '@' . $user['username'] }}</a>
 				</div>
 
 				<div class="thumbnail">
@@ -31,7 +30,7 @@
 
       				<div class="caption">
         				<a href="{{ action('BuyController@create', $item['id']) }}" class="btn btn-primary btn-lg btn-block h3" role="button">Buy now for {{$item['currency']}}{{$item['price']}}</a>
-       						@if($item['user']['id'] == Auth::user()->id)
+       						@if($user['id'] == Auth::user()->id)
 							{{ Form::open(['action' => array('ItemsController@destroy', $item['id']), 'method' => 'delete']) }}
 							{{Form::token()}}
 								<button value="submit" class="glyphicon glyphicon-trash btn btn-danger btn-sm del-btn"></button>

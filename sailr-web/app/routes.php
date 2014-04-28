@@ -45,10 +45,12 @@ Route::get('test', function() {
 });
 
 Route::get('buy/{id}/create', 'BuyController@create');
-Route::get('/{username}', 'UsersController@show');
+
 Route::get('/@{username}', function($username) {
     return Redirect::to(action('UsersController@show', $username));
 });
+Route::get('/{username}', 'UsersController@show');
+
 
 Route::controller('password', 'RemindersController');
 
@@ -62,7 +64,7 @@ Route::resource('items', 'ItemsController');
 Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
 Route::get('login', 'SessionController@create');
 Route::get('logout', 'SessionController@destroy');
-
+Route::get('signup', 'UsersController@create');
 
 
 

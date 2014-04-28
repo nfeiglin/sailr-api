@@ -54,22 +54,28 @@ class UsersController extends \BaseController
      */
     public function show($username)
     {
+
         //How many results per page?
         $resultsPerPage = 30;
-        
-        $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
-        if (!$user) {
 
-            return App::abort(404);
+        $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
+    //dd($user->id);
+
+        if (!$user->username) {
+            dd('shoddw');
+            return "Not found";
         }
-        $items = Item::where('user_id', '=', $user->id)->with('Photos');
+        $items = Item::where('user_id', '=', $user->id)->with(['Photos', 'Comment' => function($x) {
+                $x->with('User');
+            }]);
 
         $paginator = $items->paginate($resultsPerPage);
-        $items->get()->toArray();
+        $items = $items->get();
+        $items = $items->toArray();
 
-        $user->setAppends(['counts']);
-        $user->toArray();
 
+        $user = $user->toArray();
+        //dd($user);
         return View::make('users.show')
         ->with('title', $user['username'])
         ->with('user', $user)

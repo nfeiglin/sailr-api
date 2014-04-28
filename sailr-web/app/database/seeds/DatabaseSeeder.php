@@ -22,16 +22,16 @@ class DatabaseSeeder extends Seeder
         Item::truncate();
         */
 
-        //$this->call('CommentsTableSeeder');
-        //$this->call('UsersTableSeeder');
-        //$this->call('RelationshipsTableSeeder');
+        $this->call('CommentsTableSeeder');
+        $this->call('UsersTableSeeder');
+        $this->call('RelationshipsTableSeeder');
 
         
-        //$this->call('ItemsTableSeeder');
+        $this->call('ItemsTableSeeder');
         
-        //$this->call('ProfileImgsTableSeeder');
+        $this->call('ProfileImgsTableSeeder');
 
-        $this->call('ShippingsTableSeeder');
+        //$this->call('ShippingsTableSeeder');
     }
 
 }
