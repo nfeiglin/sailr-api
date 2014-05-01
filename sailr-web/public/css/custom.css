@@ -127,7 +127,7 @@ button.paypal-btn:hover {
 }
 
 .swag {
-    background-color: red;
-    background: url('.../images/swag-bg.jpg') no-repeat;
+    background-color: inherit;
+    /* background: url('/images/swag-bg.jpg') no-repeat; */
     background-size: cover;
 }
