@@ -9,8 +9,8 @@ class ShippingsTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 1) as $index)
-		{	
+		foreach(range(1, 10) as $index)
+		{
 			$input = [
 				'domestic_shipping_price' => 7.99,
 				'domestic_shipping_desc' => 'Will ship everywhere in Australia',
@@ -19,7 +19,7 @@ class ShippingsTableSeeder extends Seeder {
 
 			];
 
-			$item_id = 7;
+			$item_id = $index;
 			$itemcontroller = new ItemsController();
 			$itemcontroller->doShippingFromInput($input, $item_id);
 		}
