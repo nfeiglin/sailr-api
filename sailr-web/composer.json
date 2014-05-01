@@ -9,7 +9,7 @@
 		"way/generators": "dev-master",
         "fzaninotto/faker": "v1.3.0",
         "intervention/image":"1.*",
-        "paypal/adaptivepayments-sdk-php":"v2.5.106"
+        "paypal/merchant-sdk-php":"v2.5.106"
 
 
 	},

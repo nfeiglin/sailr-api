@@ -41,7 +41,7 @@ class BuyController extends \BaseController
         return View::make('buy.create')
         ->with('title', 'Buying: ' .  $item->title)
         ->with('item', $item->toArray());
-        ;
+
     }
 
     /**
@@ -52,7 +52,13 @@ class BuyController extends \BaseController
      */
     public function store($id)
     {
-        return Redirect::back()->with('fail', 'test message mz');
+        /*
+         * Paypal express checkout smaple code
+         * https://github.com/paypal/codesamples-php/blob/master/Merchant/sample/code/SetExpressCheckout.php
+         * https://github.com/paypal/codesamples-php/blob/master/Merchant/sample/code/DoExpressCheckout.php
+         *
+         *
+         */
         $input = Input::all();
         $item = Item::findOrFail($id)->with([
             'Shipping' => function ($x) {
@@ -63,7 +69,7 @@ class BuyController extends \BaseController
 
         $validator = Validator::make($input, BuyController::$rules);
         if ($validator->fails()) {
-            return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors($validator->errors());
+            return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors();
 
         }
 
@@ -78,6 +84,13 @@ class BuyController extends \BaseController
 
         //Calculate the amount the needs to be paid
         $total = $item->price + $shippingFee;
+        $returnURL = '';
+        $cancelURL = '';
+
+        $setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
+        $setExpressCheckoutRequestDetails->ReturnURL = $returnURL;
+        $setExpressCheckoutRequestDetails->CancelURL = $cancelURL;
+
 
         //Make the Paypal payment
         $payRequest = new PayRequest();
