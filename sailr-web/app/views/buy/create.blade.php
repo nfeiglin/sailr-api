@@ -50,7 +50,7 @@
     	<h2>Your Info</h2>
     <div class="col-lg-6 col-md-6 col-sm-6 col-sm-5 col-xs-12 jumbotron swag" style="background: url('{{ URL::asset('images/swag-bg.jpg') }}' no-repeat;">
     	{{ Form::open(['action' => ['BuyController@store', $item['id']], 'class' => 'form-horizontal', 'autocomplete' => 'off', 'validate', 'validate']) }}
-    	{{ Form::token() }}
+
     	<h3>The Basics</h3>
     	<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
     		<p class="form-control-static">{{{ Auth::user()->name }}}</p>

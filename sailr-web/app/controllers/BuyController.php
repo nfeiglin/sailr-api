@@ -59,75 +59,187 @@ class BuyController extends \BaseController
          *
          *
          */
+
+        /*
+              '_token' => string '2fNauE5l2OGRV3Z45hPn5B5nKGGNNqgthfwmGP7z' (length=40)
+  'street_number' => string '275' (length=3)
+  'street_name' => string 'Kent St' (length=7)
+  'city' => string 'Sydney' (length=6)
+  'state' => string 'NSW' (length=3)
+  'zipcode' => string '2000' (length=4)
+  'country' => string 'Australia' (length=9)
+         */
         $input = Input::all();
-        $item = Item::findOrFail($id)->with([
-            'Shipping' => function ($x) {
-                },
-            'User' => function ($y) {
-                }
-        ])->get();
+        $u = new User();
+        $u->setHidden([]);
+
+        $item = Item::where('id', '=', $id)->with([
+        'Shipping' => function ($x) {
+            },
+        'User' => function ($y) {
+
+            }
+    ])->firstOrFail();
+
+        $itemArray = $item->toArray();
+
 
         $validator = Validator::make($input, BuyController::$rules);
         if ($validator->fails()) {
-            return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors();
+            return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors($validator);
 
         }
 
         $shippingFee = 0.00;
         if ($item->country == $input['country']) {
             //Charge domestic shipping
-            $shippingFee = $item->shipping->type->Domestic->price;
+            $shippingFee = $item['shipping'][0]['price'];
         } else {
             //Charge international shipping fee
-            $shippingFee = $item->shipping->type->International->price;
+            $shippingFee = $itemArray['shipping'][1]['price'];
         }
 
         //Calculate the amount the needs to be paid
         $total = $item->price + $shippingFee;
         $returnURL = '';
         $cancelURL = '';
+        $paymentAction = 'Sale';
+        $address1 = $input['street_number'] . ' ' . $input['street_name'];
+        $config = Config::get('paypal.sandbox');
+
 
         $setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
         $setExpressCheckoutRequestDetails->ReturnURL = $returnURL;
         $setExpressCheckoutRequestDetails->CancelURL = $cancelURL;
 
 
-        //Make the Paypal payment
-        $payRequest = new PayRequest();
-        $receiver = array();
+// ### Payment Information
+        // list of information about the payment
+        $paymentDetailsArray = array();
 
-        $receiver[0] = new Receiver();
-        $receiver[0]->amount = $total;
-        $receiver[0]->email = $item->user->email;
+        // information about the first payment
+        $paymentDetails1 = new PaymentDetailsType();
 
-        $receiverList = new ReceiverList($receiver);
-        $payRequest->receiverList = $receiverList;
+        // Total cost of the transaction to the buyer. If shipping cost and tax
+        // charges are known, include them in this value. If not, this value
+        // should be the current sub-total of the order.
+        //
+        // If the transaction includes one or more one-time purchases, this field must be equal to
+        // the sum of the purchases. Set this field to 0 if the transaction does
+        // not include a one-time purchase such as when you set up a billing
+        // agreement for a recurring payment that is not immediately charged.
+        // When the field is set to 0, purchase-specific fields are ignored.
+        //
+        // * `Currency Code` - You must set the currencyID attribute to one of the
+        // 3-character currency codes for any of the supported PayPal
+        // currencies.
+        // * `Amount`
 
-        //TODO: Finish these up
-        $requestEnvelope = new RequestEnvelope("en_US");
-        $payRequest->requestEnvelope = $requestEnvelope;
-        $payRequest->actionType = "PAY";
-        $payRequest->cancelUrl = "https://devtools-paypal.com/guide/ap_simple_payment/php?cancel=true";
-        $payRequest->returnUrl = "https://devtools-paypal.com/guide/ap_simple_payment/php?success=true";
-        $payRequest->currencyCode = $item->currency;
-        $payRequest->ipnNotificationUrl = "http://replaceIpnUrl.com";
+        $orderTotal1 = new BasicAmountType($item->currency, $total);
+        $paymentDetails1->OrderTotal = $orderTotal1;
 
-        //TODO: Change this to production when ready!
-        $sdkConfig = Config::get('paypal.sandbox');
+        // How you want to obtain payment. When implementing parallel payments,
+        // this field is required and must be set to `Order`. When implementing
+        // digital goods, this field is required and must be set to `Sale`. If the
+        // transaction does not include a one-time purchase, this field is
+        // ignored. It is one of the following values:
+        //
+        // * `Sale` - This is a final sale for which you are requesting payment
+        // (default).
+        // * `Authorization` - This payment is a basic authorization subject to
+        // settlement with PayPal Authorization and Capture.
+        // * `Order` - This payment is an order authorization subject to
+        // settlement with PayPal Authorization and Capture.
+        // `Note:
+        // You cannot set this field to Sale in SetExpressCheckout request and
+        // then change the value to Authorization or Order in the
+        // DoExpressCheckoutPayment request. If you set the field to
+        // Authorization or Order in SetExpressCheckout, you may set the field
+        // to Sale.`
+        $paymentDetails1->PaymentAction = $paymentAction;
 
-        $adaptivePaymentsService = new AdaptivePaymentsService($sdkConfig);
-        $payResponse = $adaptivePaymentsService->Pay($payRequest);
+        // Unique identifier for the merchant. For parallel payments, this field
+        // is required and must contain the Payer Id or the email address of the
+        // merchant.
+        $sellerDetails1 = new SellerDetailsType();
+        $sellerDetails1->PayPalAccountID = $item->user->email;
+        $paymentDetails1->SellerDetails = $sellerDetails1;
+
+        // A unique identifier of the specific payment request, which is
+        // required for parallel payments.
+        $paymentDetails1->PaymentRequestID = sha1(microtime());
+
+        // `Address` to which the order is shipped, which takes mandatory params:
+        //
+        // * `Street Name`
+        // * `City`
+        // * `State`
+        // * `Country`
+        // * `Postal Code`
+        $shipToAddress1 = new AddressType();
+        $shipToAddress1->Street1 = $address1;
+        $shipToAddress1->CityName = $input['city'];
+        $shipToAddress1->StateOrProvince = $input['state'];
+        $shipToAddress1->Country = $input['country'];
+        $shipToAddress1->PostalCode = $input['zipcode'];
+
+        // Your URL for receiving Instant Payment Notification (IPN) about this transaction. If you do not specify this value in the request, the notification URL from your Merchant Profile is used, if one exists.
+        $paymentDetails1->NotifyURL = "http://localhost/ipn";
+
+        $paymentDetails1->ShipToAddress = $shipToAddress1;
+
+        $paymentDetailsArray[0] = $paymentDetails1;
+
+        $setExpressCheckoutRequestDetails->PaymentDetails = $paymentDetailsArray;
+
+        $setExpressCheckoutReq = new SetExpressCheckoutReq();
+        $setExpressCheckoutRequest = new SetExpressCheckoutRequestType($setExpressCheckoutRequestDetails);
+
+        $setExpressCheckoutReq->SetExpressCheckoutRequest = $setExpressCheckoutRequest;
+
+        // ## Creating service wrapper object
+        // Creating service wrapper object to make API call and loading
+        // configuration file for your credentials and endpoint
+        $service = new PayPalAPIInterfaceServiceService($config);
+       // $response = new PayPalAPIInterfaceServiceService($config);
+        //try {
+            // ## Making API call
+            // Invoke the appropriate method corresponding to API in service
+            // wrapper object
+            $response = $service->SetExpressCheckout($setExpressCheckoutReq, $config);
+
+        //} catch (Exception $ex) {
+          //  Log::error("Error Message : " . $ex->getMessage());
+
+      //  }
+
+
+        // ## Accessing response parameters
+        // You can access the response parameters using variables in
+        // response object as shown below
+        // ### Success values
+        if ($response->Ack == "Success") {
+
+            // ### Redirecting to PayPal for authorization
+            // Once you get the "Success" response, needs to authorise the
+            // transaction by making buyer to login into PayPal. For that,
+            // need to construct redirect url using EC token from response.
+            // For example,
+            // `redirectURL="https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=". $response->Token();`
+
+            // Express Checkout Token
+            Log::debug("EC Token:" . $response->Token);
+
+        }
+        // ### Error Values
+        // Access error values from error list using getter methods
+        else {
+            Log::error("API Error Message : ". $response->Errors[0]->LongMessage);
+        }
+        return dd($response);
+
         /*
-                A JSON response will be returned containing paymentExecStatus and payKey — Save this!:
-
-         {"responseEnvelope":{"timestamp":"2014-04-20T09:44:20.161-07:00",
-        "ack":"Success","correlationId":"4f43a7d94dae4","build":"10273932"},
-        "payKey":"AP-4EC942335R9066153","paymentExecStatus":"CREATED"}
-
-        Take the payKey value from the response, add it to the following URL, and redirect your user there. PayPal will send the user back to the redirect URL provided in previous step.
-
-            https://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=AP-4EC942335R9066153
-        */
+        $sdkConfig = Config::get('paypal.sandbox');
 
         $dbPayResponse = new Feiglin\Payresponse();
         $dbPayResponse->paymentExecStatus = $payResponse->paymentExecStatus;
@@ -135,9 +247,10 @@ class BuyController extends \BaseController
         $dbPayResponse->user_id = Auth::user()->id;
         $dbPayResponse->item_id = $item->id;
         $dbPayResponse->save();
+        */
 
         //Now, redirect user to Paypal, where they can complete the payment.
-        return Redirect::to('https://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=' . $payResponse->payKey);
+        //return Redirect::to('https://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=' . $payResponse->payKey);
     }
 
     /**

@@ -68,7 +68,7 @@ function fillInAddress() {
 
   for (var component in componentForm) {
     document.getElementById(component).value = '';
-    document.getElementById(component).disabled = false;
+    document.getElementById(component).readOnly = false;
   }
 
   // Get each component of the address from the place details
@@ -78,7 +78,7 @@ function fillInAddress() {
     if (componentForm[addressType]) {
       var val = place.address_components[i][componentForm[addressType]];
       document.getElementById(addressType).value = val;
-      document.getElementById(addressType).disabled = true;
+      document.getElementById(addressType).readOnly = true;
     }
   }
 
