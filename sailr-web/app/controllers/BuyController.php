@@ -91,12 +91,15 @@ class BuyController extends \BaseController
         }
 
         $shippingFee = 0.00;
+        $shippingName = 'shipping';
         if ($item->country == $input['country']) {
             //Charge domestic shipping
             $shippingFee = $item['shipping'][0]['price'];
+            $shippingName = 'Domestic ' . $shippingName;
         } else {
             //Charge international shipping fee
             $shippingFee = $itemArray['shipping'][1]['price'];
+            $shippingName = 'International ' . $shippingName;
         }
 
         //Store some initial info in the database
@@ -105,8 +108,12 @@ class BuyController extends \BaseController
         $checkout->user_id = Auth::user()->id;
         $checkout->completed = 0;
         $checkout->save();
+
+        //$checkoutSaved = Checkout::find($checkout->id);
+
         //Calculate the amount the needs to be paid
-        $total = $item->price + $shippingFee;
+        $total = floatval($item->price) + $shippingFee;
+
         $baseURL = 'http://sailr.web';
         $returnURL = $baseURL . '/buy/' . $checkout->id . '/confirm';
         $cancelURL = $baseURL . '/buy/' . $checkout->id . '/cancel';
@@ -114,10 +121,13 @@ class BuyController extends \BaseController
         $address1 = $input['street_number'] . ' ' . $input['street_name'];
         $config = Config::get('paypal.live');
         $sellerEmail = $item->user->email;
+        $invoice_id = substr(sha1($checkout->id . microtime()), 0, 32);
 
         $setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
         $setExpressCheckoutRequestDetails->ReturnURL = $returnURL;
         $setExpressCheckoutRequestDetails->CancelURL = $cancelURL;
+
+        $setExpressCheckoutRequestDetails->MaxAmount = new BasicAmountType($item->currency, $total);
 
 
 // ### Payment Information
@@ -145,9 +155,10 @@ class BuyController extends \BaseController
         $orderTotal1 = new BasicAmountType($item->currency, $total);
         $paymentDetails1->OrderTotal = $orderTotal1;
 
+        $itemAmount =  new BasicAmountType($item->currency, floatval($item->price));
         $paymentDetails1->ShippingTotal = new BasicAmountType($item->currency, $shippingFee);
-        $paymentDetails1->ItemTotal = new BasicAmountType($item->currency, $item->price);
-        $paymentDetails1->OrderDescription = str_limit($item->title, 127);
+        $paymentDetails1->ItemTotal = $itemAmount;
+        $paymentDetails1->OrderDescription = str_limit($item->title, 124);
 
         // How you want to obtain payment. When implementing parallel payments,
         // this field is required and must be set to `Order`. When implementing
@@ -174,7 +185,23 @@ class BuyController extends \BaseController
         // merchant.
         $sellerDetails1 = new SellerDetailsType();
         $sellerDetails1->PayPalAccountID = $sellerEmail;
+        $sellerDetails1->SellerUserName = $item->user->username;
+        $sellerDetails1->SellerId = $item->user->id;
+
         $paymentDetails1->SellerDetails = $sellerDetails1;
+        $paymentDetails1->InvoiceID = $invoice_id;
+
+        $paypalItem = new PaymentDetailsItemType();
+
+        $paypalItem->Amount = $itemAmount;
+        $paypalItem->Description = str_limit($item->description);
+        $paypalItem->Name = str_limit($item->title, 124);
+        $paypalItem->Quantity = 1;
+        $paypalItem->Number = $item->id;
+        $paypalItem->ItemURL = action('BuyController@create', $item->id);
+        $paypalItem->ItemCategory = 'Physical';
+
+        $paymentDetails1->PaymentDetailsItem = $paypalItem;
 
         // A unique identifier of the specific payment request, which is
         // required for parallel payments.
@@ -191,7 +218,7 @@ class BuyController extends \BaseController
         $shipToAddress1->Street1 = $address1;
         $shipToAddress1->CityName = $input['city'];
         $shipToAddress1->StateOrProvince = $input['state'];
-        $shipToAddress1->Country = $input['country'];
+        $shipToAddress1->Country = CountryHelpers::getISOCodeFromCountryName($input['country']);
         $shipToAddress1->PostalCode = $input['zipcode'];
 
         // Your URL for receiving Instant Payment Notification (IPN) about this transaction. If you do not specify this value in the request, the notification URL from your Merchant Profile is used, if one exists.
@@ -199,11 +226,17 @@ class BuyController extends \BaseController
 
         $paymentDetails1->ShipToAddress = $shipToAddress1;
 
+        $setExpressCheckoutRequestDetails->AllowNote = 1;
+        $setExpressCheckoutRequestDetails->BrandName = 'Sailr';
+
+        //$setExpressCheckoutRequestDetails->NoShipping = 1;
+        $setExpressCheckoutRequestDetails->AddressOverride = 1;
         $paymentDetailsArray[0] = $paymentDetails1;
 
         $setExpressCheckoutRequestDetails->PaymentDetails = $paymentDetailsArray;
 
         $setExpressCheckoutReq = new SetExpressCheckoutReq();
+
         $setExpressCheckoutRequest = new SetExpressCheckoutRequestType($setExpressCheckoutRequestDetails);
 
         $setExpressCheckoutReq->SetExpressCheckoutRequest = $setExpressCheckoutRequest;
@@ -217,7 +250,9 @@ class BuyController extends \BaseController
             // ## Making API call
             // Invoke the appropriate method corresponding to API in service
             // wrapper object
+
             $response = $service->SetExpressCheckout($setExpressCheckoutReq);
+
 
         //} catch (Exception $ex) {
           //  Log::error("Error Message : " . $ex->getMessage());
@@ -281,7 +316,7 @@ class BuyController extends \BaseController
     public function showConfirm($id) {
         //
     }
-    
+
     public function payment($id) {
         $itemID = $id;
         $input = Input::all();
