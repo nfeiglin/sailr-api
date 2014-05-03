@@ -278,6 +278,10 @@ class BuyController extends \BaseController
         //return Redirect::to('https://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=' . $payResponse->payKey);
     }
 
+    public function showConfirm($id) {
+        //
+    }
+    
     public function payment($id) {
         $itemID = $id;
         $input = Input::all();
