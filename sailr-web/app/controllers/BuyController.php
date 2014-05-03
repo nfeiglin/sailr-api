@@ -99,14 +99,21 @@ class BuyController extends \BaseController
             $shippingFee = $itemArray['shipping'][1]['price'];
         }
 
+        //Store some initial info in the database
+        $checkout = new Checkout();
+        $checkout->item_id = $item->id;
+        $checkout->user_id = Auth::user()->id;
+        $checkout->completed = 0;
+        $checkout->save();
         //Calculate the amount the needs to be paid
         $total = $item->price + $shippingFee;
-        $returnURL = '';
-        $cancelURL = '';
+        $baseURL = 'http://sailr.web';
+        $returnURL = $baseURL . '/buy/' . $checkout->id . '/confirm';
+        $cancelURL = $baseURL . '/buy/' . $checkout->id . '/cancel';
         $paymentAction = 'Sale';
         $address1 = $input['street_number'] . ' ' . $input['street_name'];
-        $config = Config::get('paypal.sandbox');
-
+        $config = Config::get('paypal.live');
+        $sellerEmail = $item->user->email;
 
         $setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
         $setExpressCheckoutRequestDetails->ReturnURL = $returnURL;
@@ -138,6 +145,10 @@ class BuyController extends \BaseController
         $orderTotal1 = new BasicAmountType($item->currency, $total);
         $paymentDetails1->OrderTotal = $orderTotal1;
 
+        $paymentDetails1->ShippingTotal = new BasicAmountType($item->currency, $shippingFee);
+        $paymentDetails1->ItemTotal = new BasicAmountType($item->currency, $item->price);
+        $paymentDetails1->OrderDescription = str_limit($item->title, 127);
+
         // How you want to obtain payment. When implementing parallel payments,
         // this field is required and must be set to `Order`. When implementing
         // digital goods, this field is required and must be set to `Sale`. If the
@@ -162,7 +173,7 @@ class BuyController extends \BaseController
         // is required and must contain the Payer Id or the email address of the
         // merchant.
         $sellerDetails1 = new SellerDetailsType();
-        $sellerDetails1->PayPalAccountID = $item->user->email;
+        $sellerDetails1->PayPalAccountID = $sellerEmail;
         $paymentDetails1->SellerDetails = $sellerDetails1;
 
         // A unique identifier of the specific payment request, which is
@@ -206,7 +217,7 @@ class BuyController extends \BaseController
             // ## Making API call
             // Invoke the appropriate method corresponding to API in service
             // wrapper object
-            $response = $service->SetExpressCheckout($setExpressCheckoutReq, $config);
+            $response = $service->SetExpressCheckout($setExpressCheckoutReq);
 
         //} catch (Exception $ex) {
           //  Log::error("Error Message : " . $ex->getMessage());
@@ -230,13 +241,27 @@ class BuyController extends \BaseController
             // Express Checkout Token
             Log::debug("EC Token:" . $response->Token);
 
+            $checkout->ack = $response->Ack;
+            $checkout->token = $response->Token;
+            $checkout->save();
+
+            if ($config['mode'] == 'LIVE') {
+                return Redirect::to('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response->Token);
+            }
+
+            else {
+                return Redirect::to('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response->Token);
+            }
+
+
         }
         // ### Error Values
         // Access error values from error list using getter methods
         else {
             Log::error("API Error Message : ". $response->Errors[0]->LongMessage);
+            dd($response);
         }
-        return dd($response);
+
 
         /*
         $sdkConfig = Config::get('paypal.sandbox');
@@ -253,6 +278,20 @@ class BuyController extends \BaseController
         //return Redirect::to('https://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=' . $payResponse->payKey);
     }
 
+    public function payment($id) {
+        $itemID = $id;
+        $input = Input::all();
+        dd($input);
+    }
+
+    public function cancel($id) {
+        $input = Input::all();
+        $checkout = Checkout::where('token', '=', $input['token'])->where('user_id', '=', Auth::user()->id)->firstOrFail();
+
+        $checkout->delete();
+        return Redirect::home()->with('message', Lang::get('transaction.cancel'));
+        //dd($input);
+    }
     /**
      * Display the specified resource.
      * GET /buy/{id}

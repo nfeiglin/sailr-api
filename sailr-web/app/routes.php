@@ -31,7 +31,11 @@ View::composer('*', function($view) {
 	}
 });
 
-Route::get('/', function () {
+Route::get('/i/info', function() {
+   phpinfo();
+});
+
+Route::get('/', ['as' => 'home'], function () {
     return View::make('index');
 });
 
@@ -55,6 +59,8 @@ Route::get('/{username}', 'UsersController@show');
 Route::controller('password', 'RemindersController');
 
 Route::post('buy/{id}', 'BuyController@store');
+Route::any('buy/{id}/confirm', 'BuyController@payment');
+Route::any('buy/{id}/cancel', 'BuyController@cancel');
 
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
