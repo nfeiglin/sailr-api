@@ -328,7 +328,7 @@ class BuyController extends \BaseController
         $checkout = Checkout::where('token', '=', $input['token'])->where('user_id', '=', Auth::user()->id)->firstOrFail();
 
         $checkout->delete();
-        return Redirect::home()->with('message', Lang::get('transaction.cancel'));
+        return Redirect::to('/')->with('message', Lang::get('transaction.cancel'));
         //dd($input);
     }
     /**

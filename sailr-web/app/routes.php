@@ -35,12 +35,16 @@ Route::get('/i/info', function() {
    phpinfo();
 });
 
-Route::get('/', ['as' => 'home'], function () {
-    return View::make('index');
-});
+
 
 if (Auth::check()) {
 	Route::get('/', 'UsersController@self_feed');
+}
+
+else {
+    Route::get('/', function () {
+        return View::make('index');
+    });
 }
 
 
@@ -63,16 +67,25 @@ Route::any('buy/{id}/cancel', 'BuyController@cancel');
 Route::get('buy/{id}/confirm', 'BuyController@showConfirm');
 Route::post('buy/{id}/confirm', 'BuyController@payment');
 
-
+Route::get('item/show/{id}', 'BuyController@create');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
-Route::resource('self/user', 'UsersController', ['only' => ['create', 'store', 'show']]);
+
 Route::resource('items', 'ItemsController');
 
 Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
-Route::get('login', 'SessionController@create');
-Route::get('logout', 'SessionController@destroy');
-Route::get('signup', 'UsersController@create');
+Route::get('session/destroy', 'SessionController@destroy');
+Route::resource('user/create', 'UsersController@create');
+
+Route::group(array('prefix' => 'self'), function() {
+    Route::get('login', 'SessionController@create');
+    Route::get('logout', 'SessionController@destroy');
+    Route::get('signup', 'UsersController@create');
+
+    Route::resource('user', 'UsersController', ['only' => ['store', 'show']]);
+
+});
+
 
 
 

@@ -51,14 +51,7 @@ class SessionController extends BaseController
     public function destroy()
     {
         Auth::logout();
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => 'Logged out'
-            )
-        );
-
-        return Response::json($res);
+        return Redirect::to('/')->with('success', 'Successfully logged out.');
     }
 
 }
