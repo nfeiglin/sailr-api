@@ -1,9 +1,9 @@
-@extends('layout.main')
+@extends('layout.simple')
 
 @section('content')
-<link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
 
-<form class="form-signin register" role="form" action="{{URL::action('UsersController@store')}}" method="post" validate="validate">
+<form class="form-signin register panel" role="form" action="{{URL::action('UsersController@store')}}" method="post" validate="validate">
+    {{ Form::token() }}
     <a href="{{url('')}}"><img src="/images/logo-500.png" class="img-responsive"></a>
     @if(Session::get('message'))
     	<p class="form-signin message h5 well well-sm text-danger">{{ Session::get('message') }}</p>

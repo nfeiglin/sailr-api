@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
+   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="{{-- URL::asset('css/bootstrap.css') --}}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('slick/slick.css') }}">
-
+    @yield('head','')
    <title>Sailr | {{{$title}}}</title>
 
 </head>
@@ -38,7 +38,7 @@
 
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{ URL::asset('slick/slick.min.js') }}"></script>
     <script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
 </body>

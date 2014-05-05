@@ -1,11 +1,12 @@
 @extends('layout.main')
+
 	@section('content')
-	<script> 
+	<script async="async" defer="defer">
 	var item = {{ json_encode($item) }};
 	var internationalShippingPrice = {{ $item['shipping'][1]['price'] }};
 	var domesticShippingPrice = {{ $item['shipping'][0]['price'] }};
 	</script>
-		<div class="col-lg-6 col-md-6 col-sm-6 col-sm-7 col-xs-12">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-sm-12 col-xs-12">
 			<h2>Item Info</h2>
 				<div class="row">
 
@@ -48,13 +49,15 @@
  	</div>
 
     	<h2>Your Info</h2>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-sm-5 col-xs-12 jumbotron swag" style="background: url('{{ URL::asset('images/swag-bg.jpg') }}' no-repeat;">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 jumbotron swag" style="background: url('{{ URL::asset('images/swag-bg.jpg') }}' no-repeat;">
     	{{ Form::open(['action' => ['BuyController@store', $item['id']], 'class' => 'form-horizontal', 'autocomplete' => 'off', 'validate', 'validate']) }}
 
     	<h3>The Basics</h3>
     	<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            @if(Auth::check())
     		<p class="form-control-static">{{{ Auth::user()->name }}}</p>
     		<p class="form-control-static">{{{ Auth::user()->email }}}</p>
+
     	</div>
 
     	<h3>The Important Stuff</h3>
@@ -94,4 +97,7 @@
     </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+@else
+@include('parts.not_logged_in')
+@endif
 	@stop
