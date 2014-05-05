@@ -13,21 +13,25 @@ body {
 
 .form-signin .message {
     padding-bottom: 10px;
-   margin-bottom: 15px;
+    margin-bottom: 15px;
     margin-top: 15px;
+    max-width: 100%;
+    text-align: center;
 }
-form .form-signin img {
-    max-width: 330px;
-    padding: 15px;
 
+form.form-signin img {
+    padding: 15px;
 }
+
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
     margin-bottom: 10px;
 }
+
 .form-signin .checkbox {
     font-weight: normal;
 }
+
 .form-signin .form-control {
     position: relative;
     height: auto;
@@ -37,14 +41,17 @@ form .form-signin img {
     padding: 10px;
     font-size: 16px;
 }
+
 .form-signin .form-control:focus {
     z-index: 2;
 }
+
 .form-signin input[type="email"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .form-signin input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
@@ -54,4 +61,25 @@ form .form-signin img {
 .register input {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.wide {
+    max-width: 612px;
+}
+
+.form-signin .wide {
+    max-width: 612px;
+}
+
+.form-signin .message {
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    width: auto;
+}
+
+form.form-signin.wide img {
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
 }
