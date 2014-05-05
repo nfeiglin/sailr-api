@@ -13,6 +13,11 @@
 </head>
 
 <body>
+@if($hasNavbar == 1)
+
+    @include('parts.navbar')
+
+@endif
 
 <div class="row">
     <div class="container">
