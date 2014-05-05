@@ -1,14 +1,26 @@
 body {
-    padding-top: 40px;
+    padding-top: 0px;
     padding-bottom: 40px;
-    /* background-color: #eee; */
-    background: url('../images/swag-bg.jpg');
+
+    background: url('../images/swag-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+nav {
+    padding-top: 0;
 }
 
 .form-signin {
     max-width: 330px;
+
     padding: 15px;
-    margin: 0 auto;
+    margin-bottom: auto;
+    margin-top: 80px !important;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .form-signin .message {

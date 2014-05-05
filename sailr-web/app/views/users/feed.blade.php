@@ -21,7 +21,7 @@
         			<div class="img-gallery">
 						@foreach($item['photos'] as $photo)
       						<div class="gallery-item">
-      							<img draggable="false" src={{$photo['url']}} class="img-responsive" alt="...">
+      							<img draggable="false" src="{{ $photo['url'] }}" class="img-responsive" alt="...">
       						</div>
       					@endforeach
       				</div>

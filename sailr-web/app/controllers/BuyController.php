@@ -37,10 +37,17 @@ class BuyController extends \BaseController
 
         //$domesticShippingPrice = $item->shipping->type->Domestic->price;
         //$internationalShippingPrice = $item->shipping->type->International->price;
+        $profileImg = false;
+        if(Auth::check()) {
+            $profileImg = ProfileImg::where('user_id', '=', Auth::user()->id)->where('type', '=', 'small')->get(['url'])->toArray();
+
+        }
+        $profileImg = [0 => array('url' => 'http://sailr.web/img/default-sm.jpg')];
 
         return View::make('buy.create')
         ->with('title', 'Buying: ' .  $item->title)
-        ->with('item', $item->toArray());
+        ->with('item', $item->toArray())
+            ->with('profileURL', $profileImg[0]['url']);
 
     }
 
@@ -119,7 +126,7 @@ class BuyController extends \BaseController
         $cancelURL = $baseURL . '/buy/' . $checkout->id . '/cancel';
         $paymentAction = 'Sale';
         $address1 = $input['street_number'] . ' ' . $input['street_name'];
-        $config = Config::get('paypal.live');
+        $config = Config::get('paypal.sandbox');
         $sellerEmail = $item->user->email;
         $invoice_id = substr(sha1($checkout->id . microtime()), 0, 32);
 

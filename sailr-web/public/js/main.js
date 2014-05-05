@@ -1,4 +1,5 @@
 var totalPriceText = $('#total-price');
+var checkoutBtn = $('#checkout-btn');
 $(document).ready(function(){
 	var imgGallery = $('.img-gallery');
     imgGallery.slick({
@@ -32,7 +33,9 @@ var doUpdatePrice = function() {
     total = item['price'] + internationalShippingPrice;
     totalPriceText.html(item['currency'] + total.toFixed(2));
   }
+    checkoutBtn.removeAttr('disabled');
 }
+
 $('#country').change(function() {
 
   doUpdatePrice();
