@@ -61,7 +61,7 @@ Route::get('/{username}', 'UsersController@show');
 
 
 Route::controller('password', 'RemindersController');
-
+Route::get('/item/{id}', 'BuyController@create');
 Route::post('buy/{id}', 'BuyController@store');
 Route::any('buy/{id}/cancel', 'BuyController@cancel');
 Route::get('buy/{id}/confirm', 'BuyController@showConfirm');

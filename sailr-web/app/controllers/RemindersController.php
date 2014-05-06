@@ -39,7 +39,14 @@ class RemindersController extends Controller {
 	{
 		if (is_null($token)) App::abort(404);
 
-		return View::make('password.reset')->with('token', $token);
+        if (DB::table('password_reminders')->where('token', '=', $token)->count('token') != 0) {
+		return View::make('password.reset')->with('token', $token)->with('title', 'Reset password');
+        }
+
+        else {
+            //No record for the token exists
+            return Redirect::to('/')->with('fail', 'Hmm.. we can not find any record of that reset request');
+        }
 	}
 
 	/**
@@ -68,7 +75,7 @@ class RemindersController extends Controller {
 				return Redirect::back()->with('error', Lang::get($response));
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/login')->with('success', 'Password successfully reset.');
+				return Redirect::action('SessionController@create')->with('success', 'Password successfully reset.');
 		}
 	}
 
