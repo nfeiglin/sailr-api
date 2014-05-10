@@ -4,6 +4,7 @@
 
 <form class="form-signin panel" method="post" action="{{ action('BuyController@doConfirm', $id) }}">
     {{ Form::token() }}
+    <input type="hidden" value="{{ $pp_token }}" name="pp_token">
         <h2>Confirm purchase</h2>
         You are buying from <a class="text-muted" href="{{ action('UsersController@show', $item['user']['username']) }}">{{{
             $item['user']['name'] }}} {{ '@' . $item['user']['username'] }}</a>
