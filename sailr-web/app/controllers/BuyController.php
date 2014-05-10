@@ -328,15 +328,41 @@ class BuyController extends \BaseController
 
     public function showConfirm($id)
     {
+        //http://sailr.web/buy/53/confirm?token=EC-3CY03370AB277445T&PayerID=ZF5LCR3K9VJCU
         $config = Config::get('paypal.sandbox');
         $input = Input::all();
         $paypalToken = $input['token'];
 
         //Validate that the user is getting their own transaction not someone else's!
         $checkout = Checkout::findOrFail($id);
+
+        $item = Item::where('id', '=', $checkout->item_id)->with([
+            'User' => function ($y) {
+                    $y->with([
+                        'ProfileImg' => function ($z) {
+                                $z->where('type', '=', 'small');
+                                $z->first();
+                            }
+                    ]);
+                    $y->select(['id', 'username', 'name']);
+                },
+
+            'Photos' => function ($y) {
+                    $y->where('type', '=', 'thumbnail');
+                    $y->select(['item_id', 'type', 'url']);
+                },
+        ])->firstOrFail();
+
         if ($checkout->token != $paypalToken | $checkout->user_id != Auth::user()->id) {
             return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');
         }
+
+        $boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
+
+        if ($boughtUnits >= $item->initial_units) {
+            return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
+        }
+
 
         $paypalService = new PayPalAPIInterfaceServiceService($config);
         $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($paypalToken);
@@ -347,14 +373,90 @@ class BuyController extends \BaseController
 
         $getECResponse = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
 
-       return '<pre>' . print_r($getECResponse, 1) . '</pre>';
+        if ($getECResponse->Errors) {
+
+            if ($getECResponse->Errors[0]->ErrorCode == '10411') {
+                //Paypal token expired
+                return Redirect::to('/')->with('fail', 'Sorry, this Paypal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
+            }
+            return Redirect::to('/')->with('fail', 'Sorry, Paypal has encountered an error. This transaction has not been processed and you have not been charged');
+        }
+
+        $item['photos'] = array(['url' => 'http://sailr.web/img/default-sm.jpg']);
+
+       //return '<pre>' . print_r(json_decode(json_encode($getECResponse), true)) . '</pre>';
+
+        $address = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Address;
+        $payment = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
+       // dd($address);
+
+       //return '<pre>' . print_r($x, 1) . '</pre>';
+       return View::make('buy.confirm')
+           ->with('title', 'Confirm purchase')
+           ->with('item', $item)
+           ->with('paypal', $getECResponse)
+           ->with('address', $address)
+           ->with('payment', $payment)
+           ->with('id', $id);
     }
 
     public function doConfirm($id)
     {
-        $itemID = $id;
+        $config = Config::get('paypal.sandbox');
+        $checkout = Checkout::findOrFail($id);
+        $item = Item::where('id', '=', $checkout->item_id)->firstOrFail();
         $input = Input::all();
-        dd($input);
+        $ipnUrl = 'http://localhost.com';
+
+        if ($checkout->user_id != Auth::user()->id) {
+            return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');
+        }
+
+        $boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
+
+        if ($boughtUnits >= $item->initial_units) {
+            return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
+        }
+
+
+        $paypalService = new PayPalAPIInterfaceServiceService($config);
+        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($checkout->Token);
+        $getExpressCheckoutDetailsRequest->Version = '104.0';
+
+        $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
+        $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
+
+        $getECResponse = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
+
+        if ($getECResponse->Errors) {
+
+            if ($getECResponse->Errors[0]->ErrorCode == '10411') {
+                //Paypal token expired
+                return Redirect::to('/')->with('fail', 'Sorry, this Paypal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
+            }
+            return Redirect::to('/')->with('fail', 'Sorry, Paypal has encountered an error. This transaction has not been processed and you have not been charged');
+        }
+
+
+        $paypalService = new PayPalAPIInterfaceServiceService($config);
+        $paymentDetails = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
+        $paymentDetails->PaymentAction = 'Sale';
+        $paymentDetails->NotifyURL = $ipnUrl;
+
+        $DoECRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
+        $DoECRequestDetails->PayerID = $checkout->PayerID;
+        $DoECRequestDetails->Token = $checkout->Token;
+
+        $DoECRequestDetails->PaymentDetails[0] = $paymentDetails;
+        $DoECRequest = new DoExpressCheckoutPaymentRequestType();
+        $DoECRequest->DoExpressCheckoutPaymentRequestDetails = $DoECRequestDetails;
+        $DoECRequest->Version = '104.0';
+        $DoECReq = new DoExpressCheckoutPaymentReq();
+        $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
+        $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
+
+       echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
+        dd();
     }
 
     public function cancel($id)
