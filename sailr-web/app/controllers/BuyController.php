@@ -16,37 +16,37 @@ class BuyController extends \BaseController
 
         $item = Item::where('id', '=', $id)->with([
             'Shipping' => function ($x) {
-                $x->select(['item_id', 'type', 'price', 'desc']);
+                    $x->select(['item_id', 'type', 'price', 'desc']);
                 },
             'User' => function ($y) {
-                $y->with([
-                            'ProfileImg' => function($z) {
+                    $y->with([
+                        'ProfileImg' => function ($z) {
                                 $z->where('type', '=', 'small');
                                 $z->first();
                             }
-                        ]);
+                    ]);
                     $y->select(['id', 'username', 'name']);
                 },
 
-                'Photos' => function ($y) {
+            'Photos' => function ($y) {
                     $y->where('type', '=', 'full_res');
                     $y->select(['item_id', 'type', 'url']);
-                    
+
                 },
         ])->firstOrFail();
 
         //$domesticShippingPrice = $item->shipping->type->Domestic->price;
         //$internationalShippingPrice = $item->shipping->type->International->price;
         $profileImg = false;
-        if(Auth::check()) {
+        if (Auth::check()) {
             $profileImg = ProfileImg::where('user_id', '=', Auth::user()->id)->where('type', '=', 'small')->get(['url'])->toArray();
 
         }
         $profileImg = [0 => array('url' => 'http://sailr.web/img/default-sm.jpg')];
 
         return View::make('buy.create')
-        ->with('title', 'Buying: ' .  $item->title)
-        ->with('item', $item->toArray())
+            ->with('title', 'Buying: ' . $item->title)
+            ->with('item', $item->toArray())
             ->with('profileURL', $profileImg[0]['url']);
 
     }
@@ -81,12 +81,12 @@ class BuyController extends \BaseController
         $u->setHidden([]);
 
         $item = Item::where('id', '=', $id)->with([
-        'Shipping' => function ($x) {
-            },
-        'User' => function ($y) {
+            'Shipping' => function ($x) {
+                },
+            'User' => function ($y) {
 
-            }
-    ])->firstOrFail();
+                }
+        ])->firstOrFail();
 
         $itemArray = $item->toArray();
 
@@ -121,12 +121,21 @@ class BuyController extends \BaseController
         //Calculate the amount the needs to be paid
         $total = floatval($item->price) + $shippingFee;
 
+        $config = Config::get('paypal.sandbox');
+
         $baseURL = 'http://sailr.web';
         $returnURL = $baseURL . '/buy/' . $checkout->id . '/confirm';
         $cancelURL = $baseURL . '/buy/' . $checkout->id . '/cancel';
+
+        if ($config['mode'] == 'LIVE') {
+            $returnURL = URL::action('BuyController@showConfirm', $checkout->id);
+            $cancelURL = URL::action('Controller@cancel', $checkout->id);
+        }
+
+
         $paymentAction = 'Sale';
         $address1 = $input['street_number'] . ' ' . $input['street_name'];
-        $config = Config::get('paypal.sandbox');
+
         $sellerEmail = $item->user->email;
         $invoice_id = substr(sha1($checkout->id . microtime()), 0, 32);
 
@@ -162,7 +171,7 @@ class BuyController extends \BaseController
         $orderTotal1 = new BasicAmountType($item->currency, $total);
         $paymentDetails1->OrderTotal = $orderTotal1;
 
-        $itemAmount =  new BasicAmountType($item->currency, floatval($item->price));
+        $itemAmount = new BasicAmountType($item->currency, floatval($item->price));
         $paymentDetails1->ShippingTotal = new BasicAmountType($item->currency, $shippingFee);
         $paymentDetails1->ItemTotal = $itemAmount;
         $paymentDetails1->OrderDescription = str_limit($item->title, 124);
@@ -252,19 +261,19 @@ class BuyController extends \BaseController
         // Creating service wrapper object to make API call and loading
         // configuration file for your credentials and endpoint
         $service = new PayPalAPIInterfaceServiceService($config);
-       // $response = new PayPalAPIInterfaceServiceService($config);
+        // $response = new PayPalAPIInterfaceServiceService($config);
         //try {
-            // ## Making API call
-            // Invoke the appropriate method corresponding to API in service
-            // wrapper object
+        // ## Making API call
+        // Invoke the appropriate method corresponding to API in service
+        // wrapper object
 
-            $response = $service->SetExpressCheckout($setExpressCheckoutReq);
+        $response = $service->SetExpressCheckout($setExpressCheckoutReq);
 
 
         //} catch (Exception $ex) {
-          //  Log::error("Error Message : " . $ex->getMessage());
+        //  Log::error("Error Message : " . $ex->getMessage());
 
-      //  }
+        //  }
 
 
         // ## Accessing response parameters
@@ -288,19 +297,16 @@ class BuyController extends \BaseController
             $checkout->save();
 
             if ($config['mode'] == 'LIVE') {
-                return Redirect::to('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response->Token);
+                return Redirect::to('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
+            } else {
+                return Redirect::to('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
             }
 
-            else {
-                return Redirect::to('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response->Token);
-            }
 
-
-        }
-        // ### Error Values
+        } // ### Error Values
         // Access error values from error list using getter methods
         else {
-            Log::error("API Error Message : ". $response->Errors[0]->LongMessage);
+            Log::error("API Error Message : " . $response->Errors[0]->LongMessage);
             dd($response);
         }
 
@@ -320,17 +326,39 @@ class BuyController extends \BaseController
         //return Redirect::to('https://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=' . $payResponse->payKey);
     }
 
-    public function showConfirm($id) {
-        //
+    public function showConfirm($id)
+    {
+        $config = Config::get('paypal.sandbox');
+        $input = Input::all();
+        $paypalToken = $input['token'];
+
+        //Validate that the user is getting their own transaction not someone else's!
+        $checkout = Checkout::findOrFail($id);
+        if ($checkout->token != $paypalToken | $checkout->user_id != Auth::user()->id) {
+            return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');
+        }
+
+        $paypalService = new PayPalAPIInterfaceServiceService($config);
+        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($paypalToken);
+        $getExpressCheckoutDetailsRequest->Version = '104.0';
+
+        $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
+        $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
+
+        $getECResponse = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
+
+       return '<pre>' . print_r($getECResponse, 1) . '</pre>';
     }
 
-    public function payment($id) {
+    public function doConfirm($id)
+    {
         $itemID = $id;
         $input = Input::all();
         dd($input);
     }
 
-    public function cancel($id) {
+    public function cancel($id)
+    {
         $input = Input::all();
         $checkout = Checkout::where('token', '=', $input['token'])->where('user_id', '=', Auth::user()->id)->firstOrFail();
 
@@ -338,6 +366,7 @@ class BuyController extends \BaseController
         return Redirect::to('/')->with('message', Lang::get('transaction.cancel'));
         //dd($input);
     }
+
     /**
      * Display the specified resource.
      * GET /buy/{id}

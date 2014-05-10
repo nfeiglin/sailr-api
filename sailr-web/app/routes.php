@@ -61,11 +61,18 @@ Route::get('/{username}', 'UsersController@show');
 
 
 Route::controller('password', 'RemindersController');
+
 Route::get('/item/{id}', 'BuyController@create');
 Route::post('buy/{id}', 'BuyController@store');
+
 Route::any('buy/{id}/cancel', 'BuyController@cancel');
+
+
 Route::get('buy/{id}/confirm', 'BuyController@showConfirm');
-Route::post('buy/{id}/confirm', 'BuyController@payment');
+Route::group(['before' => ['auth', 'csrf']], function() {
+    Route::post('buy/{id}/confirm', 'BuyController@doConfirm');
+});
+
 
 Route::get('item/show/{id}', 'BuyController@create');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
