@@ -418,13 +418,6 @@ class BuyController extends \BaseController
             return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');
         }
 
-        $item = Item::where('id', '=', $checkout->item_id)->firstOrFail(['id', 'initial_units']);
-        $boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
-
-        if ($boughtUnits >= $item->initial_units) {
-            return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
-        }
-
 
         $paypalService = new PayPalAPIInterfaceServiceService($config);
         $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($paypalToken);
@@ -476,6 +469,16 @@ class BuyController extends \BaseController
         $DoECRequest->Version = '104.0';
         $DoECReq = new DoExpressCheckoutPaymentReq();
         $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
+        
+        /* Right before the trasaction is commited and the user is charged we MUST verify there is sufficient stock of the item  */
+        
+        $item = Item::where('id', '=', $checkout->item_id)->firstOrFail(['id', 'initial_units']);
+        $boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
+
+        if ($boughtUnits >= $item->initial_units) {
+            return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
+        }
+
         $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
 
         echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
