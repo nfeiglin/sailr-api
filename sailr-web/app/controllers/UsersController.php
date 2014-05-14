@@ -74,13 +74,44 @@ class UsersController extends \BaseController
         $items = $items->toArray();
 
 
-        $user = $user->toArray();
-        //dd($user);
+        $userArray = $user->toArray();
+
+        $isSelf = false;
+        $follow_you = false;
+        $you_follow = false;
+        if (Auth::check()) {
+            if (Auth::user()->username == $username) {
+                $isSelf = true;
+            }
+
+            $follow_you = RelationshipHelpers::follows_you($user);
+            $you_follow = RelationshipHelpers::you_follow($user);
+        }
+
+
+        if (Auth::check()) {
+
+        }
+
+        $no_of_followers = RelationshipHelpers::count_follows_user($user);
+        $no_of_following = RelationshipHelpers::count_user_following($user);
+
+        $mutual = false;
+
+        if ($follow_you && $you_follow) {
+            $mutual = true;
+        }
         return View::make('users.show')
         ->with('title', $user['username'])
-        ->with('user', $user)
+        ->with('user', $userArray)
         ->with('items', $items)
         ->with('paginator', $paginator)
+        ->with('follows_you', $follow_you)
+        ->with('you_follow', $you_follow)
+        ->with('mutual', $mutual)
+        ->with('is_self', $isSelf)
+        ->with('no_of_followers', $no_of_followers)
+        ->with('no_of_following', $no_of_following)
         ;
     }
 

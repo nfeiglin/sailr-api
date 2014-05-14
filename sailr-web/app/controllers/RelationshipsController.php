@@ -24,7 +24,11 @@ class RelationshipsController extends \BaseController
                 )
             );
 
-            return Response::json($res, 400);
+            if (Request::ajax()) {
+                return Response::json($res, 400);
+            }
+
+            return Redirect::back()->with('fail', $res['meta']['message']);
         }
 
         $doesExist = DB::table('relationships')->where('user_id', '=', $user->id)->where('follows_user_id', '=', $followUser->id)->count();
@@ -36,7 +40,11 @@ class RelationshipsController extends \BaseController
                     'message' => 'You already follow ' . $followUser->username
                 )
             );
-            return Response::json($res, 403);
+            if (Request::ajax()) {
+                return Response::json($res, 403);
+            }
+
+            return Redirect::back()->with('fail', $res['meta']['message']);
         }
 
         $relationship = new Relationship();
@@ -52,7 +60,12 @@ class RelationshipsController extends \BaseController
             )
         );
 
-        return Response::json($res, 201);
+        if (Request::ajax()) {
+            return Response::json($res, 201);
+        }
+
+        return Redirect::back()->with('success', $res['meta']['message']);
+
     }
 
     /**
@@ -84,7 +97,11 @@ class RelationshipsController extends \BaseController
                 )
             );
 
-            return Response::json($res, 400);
+            if (Request::ajax()) {
+                return Response::json($res, 400);
+            }
+
+            return Redirect::back()->with('fail', $res['meta']['message']);
         }
 
         $doesExist = DB::table('relationships')->where('user_id', '=', $user->id)->where('follows_user_id', '=', $followUser->id)->count();
@@ -96,7 +113,11 @@ class RelationshipsController extends \BaseController
                     'message' => "You don't follow" . $followUser->username . " so you can't unfollow them"
                 )
             );
-            return Response::json($res, 403);
+            if (Request::ajax()) {
+                return Response::json($res, 403);
+            }
+
+            return Redirect::back()->with('fail', $res['meta']['message']);
         }
 
         $relationship = Relationship::where('user_id', '=', $user->id)->where('follows_user_id', '=', $followUser->id);
@@ -108,7 +129,11 @@ class RelationshipsController extends \BaseController
             )
         );
 
-        return Response::json($res, 201);
+        if (Request::ajax()) {
+            return Response::json($res, 200);
+        }
+
+        return Redirect::back()->with('success', $res['meta']['message']);
     }
 
     /**

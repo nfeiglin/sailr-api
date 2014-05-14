@@ -73,6 +73,8 @@ Route::group(['before' => ['auth', 'csrf']], function() {
     Route::post('buy/{id}/confirm', 'BuyController@doConfirm');
 });
 
+Route::delete('relationship', 'RelationshipsController@destroy');
+Route::resource('relationship', 'RelationshipsController');
 
 Route::get('item/show/{id}', 'BuyController@create');
 Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);

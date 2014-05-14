@@ -21,7 +21,7 @@
 
 <div class="row">
     <div class="container">
-        <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
+        <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12" style="margin-top: 30px">
             @if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif
             @if(Session::has('success'))<div class="alert alert-success">{{ Session::get('success') }}</div> @endif
             @if(Session::has('error'))<div class="alert alert-warning">{{ Session::get('error') }}</div> @endif

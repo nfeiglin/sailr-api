@@ -5,10 +5,10 @@
  * Time: 4:00 PM
  */
 
-
+use Illuminate\Auth\UserInterface;
 class RelationshipHelpers
 {
-    public static function follows_you(User $user)
+    public static function follows_you(UserInterface $user)
     {
         $doesExist = DB::table('relationships')->where('user_id', '=', $user->id)->where('follows_user_id', '=', Auth::user()->id)->count();
         if ($doesExist) {
@@ -17,7 +17,7 @@ class RelationshipHelpers
         return false;
     }
 
-    public static function you_follow(User $user)
+    public static function you_follow(UserInterface $user)
     {
         $doesExist = DB::table('relationships')->where('user_id', '=', Auth::user()->id)->where('follows_user_id', '=', $user->id)->count();
         if ($doesExist) {
@@ -26,7 +26,7 @@ class RelationshipHelpers
         return false;
     }
 
-    public static function get_follows_user(User $user)
+    public static function get_follows_user(UserInterface $user)
     {
         $followers = Relationship::where('follows_user_id', '=', $user->id)->orderBy('created_at', 'dsc')->get(array('user_id'))->toArray();
 
@@ -46,7 +46,7 @@ class RelationshipHelpers
         return $users;
     }
 
-    public static function get_user_following(User $user)
+    public static function get_user_following(UserInterface $user)
     {
         $following = Relationship::where('user_id', '=', $user->id)->orderBy('created_at', 'dsc')->get(array('follows_user_id'))->toArray();
 
@@ -65,6 +65,21 @@ class RelationshipHelpers
 
         return $users;
     }
+
+    public static function count_follows_user(UserInterface $user)
+    {
+        $followers = Relationship::where('follows_user_id', '=', $user->id)->count();
+
+        return $followers;
+    }
+
+    public static function count_user_following(UserInterface $user)
+    {
+        $following = Relationship::where('user_id', '=', $user->id)->count();
+
+        return $following;
+    }
+
 
     /*
     public static function findSuggestedFriends()

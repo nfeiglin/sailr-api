@@ -110,5 +110,22 @@ initialize();
 
 });
 
+//Code for user.show page
+
+var unfollowButton = $('#unfollow-btn');
+
+unfollowButton.on('mouseover', function() {
+    console.log('MOUSEOVER');
+    $(this).text('Unfollow');
+    $(this).addClass('btn-danger');
+
+});
+
+unfollowButton.on('mouseleave', function() {
+    unfollowButton.text('Following');
+    unfollowButton.removeClass('btn-danger');
+});
+
+
 
 
