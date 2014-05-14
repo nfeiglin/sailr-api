@@ -480,8 +480,10 @@ class BuyController extends \BaseController
         }
 
         $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
-
         echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
+
+        $checkout->txn_id = $DoECResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->TransactionID;
+        $checkout->save();
     }
 
     public function cancel($id)
