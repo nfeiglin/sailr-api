@@ -58,6 +58,8 @@ Route::get('/@{username}', function($username) {
     return Redirect::to(action('UsersController@show', $username));
 });
 Route::get('/{username}', 'UsersController@show');
+Route::get('{username}/following', 'UsersController@following');
+Route::get('{username}/followers', 'UsersController@followers');
 
 
 Route::controller('password', 'RemindersController');

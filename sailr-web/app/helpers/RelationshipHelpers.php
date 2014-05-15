@@ -26,7 +26,7 @@ class RelationshipHelpers
         return false;
     }
 
-    public static function get_follows_user(UserInterface $user)
+    public static function get_follows_user(UserInterface $user, array $what = ['id', 'name', 'username', 'bio'])
     {
         $followers = Relationship::where('follows_user_id', '=', $user->id)->orderBy('created_at', 'dsc')->get(array('user_id'))->toArray();
 
@@ -41,12 +41,12 @@ class RelationshipHelpers
             'ProfileImg' => function ($y) {
                     $y->select(['id', 'type', 'url']);
                 }
-        ))->get()->toArray();
+        ))->get($what);
 
         return $users;
     }
 
-    public static function get_user_following(UserInterface $user)
+    public static function get_user_following(UserInterface $user, array $what = ['id', 'name', 'username', 'bio'])
     {
         $following = Relationship::where('user_id', '=', $user->id)->orderBy('created_at', 'dsc')->get(array('follows_user_id'))->toArray();
 
@@ -61,7 +61,7 @@ class RelationshipHelpers
             'ProfileImg' => function ($y) {
                     $y->select(['id', 'type', 'url']);
                 }
-        ))->get()->toArray();
+        ))->get($what);
 
         return $users;
     }
