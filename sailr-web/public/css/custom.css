@@ -191,3 +191,7 @@ button.paypal-btn:hover {
     padding-left: 8px;
     margin-left: 5px;
 }
+
+.form-signin.wide.panel a:hover {
+    text-decoration:none;
+}
