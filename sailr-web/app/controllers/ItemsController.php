@@ -13,11 +13,16 @@ class ItemsController extends BaseController
         return Response::json(Item::all());
     }
 
+
+
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
+    public function create() {
+        return View::make('items.create')->with('title', 'Add a product');
+    }
 
     /**
      * Store a newly created resource in storage.
