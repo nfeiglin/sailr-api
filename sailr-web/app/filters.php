@@ -54,7 +54,7 @@ View::composer('password.remind', function (\Illuminate\View\View $view) {
 */
 
 Route::filter('auth', function () {
-    if (Auth::guest()) return Redirect::guest('login');
+    if (Auth::guest()) return Redirect::guest('session/create');
 });
 
 Route::filter('json_auth', function () {
@@ -65,7 +65,7 @@ Route::filter('json_auth', function () {
                 'message' => 'Please sign in'
             )
         );
-        return Response::json($res, 201);
+        return Response::json($res, 401);
     }
 });
 
@@ -85,7 +85,7 @@ Route::filter('auth.basic', function () {
 */
 
 Route::filter('guest', function () {
-    if (Auth::check()) return Redirect::to('/');
+    if (Auth::check()) return Redirect::to('/')->with('success', 'You are already logged in');
 });
 
 /*
@@ -100,7 +100,11 @@ Route::filter('guest', function () {
 */
 
 Route::filter('csrf', function () {
-    if (Session::token() != Input::get('_token')) {
-        throw new Illuminate\Session\TokenMismatchException;
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'PATCH' || $_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        if (Session::token() != Input::get('_token'))
+        {
+            throw new Illuminate\Session\TokenMismatchException;
+
+        }
     }
 });

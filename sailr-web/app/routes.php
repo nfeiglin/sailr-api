@@ -25,80 +25,78 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
-View::composer('*', function($view) {
-	if(!array_key_exists('hasNavbar', $view->getData())) {
-		$view->with('hasNavbar', 1);
-	}
+View::composer('*', function ($view) {
+    if (!array_key_exists('hasNavbar', $view->getData())) {
+        $view->with('hasNavbar', 1);
+    }
 });
 
-Route::get('/i/info', function() {
-   phpinfo();
+Route::get('/i/info', function () {
+    phpinfo();
 });
-
 
 
 if (Auth::check()) {
-	Route::get('/', 'UsersController@self_feed');
-}
-
-else {
+    Route::get('/', 'UsersController@self_feed');
+} else {
     Route::get('/', function () {
         return View::make('index');
     });
 }
 
+Route::group(['before' => 'csrf'], function () {
+    Route::get('test', function () {
+        return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
+    });
 
-Route::get('test', function() {
-   return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
+    Route::get('buy/{id}/create', 'BuyController@create');
+
+    Route::get('/@{username}', function ($username) {
+        return Redirect::to(action('UsersController@show', $username));
+    });
+    Route::get('/{username}', 'UsersController@show');
+    Route::get('{username}/following', 'UsersController@following');
+    Route::get('{username}/followers', 'UsersController@followers');
+
+    Route::get('item/show/{id}', 'BuyController@create');
+    Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
+    Route::resource('items', 'ItemsController');
+
+    Route::group(['before' => 'guest'], function () {
+        Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
+        Route::resource('user/create', 'UsersController@create');
+    });
+    Route::get('session/destroy', 'SessionController@destroy');
+    Route::controller('password', 'RemindersController');
+
+
+    Route::get('/item/{id}', 'BuyController@create');
+
+
+    Route::group(['before' => ['auth']], function () {
+        Route::resource('{username}/profile_img', 'ProfileImageController');
+        Route::post('buy/{id}', 'BuyController@store');
+        Route::any('buy/{id}/cancel', 'BuyController@cancel');
+        Route::get('buy/{id}/confirm', 'BuyController@showConfirm');
+        Route::post('buy/{id}/confirm', 'BuyController@doConfirm');
+        Route::controller('settings', 'SettingsController');
+        Route::delete('relationship', 'RelationshipsController@destroy');
+        Route::resource('relationship', 'RelationshipsController');
+        Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
+        Route::get('items/create', 'ItemsController@create');
+    });
+
+
+    Route::group(array('prefix' => 'self'), function () {
+        Route::get('login', 'SessionController@create');
+        Route::get('logout', 'SessionController@destroy');
+        Route::get('signup', 'UsersController@create');
+
+        Route::resource('user', 'UsersController', ['only' => ['store', 'show']]);
+
+    });
 });
 
-Route::get('buy/{id}/create', 'BuyController@create');
-
-Route::get('/@{username}', function($username) {
-    return Redirect::to(action('UsersController@show', $username));
-});
-Route::get('/{username}', 'UsersController@show');
-Route::get('{username}/following', 'UsersController@following');
-Route::get('{username}/followers', 'UsersController@followers');
-
-Route::resource('{username}/profile_img', 'ProfileImageController');
-
-Route::controller('password', 'RemindersController');
-Route::controller('settings','SettingsController');
-
-
-Route::get('/item/{id}', 'BuyController@create');
-Route::post('buy/{id}', 'BuyController@store');
-
-Route::any('buy/{id}/cancel', 'BuyController@cancel');
-
-
-Route::get('buy/{id}/confirm', 'BuyController@showConfirm');
-Route::group(['before' => ['auth', 'csrf']], function() {
-    Route::post('buy/{id}/confirm', 'BuyController@doConfirm');
-});
-
-Route::delete('relationship', 'RelationshipsController@destroy');
-Route::resource('relationship', 'RelationshipsController');
-
-Route::get('item/show/{id}', 'BuyController@create');
-Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
-Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
-
-Route::resource('items', 'ItemsController');
-
-Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
-Route::get('session/destroy', 'SessionController@destroy');
-Route::resource('user/create', 'UsersController@create');
-
-Route::group(array('prefix' => 'self'), function() {
-    Route::get('login', 'SessionController@create');
-    Route::get('logout', 'SessionController@destroy');
-    Route::get('signup', 'UsersController@create');
-
-    Route::resource('user', 'UsersController', ['only' => ['store', 'show']]);
-
-});
 
 
 
