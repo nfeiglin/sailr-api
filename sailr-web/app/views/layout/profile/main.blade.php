@@ -19,7 +19,7 @@
     <a href="{{ URL::action('UsersController@show', $user['username'] ) }}" class="h4">{{{ $user['username'] }}}</a>
 
     @if(Auth::check() && $is_self)
-    <a href="#" class="btn btn-md btn-default pull-right">Settings</a>
+    <a href="{{ URL::action('SettingsController@getAccount') }}" class="btn btn-md btn-default pull-right">My settings</a>
     @endif
     <div class="row">
         <div class="col-sm-4 center-block">

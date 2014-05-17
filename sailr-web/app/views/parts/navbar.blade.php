@@ -15,17 +15,30 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="navbar-collapse">
+
                 <div class="nav navbar-nav navbar-left">
+                    <a class="btn btn-primary navbar-btn"
+                       href="{{ URL::to('/') }}">
+                        <span class="glyphicon glyphicon-home"></span> Home</a>
+
+                    @if(Auth::check())
                     <a class="btn btn-primary navbar-btn"
                        href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
                         <span class="glyphicon glyphicon-user"></span> Me</a>
-
+                    @endif
                 </div>
 
+                @if(Auth::check())
 
-                <ul class="navbar-right">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                            <div>
+                                <a class="btn btn-primary navbar-btn" href="{{ URL::action('ItemsController@create') }}"><span class="glyphicon glyphicon-plus-sign"></span> Add item</a>
+                            </div>
+                    </li>
+
                     <li class="dropdown list-unstyled">
-                        <a href="#" class="btn btn-primary navbar-btn" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+                        <button class="btn btn-primary navbar-btn" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Settings</button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
@@ -41,6 +54,7 @@
 
 
                 </ul>
+             @endif
 
             </div>
             <!-- /.navbar-collapse -->
