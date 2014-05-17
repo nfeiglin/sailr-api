@@ -235,62 +235,14 @@ class UsersController extends \BaseController
 
     public function update($id)
     {
-        if (!$id == Auth::user()->id) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 403,
-                    'message' => 'Not authorised',
-                    'errors' => ['Sorry, you can only update your own account.']
-                )
-            );
-            return Response::json($res, 403);
-        }
-        $input = Input::all();
-        $input = array_filter($input);
-        $user = User::find(Auth::user()->id);
-
-        $validator = Validator::make($input, User::$updateRules);
-        if ($validator->fails()) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Invalid data',
-                    'errors' => $validator->messages()->all()
-                )
-            );
-            return Response::json($res, 400);
-        }
-
-
-        if (isset($input['password'])) {
-            $input['password'] = Hash::make($input['password']);
-        }
-
-
-        if (array_key_exists('bio', $input)) {
-            $input['bio'] = e($input['bio']);
-        }
-
-        if (array_key_exists('name', $input)) {
-            $input['name'] = e($input['name']);
-        }
-
-        $user->fill($input);
-        $user->save();
-
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => 'User successfully updated'
-            ),
-
-            'data' => $user->toArray()
-        );
-        return Response::json($res, 200);
-
 
     }
 
+    /*
+     * Display the user's homepage feed
+     * @param null
+     * @return Response
+     */
     public function self_feed()
     {   
         //How many results per page?

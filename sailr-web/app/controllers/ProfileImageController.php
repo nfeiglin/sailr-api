@@ -11,21 +11,13 @@ class ProfileImageController extends \BaseController
     public function store()
     {
         $files = Request::instance()->files->get('photos');
-        $p = Photo::validateImages($files);
-
-            return Redirect::back()->with('errror', 'Invalid image');
+        if(!Photo::validateImages($files)) {
+            return Redirect::back()->with('fail', 'Invalid image');
+        }
 
         ProfileImg::resizeAndStoreUploadedImages($files, Auth::user());
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 201,
-                'message' => 'New profile image successfully added'
-            ),
-
-            'data' => ProfileImg::where('user_id', '=', Auth::user()->id)->get()->toArray()
-        );
-        return Response::json($res, 201);
+        return Redirect::back()->with('success', 'New profile image successfully added');
 
     }
 
@@ -40,14 +32,7 @@ class ProfileImageController extends \BaseController
         $images = ProfileImg::where('user_id', '=', Auth::user()->id)->delete();
         ProfileImg::setDefaultProfileImages(Auth::user());
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => 'Profile image successfully removed'
-            ),
-
-        );
-        return Response::json($res, 200);
+        return Redirect::back()->with('success', 'Profile image successfully removed');
 
     }
 

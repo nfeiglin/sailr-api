@@ -61,8 +61,11 @@ Route::get('/{username}', 'UsersController@show');
 Route::get('{username}/following', 'UsersController@following');
 Route::get('{username}/followers', 'UsersController@followers');
 
+Route::resource('{username}/profile_img', 'ProfileImageController');
 
 Route::controller('password', 'RemindersController');
+Route::controller('settings','SettingsController');
+
 
 Route::get('/item/{id}', 'BuyController@create');
 Route::post('buy/{id}', 'BuyController@store');
