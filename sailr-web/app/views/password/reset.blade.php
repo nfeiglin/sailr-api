@@ -1,9 +1,6 @@
 @extends('layout.simple')
 
 @section('content')
-<link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
-
-
 <form class="form-signin panel" role="form" action="{{URL::action('RemindersController@postRemind')}}" method="post" validate="validate">
     {{ Form::token() }}
     <input type="hidden" name="token" value="{{{ $token }}}">
