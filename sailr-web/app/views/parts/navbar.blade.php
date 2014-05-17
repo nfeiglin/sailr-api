@@ -17,15 +17,15 @@
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <div class="nav navbar-nav navbar-left">
                     <a class="btn btn-primary navbar-btn"
-                       href="{{ URL::action('UsersController@show',Auth::user()->username) }}">Me</a>
+                       href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
+                        <span class="glyphicon glyphicon-user"></span> Me</a>
 
                 </div>
 
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                class="glyphicon glyphicon-cog"></i><b class="caret"></b></a>
+                <ul class="navbar-right">
+                    <li class="dropdown list-unstyled">
+                        <a href="#" class="btn btn-primary navbar-btn" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Settings</a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
