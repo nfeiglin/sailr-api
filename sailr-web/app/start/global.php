@@ -31,10 +31,12 @@ Validator::resolver(function($translator, $data, $rules, $messages)
     return new CountryValidator($translator, $data, $rules, $messages);
 });
 
+/*
 Validator::resolver(function($translator, $data, $rules, $messages)
 {
     return new UsernameOrUniqueValidator($translator, $data, $rules, $messages);
 });
+*/
 
 /*
 |--------------------------------------------------------------------------
