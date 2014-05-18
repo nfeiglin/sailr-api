@@ -43,4 +43,8 @@ class Item extends Eloquent
 
         return $this->attributes['comments'] = $comments;
     }
+
+    public function scopeWhereUser($query, User $user) {
+        return $query->where('user_id', '=', $user->id);
+    }
 }

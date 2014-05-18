@@ -19,7 +19,7 @@
         <div class="col-sm-6">
             <label for="currency">Currency</label>
             <select class="selectpicker form-control" name="currency" id="currency" data-live-search="true" data-ng-model="currency">
-                @foreach(Config::get('currencies') as $currencyCode => $currencyName)
+                @foreach(Config::get('currencies.both') as $currencyCode => $currencyName)
                 <option value="{{ $currencyCode }}" data-subtext="{{ $currencyCode }}">{{ $currencyCode }} ({{ $currencyName }})</option>
                 @endforeach
             </select>
@@ -41,7 +41,7 @@
     <div class="row form-group">
         <div class="col-sm-6">
             <label for="shipping-country">Where will you ship to?</label>
-            <select class="form-control" name="shipping-country" data-live-search="true" id="shipping-country" data-ng-model="shipCountry">
+            <select class="form-control" name="shipping-country" data-live-search="true" id="shipping-country" data-ng-model="shipCountry" data-ng-repeat="filter:coCode">
                 @foreach(Config::get('countries') as $code => $countryname)
                 <option value="{{ $code }}">{{ $countryname }}</option>
                 @endforeach
@@ -67,7 +67,7 @@
            </div>
        </div>
     <div class="form-group row">
-        <p class="h4">In summary: You have @{{ quantity }} @{{ title }}'s that you will sell to @{{ shipCountry }} for @{{ currency + shipPrice }}</p>
+
     </div>
 
 </div>

@@ -10,7 +10,12 @@ class ItemsController extends BaseController
      */
     public function index()
     {
-        return Response::json(Item::all());
+        $items = Item::WhereUser(Auth::user())->get(['title', 'price', 'currency']);
+        return View::make('items.index')
+            ->with('title', 'My products')
+            ->with('items', $items->toArray())
+            ->with('hasNavbar', 1);
+
     }
 
 

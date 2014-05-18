@@ -14,6 +14,15 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
 }
 
+
+.purpleBackground {
+    background: url('../images/swag-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 p {
     font-family: 'Lato', "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -223,4 +232,30 @@ button.paypal-btn:hover {
 
 .form-signin.wide.panel a:hover {
     text-decoration: none;
+}
+
+.noSelect {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    cursor: pointer;
+
+}
+
+.vis-hidden {
+    display: none;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.animate-down.ng-show {
+    -webkit-transition: all 2.5s ease-in;
+    -moz-transition: all 2.5s ease-in;
+    -ms-transition: all 2.5s ease-in;
+    -o-transition: all 2.5s ease-in;
+    transition: all 2.5s ease-in;
+
+
 }

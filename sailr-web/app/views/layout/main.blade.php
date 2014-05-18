@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
+<html lang="en" ng-app>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.min.js"></script>
    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -12,7 +12,7 @@
 
 </head>
 
-<body>
+<body class="purpleBackground">
     @if($hasNavbar == 1)
         @include('parts.navbar')
         <div id="backgroundSwag" class="jumbotron">

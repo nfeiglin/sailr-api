@@ -83,7 +83,9 @@ Route::group(['before' => 'csrf'], function () {
         Route::delete('relationship', 'RelationshipsController@destroy');
         Route::resource('relationship', 'RelationshipsController');
         Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
+
         Route::get('items/create', 'ItemsController@create');
+        Route::get('dashboard/products', 'ItemsController@index');
     });
 
 
