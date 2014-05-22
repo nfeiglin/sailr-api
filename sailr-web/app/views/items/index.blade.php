@@ -4,6 +4,7 @@
 <div class="row" data-ng-controller="indexController">
     <script>
         function indexController($scope) {
+            $scope.currency = 'USD';
             $scope.codes = {{ json_encode(Config::get('currencies.codes')) }};
             $scope.handleCodeChange = function($index) {
                 $scope.currency = $scope.codes[$index];
@@ -44,7 +45,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <input type="hidden" value="@{{ currency }}" name="currency" id="cur-hid">@{{ currency }}
+                            <input type="hidden" ng-value="currency" name="currency" id="cur-hid">
                             <input class="form-control" name="price" placeholder="0.00" type="number" data-ng-model="price">
                         </div>
                     </div>
