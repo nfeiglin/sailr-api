@@ -1,0 +1,10 @@
+{
+  "database": {
+    "image": "mysql",
+    "path": "."
+  },
+  "web": {
+    "image": "php55",
+    "path": "."
+  }
+}

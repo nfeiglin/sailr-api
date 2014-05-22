@@ -109,6 +109,7 @@ return array(
         'Way\Generators\GeneratorsServiceProvider',
         'Intervention\Image\ImageServiceProvider',
         'Sailr\Holystone\HolystoneServiceProvider',
+        'Sailr\Currencyvalidator\CurrencyvalidatorServiceProvider',
 
     ),
 
@@ -177,6 +178,7 @@ return array(
         'View' => 'Illuminate\Support\Facades\View',
         'Image' => 'Intervention\Image\Facades\Image',
         'Holystone' => 'Sailr\Holystone\Facades\Holystone',
+
 
     ),
 

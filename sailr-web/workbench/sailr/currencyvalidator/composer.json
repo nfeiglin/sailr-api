@@ -1,0 +1,20 @@
+{
+    "name": "sailr/currencyvalidator",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nathan Feiglin",
+            "email": "nathanfeiglin@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sailr\\Currencyvalidator": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}

@@ -25,7 +25,7 @@
             </div>
 
             <div class="add-new-form panel animate-down vis-hidden" id="addItem">
-                {{ Form::open(['method' => 'post', 'class' => 'form-horizontal' ]) }}
+                {{ Form::open(['method' => 'post', 'class' => 'form-horizontal', 'action' => 'ItemsController@store' ]) }}
                 <div class="product-list panel-body">
                     <div class="col-xs-5 col-lg-8 col-md-8 col-sm-7">
                         <input type="text" class="form-control" placeholder="Item name" name="title">
@@ -44,8 +44,8 @@
                                     </ul>
                                 </div>
                             </div>
+                            <input type="hidden" value="@{{ currency }}" name="currency" id="cur-hid">@{{ currency }}
                             <input class="form-control" name="price" placeholder="0.00" type="number" data-ng-model="price">
-                            <input type="hidden" value="@{{ currency }}" name="currency" id="cur-hid">
                         </div>
                     </div>
 

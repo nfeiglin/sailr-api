@@ -20,6 +20,7 @@ class ItemsController extends BaseController
 
 
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -34,54 +35,41 @@ class ItemsController extends BaseController
      *
      * @return Response
      */
-    public function store()
-    {
-        $user_id = Auth::user()->id;
+
+    public function store() {
 
         $input = Input::all();
-        $files = Request::instance()->files->get('photos');
-        $validator = Validator::make($input, Item::$rules);
+        $rules = [
+            'title' => 'required|max:255',
+            'currency' => 'required|currency|max:2',
+            'price' => 'required|numeric|max:999999'
+        ];
 
-        if ($validator->fails()) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Invalid data',
-                    'errors' => $validator->messages()->all()
-                )
-            );
-            return Response::json($res, 400);
+        //TODO add currency validator
+
+        $v = Validator::make($input, $rules);
+
+        if ($v->fails()) {
+
+            //Kill it!
+            return Response::json($v->messages(), 400);
         }
 
-        $p = Photo::validateImages($files);
+        $item = new Item();
+        $item->title = $input['title'];
+        $item->currency = $input['currency'];
+        $item->price = $input['price'];
+        $item->user_id = Auth::user()->id;
 
-        if (!$p) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 415,
-                    'message' => 'Invalid images',
-                    'errors' => ['Your images are an invalid format']
-                )
-            );
-            return Response::json($res, 415);
-        }
+        $item->save();
 
-        /* Running HTML entities over the text input to minimise risk of XSS */
-        $input['title'] = e($input['title']);
-        $input['description'] = e($input['description']);
+        //TODO: Assume things are sweet and now move them onto the edit page to finish up.
+        $res = [
+            'message' => 'Success',
+            'id' => $item->id,
+            'redirect_url' => URL::action('ItemsController@edit')
+          ];
 
-        $item = $this->doItemCreationFromInput($input, $user_id);
-        $this->doShippingFromInput($input, $item->id);
-        Photo::resizeAndStoreUploadedImages($files, $item);
-
-        $res = array(
-            'meta' => array(
-                'statuscode' => 201,
-                'message' => 'Item successfully posted!'
-            ),
-
-            'data' => $item->toArray()
-        );
         return Response::json($res, 201);
 
     }
