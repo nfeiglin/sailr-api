@@ -31,6 +31,9 @@ View::composer('*', function ($view) {
     }
 });
 
+Route::get('i/i/i', function() {
+    return Holystone::sanitize('<blockquote>yoyoyoyo</blockquote> <a href="http://google.com">test</a>  http://facebook.com');
+});
 Route::get('/i/info', function () {
     phpinfo();
 });
