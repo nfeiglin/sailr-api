@@ -41,7 +41,7 @@ class ItemsController extends BaseController
         $input = Input::all();
         $rules = [
             'title' => 'required|max:255',
-            'currency' => 'required|currency|max:2',
+            'currency' => 'required|currency',
             'price' => 'required|numeric|max:999999'
         ];
 
@@ -67,10 +67,14 @@ class ItemsController extends BaseController
         $res = [
             'message' => 'Success',
             'id' => $item->id,
-            'redirect_url' => URL::action('ItemsController@edit')
+            'redirect_url' => URL::action('ItemsController@edit', $item->id)
           ];
 
         return Response::json($res, 201);
+
+    }
+
+    public function edit($id) {
 
     }
 
