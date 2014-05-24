@@ -38,7 +38,10 @@ class ItemsController extends BaseController
 
     public function store() {
 
-        $input = Input::all();
+        $input = Input::json()->all();
+
+        //return Response::json($input, 200);
+        //$input = ['title' => 'title', 'currency' => 'AUD', 'price' => 32.55];
         $rules = [
             'title' => 'required|max:255',
             'currency' => 'required|currency',
@@ -75,7 +78,16 @@ class ItemsController extends BaseController
     }
 
     public function edit($id) {
+        $item = Item::withTrashed()->findOrFail($id);
+       return View::make('items.edit')->with('title', 'Add a product')->with('item', $item);
+    }
 
+    public function update($id) {
+        $item = Item::withTrashed()->findOrFail($id);
+        if (Auth::user()->id != $item->user_id) {
+            $res = ['message' => 'Sorry, you can only edit your own products'];
+            return Response::json($res, 403);
+        }
     }
 
     /**
