@@ -351,5 +351,5 @@ input.ng-valid.ng-dirty:focus {
 
 
 [data-edit] {
-    font-size: 16px;
+    /* font-size: 16px; */
 }

@@ -8,7 +8,7 @@ angular.module('app', []).
 
                 // Specify how UI should be updated
                 ngModel.$render = function() {
-                    element.html(ngModel.$viewValue || '');
+                    element.html(ngModel.$viewValue);
                 };
 
                 // Listen for change events to enable binding
@@ -29,5 +29,20 @@ angular.module('app', []).
                 }
             }
         };
-    });
+    })
+
+.directive('num-binding', function () {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+            model: '=ngModel',
+        },
+        link: function (scope, element, attrs, ngModelCtrl) {
+            if (scope.model && typeof scope.model == 'string') {
+                scope.model = parseInt(scope.model);
+            }
+        }
+    };
+});
 

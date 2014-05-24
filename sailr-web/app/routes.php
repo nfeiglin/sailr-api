@@ -32,7 +32,23 @@ View::composer('*', function ($view) {
 });
 
 Route::get('i/i/i', function() {
-    return Holystone::sanitize('<blockquote>yoyoyoyo</blockquote> <a href="http://google.com">test</a>  http://facebook.com');
+    $input = ['title' => 'title', 'currency' => 'zzz', 'price' => 32.55];
+    $rules = [
+        'title' => 'required|max:255',
+        'currency' => 'required|currency',
+        'price' => 'required|numeric|max:999999'
+    ];
+
+    $v = Validator::make($input, $rules);
+
+    if($v->passes()) {
+        echo 'yolo';
+    }
+
+    //TODO add currency validator
+
+    $v = Validator::make($input, $rules);
+    //return Holystone::sanitize('<blockquote>yoyoyoyo</blockquote> <a href="http://google.com">test</a>  http://facebook.com');
 });
 Route::get('/i/info', function () {
     phpinfo();

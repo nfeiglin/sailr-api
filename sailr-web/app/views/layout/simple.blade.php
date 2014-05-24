@@ -52,9 +52,9 @@
 <link type="text/css" rel="stylesheet" href="{{ URL::asset('css/medium-editor.min.css') }}">
 <link type="text/css" rel="stylesheet" href="{{ URL::asset('css/medium-bootstrap.min.css') }}">
 
-<script src="----//dfimg.com/medium-editor/dist/js/medium-editor.-js"></script>
-<script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
 
+<script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
+<link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">
 
 </body>
 

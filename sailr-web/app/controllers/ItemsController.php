@@ -63,6 +63,7 @@ class ItemsController extends BaseController
         $item->currency = $input['currency'];
         $item->price = $input['price'];
         $item->user_id = Auth::user()->id;
+        $item->initial_units = 1; //A safe bet ;)
 
         $item->save();
 
@@ -78,16 +79,47 @@ class ItemsController extends BaseController
     }
 
     public function edit($id) {
-        $item = Item::withTrashed()->findOrFail($id);
+        $item = Item::withTrashed()->where('user_id', '=', Auth::user()->id)->where('id', '=', $id)->firstOrFail();
        return View::make('items.edit')->with('title', 'Add a product')->with('item', $item)->with('jsonItem', $item->toJson());
     }
 
     public function update($id) {
-        $item = Item::withTrashed()->findOrFail($id);
+        $input = Input::json()->all();
+        if(isset($input['created_at'])) {
+            unset($input['created_at']);
+        }
+
+        if(isset($input['description'])) {
+            $input['description'] = Holystone::sanitize($input['description']);
+        }
+
+        if(isset($input['title'])) {
+            $input['title'] = htmlentities($input['title']);
+        }
+
+        array_filter($input);
+
+        //TODO: VALIDATE
+
+        $item = Item::withTrashed()->where('user_id', '=', Auth::user()->id)->where('id', '=', $id)->firstOrFail();
+
         if (Auth::user()->id != $item->user_id) {
             $res = ['message' => 'Sorry, you can only edit your own products'];
             return Response::json($res, 403);
         }
+
+        $item->fill($input);
+        $item->save();
+
+        return Response::json($item->toArray(), 200);
+    }
+
+    public function toggleVisibility($id) {
+        $item = Item::where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->firstOrFail(['id', 'public']);
+        $numberOfPhotos = Photo::where('item_id', '=', $id)->count();
+
+       // if
+
     }
 
     /**

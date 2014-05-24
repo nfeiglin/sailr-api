@@ -26,7 +26,7 @@
 
             $http.post('/items', JSON.stringify($scope.formData))
                 .success(function(data, status, headers, config){
-                    console.log('tthe data is ' + JSON.stringify(data));
+                    console.log('the data to be sent is ' + JSON.stringify(data));
                     $scope.responseData = data;
                     console.log($scope.responseData);
                     window.location = $scope.responseData.redirect_url;
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                             <input type="hidden" ng-value="currency" name="currency" id="cur-hid">
-                            <input class="form-control" name="price" placeholder="0.00" type="number" data-ng-model="price" min="0" max="999999" required="required">
+                            <input class="form-control" name="price" placeholder="0.00" type="number" data-ng-model="price" step="any" min="0" max="999999" required="required">
                         </div>
                     </div>
 
@@ -106,6 +106,4 @@
     </div>
 </div>
 
-
-<link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">
 @stop
