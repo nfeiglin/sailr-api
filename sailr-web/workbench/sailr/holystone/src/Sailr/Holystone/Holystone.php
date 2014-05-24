@@ -7,6 +7,7 @@ class Holystone implements HolystoneInterface {
 
     protected $htmlPurifier;
     protected $holystoneConfig;
+    public $configuration;
 
     public function __construct() {
         $this->holystoneConfig = \HTMLPurifier_Config::createDefault();
@@ -26,6 +27,10 @@ class Holystone implements HolystoneInterface {
      */
     public function sanitize($html = '') {
         return $this->htmlPurifier->purify($html);
+    }
+
+    protected function assignHTMLPurifierConfig($config) {
+        //
     }
 
 }

@@ -79,7 +79,7 @@ class ItemsController extends BaseController
 
     public function edit($id) {
         $item = Item::withTrashed()->findOrFail($id);
-       return View::make('items.edit')->with('title', 'Add a product')->with('item', $item);
+       return View::make('items.edit')->with('title', 'Add a product')->with('item', $item)->with('jsonItem', $item->toJson());
     }
 
     public function update($id) {
