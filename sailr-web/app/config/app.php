@@ -109,7 +109,7 @@ return array(
         'Way\Generators\GeneratorsServiceProvider',
         'Intervention\Image\ImageServiceProvider',
         'Sailr\Holystone\HolystoneServiceProvider',
-        'Sailr\Currencyvalidator\CurrencyvalidatorServiceProvider',
+        'Sailr\Validator\ValidatorServiceProvider',
 
     ),
 

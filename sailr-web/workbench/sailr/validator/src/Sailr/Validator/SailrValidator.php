@@ -1,7 +1,38 @@
 <?php
 
-class CountryValidator extends Illuminate\Validation\Validator
-{
+namespace Sailr\Validator;
+use Illuminate\Validation\Validator as Validator;
+use Illuminate\Validation\Factory;
+
+class SailrValidator extends Validator {
+
+    public function validateCurrency($attribute, $value, $parameters) {
+
+        $codes = [
+            'USD',
+            'AUD',
+            'CAD',
+            'GBP',
+            'EUR',
+            'CHF',
+            'PLN',
+            'CZK',
+            'DKK',
+            'NOK',
+            'SEK',
+            'ILS',
+            'HKD',
+            'PHP',
+            'NZD',
+            'RUB',
+            'THB',
+            'SGD',
+            'MXN',
+        ];
+
+        return in_array($value, $codes);
+    }
+
     public function validateCountry($attribute, $value, $parameters)
     {
         $countries = array(
@@ -266,10 +297,7 @@ class CountryValidator extends Illuminate\Validation\Validator
             'Zimbabwe'
         );
 
-        if (in_array($value, $countries)) {
-            return true;
-        }
+       return in_array($value, $countries);
 
-        return false;
     }
-}
+} 

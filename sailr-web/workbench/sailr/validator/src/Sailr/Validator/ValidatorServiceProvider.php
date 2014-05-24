@@ -1,8 +1,10 @@
-<?php namespace Sailr\Currencyvalidator;
+<?php namespace Sailr\Validator;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Validator;
+use Illuminate\Validation\Factory;
 
-class CurrencyvalidatorServiceProvider extends ServiceProvider {
+class ValidatorServiceProvider extends ServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,15 +20,15 @@ class CurrencyvalidatorServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-        $this->app->validator->resolver(function($translator, $data, $rules, $messages)
-        {
-            return new CurrencyValidator($translator, $data, $rules, $messages);
-        });
+
 	}
 
-    public function boot()
-    {
-
+    public function boot() {
+        $this->package('sailr/validator');
+        $this->app->validator->resolver(function($translator, $data, $rules, $messages)
+        {
+            return new SailrValidator($translator, $data, $rules, $messages);
+        });
     }
 
 	/**
@@ -34,9 +36,11 @@ class CurrencyvalidatorServiceProvider extends ServiceProvider {
 	 *
 	 * @return array
 	 */
+    /*
 	public function provides()
 	{
 		return array();
 	}
+    */
 
 }

@@ -1,5 +1,5 @@
 {
-    "name": "sailr/currencyvalidator",
+    "name": "sailr/validator",
     "description": "",
     "authors": [
         {
@@ -9,11 +9,12 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.1.*"
+        "illuminate/support": "4.1.*",
+        "illuminate/validation": "4.1.*"
     },
     "autoload": {
         "psr-0": {
-            "Sailr\\Currencyvalidator": "src/"
+            "Sailr\\Validator": "src/"
         }
     },
     "minimum-stability": "stable"

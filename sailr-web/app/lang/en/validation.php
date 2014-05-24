@@ -70,7 +70,7 @@ return array(
     "url" => "The :attribute format is invalid.",
     "country" => "The :attribute must be a country",
     "UsernameOrUnique" => "The requested :attribute is already taken",
-
+    "currency" => "This currency is unsupported",
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
