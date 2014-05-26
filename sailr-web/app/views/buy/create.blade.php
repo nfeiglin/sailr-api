@@ -3,17 +3,19 @@
 	@section('content')
 	<script async="async" defer="defer">
 	var item = {{ json_encode($item) }};
-	var internationalShippingPrice = {{ $item['shipping'][1]['price'] or ''}};
-	var domesticShippingPrice = {{ $item['shipping'][0]['price']  or '' }};
+	var internationalShippingPrice = {{ $item['shipping'][1]['price'] or '999'}};
+	var domesticShippingPrice = {{ $item['shipping'][0]['price']  or '999' }};
 	</script>
+    
 		<div class="form-signin wide panel">
-			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price']}}</small></h2>
+			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price'] }}</small></h2>
             <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
 				<div class="row">
 
 </div>
 
 			<?php $item['user']['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
+
 			<div class="well item buy-page" id="{{ $item['id'] }}">
 					<div class="caption">
         				<p> {{ $item['description'] }}</p>
@@ -70,7 +72,7 @@
                             <h3 class="modal-title">{{{ $title }}}</h3>
                         </div>
                         <div class="modal-body">
-                            {{ Form::open(['action' => ['BuyController@store', $item['id']], 'class' => 'form-horizontal', 'autocomplete' => 'off', 'validate', 'validate']) }}
+                            {{ Form::open(['action' => array('BuyController@store', $item['id']), 'class' => 'form-horizontal', 'autocomplete' => 'off', 'validate', 'validate']) }}
 
                             <h4>Your Details</h4>
                             <div class="row">

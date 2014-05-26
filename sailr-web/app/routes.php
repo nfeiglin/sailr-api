@@ -1,6 +1,7 @@
 <?php
 use Intervention\Image\Facades;
 
+    Route::post('buy/{id}', 'BuyController@store', ['before' => 'auth']);
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -79,6 +80,7 @@ Route::group(['before' => 'csrf'], function () {
 
     Route::get('item/show/{id}', 'BuyController@create');
     Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
+
     Route::resource('items', 'ItemsController');
 
     Route::group(['before' => 'guest'], function () {
