@@ -3,8 +3,8 @@
 	@section('content')
 	<script async="async" defer="defer">
 	var item = {{ json_encode($item) }};
-	var internationalShippingPrice = {{ $item['shipping'][1]['price'] }};
-	var domesticShippingPrice = {{ $item['shipping'][0]['price'] }};
+	var internationalShippingPrice = {{ $item['shipping'][1]['price'] or ''}};
+	var domesticShippingPrice = {{ $item['shipping'][0]['price']  or '' }};
 	</script>
 		<div class="form-signin wide panel">
 			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price']}}</small></h2>
@@ -16,7 +16,7 @@
 			<?php $item['user']['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
 			<div class="well item buy-page" id="{{ $item['id'] }}">
 					<div class="caption">
-        				<p> {{{ $item['description'] }}}</p>
+        				<p> {{ $item['description'] }}</p>
         			</div>
 
         			<div class="img-gallery">
@@ -39,18 +39,18 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <td>{{ $shippings[0]['type'] }}</td>
-                            <td>{{ $shippings[1]['type'] }}</td>
+                            <td>{{ $shippings[0]['type'] or ''}}</td>
+                            <td>{{ $shippings[1]['type'] or '' }}</td>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{{ $shippings[0]['desc'] }}}</td>
-                            <td>{{{ $shippings[1]['desc'] }}}</td>
+                            <td>{{{ $shippings[0]['desc'] or '' }}}</td>
+                            <td>{{{ $shippings[1]['desc'] or '' }}}</td>
                         </tr>
                             <tr>
-                                <td>{{ $item['currency']}}{{$shippings[0]['price']}}</td>
-                                <td>{{ $item['currency']}}{{$shippings[1]['price']}}</td>
+                                <td>{{ $item['currency']}}{{$shippings[0]['price'] or ''}}</td>
+                                <td>{{ $item['currency']}}{{$shippings[1]['price'] or ''}}</td>
 
                             </tr>
                         </tbody>
