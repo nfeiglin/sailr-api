@@ -5,6 +5,7 @@
 <script>
     var sessionToken = '{{ Session::token() }}';
     var updateURL = '{{ URL::action('ItemsController@update', $item->id) }}'
+    var countries = {{ json_encode(Config::get('countries')) }};
     var itemModel = {{ $jsonItem }};
     itemModel.price = parseFloat(itemModel.price);
 
@@ -18,7 +19,8 @@
 </script>
 
 <script>
-    function editController($scope, $http) {
+    function editController($scope, $http, $upload) {
+        $scope.countries = countries;
         $scope.item = {};
         $scope.item = itemModel;
 
@@ -61,6 +63,41 @@
 
         };
 
+        $scope.onFileSelect = function($files) {
+            //$files: an array of files selected, each file has name, size, and type.
+            for (var i = 0; i < $files.length; i++) {
+                var file = $files[i];
+                console.log(file);
+
+                $scope.upload = $upload.upload({
+                    url: 'server/upload/url', //upload.php script, node.js route, or servlet url
+                    // method: 'POST' or 'PUT',
+                    // headers: {'header-key': 'header-value'},
+                    // withCredentials: true,
+                    data: {myObj: $scope.myModelObj},
+                    file: file,
+                    fileFormDateName: 'photo'
+                     // or list of files: $files for html5 only
+                    /* set the file formData name ('Content-Desposition'). Default is 'file' */
+                    //fileFormDataName: myFile, //or a list of names for multiple files (html5).
+                    /* customize how data is added to formData. See #40#issuecomment-28612000 for sample code */
+                    //formDataAppender: function(formData, key, val){}
+                }).progress(function(evt) {
+                        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+                    }).success(function(data, status, headers, config) {
+                        // file is uploaded successfully
+                        console.log(data);
+                    });
+                //.error(...)
+                //.then(success, error, progress);
+                //.xhr(function(xhr){xhr.upload.addEventListener(...)})// access and attach any event listener to XMLHttpRequest.
+            }
+            /* alternative way of uploading, send the file binary with the file's content-type.
+             Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed.
+             It could also be used to monitor the progress of a normal http post/put request with large data*/
+            // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+        };
+
     }
 </script>
 <div class="form-signin panel wide" data-ng-controller="editController">
@@ -70,6 +107,14 @@
     <div class="form-group">
         <label for="photos">Images</label>
         <input class="form-control" type="file" multiple="multiple" accept="image/*" name="photos" id="photos" placeholder="Add photos">
+
+        <input type="file" ng-file-select="onFileSelect($files)" accept="image/*">
+        <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*">
+        <div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class"
+             ng-show="dropSupported">drop files here</div>
+        <div ng-file-drop-available="dropSupported=true"
+             ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
+        <button ng-click="upload.abort()">Cancel Upload</button>
     </div>
 
     {{-- THE MAIN DESCRIPTION  --}}
@@ -105,9 +150,7 @@
         <div class="col-sm-6">
             <label for="shipping-country">Where will you ship to?</label>
             <select class="form-control" name="ships_to" id="shipping-country" data-ng-model="item.ships_to">
-                @foreach(Config::get('countries') as $code => $countryname)
-                <option value="{{ $code }}">{{ $countryname }}</option>
-                @endforeach
+                <option data-ng-repeat="(code, name) in countries" value="@{{ code }}">@{{ name }}</option>
             </select>
         </div>
 
@@ -147,7 +190,7 @@
                     Loading..
                 </div>
             </div>
-            <a data-ng-click="saveChanges()" class="btn btn-lg pull-right btn-default">Publish</a>
+            <a data-ng-click="saveChanges()" class="btn btn-lg pull-right btn-default"><i class="glyphicon glyphicon-upload"></i> Publish</a>
         </div>
     </div>
 

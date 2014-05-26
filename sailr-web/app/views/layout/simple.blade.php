@@ -52,6 +52,8 @@
 <link type="text/css" rel="stylesheet" href="{{ URL::asset('css/medium-editor.min.css') }}">
 <link type="text/css" rel="stylesheet" href="{{ URL::asset('css/medium-bootstrap.min.css') }}">
 
+{{ HTML::script('js/angular-file/angular-file-upload-shim.min.js') }}
+{{ HTML::script('js/angular-file/angular-file-upload.min.js') }}
 
 <script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
 <link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">

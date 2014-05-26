@@ -3,9 +3,13 @@
 
 <div class="row" data-ng-controller="indexController">
     <script>
+        var currencyCodes = {{ json_encode(Config::get('currencies.codes')) }};
+    </script>
+
+    <script>
         function indexController($scope, $http, $q, $location) {
             $scope.currency = 'USD';
-            $scope.codes = {{ json_encode(Config::get('currencies.codes')) }};
+            $scope.codes = currencyCodes;
             $scope.handleCodeChange = function($index) {
                 $scope.currency = $scope.codes[$index];
                 console.log($scope.currency);

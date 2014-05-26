@@ -272,7 +272,6 @@ if (typeof module === 'object') {
             this.initElements()
                 .bindSelect()
                 .bindPaste()
-                .setPlaceholders()
                 .bindWindowActions();
         },
 

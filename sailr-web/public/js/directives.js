@@ -1,4 +1,4 @@
-angular.module('app', []).
+angular.module('app', ['angularFileUpload']).
     directive('contenteditable', function() {
         return {
             restrict: 'A', // only activate on element attribute
