@@ -26,7 +26,7 @@
                         <?php $item['photos'][1]['url'] = 'http://sailr.web/img/default-lg.jpg' ?>
 						@foreach($item['photos'] as $photo)
       						<div class="gallery-item">
-      							<img draggable="false" src=" {{ $photo['url'] }}" class="img-responsive" alt="...">
+      							<img draggable="false" src=" {{ $photo['url'] }}" class="img-responsive" alt="Photo of {{{ $item['title'] }}}">
       						</div>
       					@endforeach
       				</div>
