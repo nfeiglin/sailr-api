@@ -9,6 +9,7 @@
     var itemModel = {{ $jsonItem }};
     itemModel.price = parseFloat(itemModel.price);
 
+/*
     if(itemModel.ship_price >= 0 || itemModel.ship_price.length > 0) {
         itemModel.ship_price = parseFloat(itemModel.ship_price);
     }
@@ -16,13 +17,21 @@
     var filteredItem = itemModel.filter(function(val) {
         return !(val === "" || typeof val == "undefined" || val === null);
     });
+
+    */
+    var openFileBrowser = function () {
+        document.getElementById('addFiles').click();
+    };
+
 </script>
 
 <script>
-    function editController($scope, $http, $upload) {
+    function editController($scope, $http, $upload, $timeout, $rootScope, scopeService) {
         $scope.countries = countries;
         $scope.item = {};
         $scope.item = itemModel;
+        $scope.photos = [];
+        $scope.dataUrls = [];
 
         /* Set the inital values for these fields as the data binding is a bit dodgey */
         document.getElementById('title-heading').innerText = $scope.item.title;
@@ -63,10 +72,45 @@
 
         };
 
+        $scope.isFileBrowserOpen = false;
+        $scope.openFileBrowser = function() {
+            if (!$scope.isFileBrowserOpen) {
+                $scope.isFileBrowserOpen = true;
+                scopeService.safeApply($rootScope, function() {
+                    document.getElementById('addFiles').click();
+                });
+                $scope.isFileBrowserOpen = false;
+            }
+            console.log('BUTTON CLICKED');
+
+        };
+
+        $scope.tempURL = '';
         $scope.onFileSelect = function($files) {
             //$files: an array of files selected, each file has name, size, and type.
             for (var i = 0; i < $files.length; i++) {
                 var file = $files[i];
+                if (window.FileReader && file.type.indexOf('image') > -1) {
+                    var fileReader = new FileReader();
+                    fileReader.readAsDataURL($files[i]);
+
+                    var loadFile = function(fileReader, index) {
+                        fileReader.onload = function(e) {
+                            $timeout(function() {
+                                $scope.dataUrls[index] = e.target.result;
+                                console.log(e.target.result);
+                                $scope.photos.push({url: e.target.result});
+                                $scope.tempURL =  e.target.result;
+                            });
+                        }
+                    }(fileReader, i);
+                }
+
+               $scope.tempURL = '"' + $scope.tempURL + '"';
+                var newSlide = '<div class="gallery-item"><img draggable="false" src=' + $scope.tempURL + 'class="img-responsive fit-gallery-sq gallery-content" alt="..."></div>'
+
+                $('.img-gallery').slickAdd(newSlide);
+
                 console.log(file);
 
                 $scope.upload = $upload.upload({
@@ -103,6 +147,27 @@
 <div class="form-signin panel wide" data-ng-controller="editController">
     <button class="btn btn-block btn-info" ng-click="buttonPressed()"></button>
     <div class="form-signin-heading h2" id="title-heading" data-ng-model="item.title" contenteditable="true"></div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="add-photos-gallery" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover" ng-show="dropSupported" onclick="openFileBrowser()">
+                    <div class="h3">Add more photos by dropping them here</div>
+
+                    <a href="#" class="btn btn-lg btn-primary" onclick="openFileBrowser()">
+                        <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
+                        <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
+                    </a>
+
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-4 col-sm-4 col-md-4" data-ng-repeat="photo in photos">
+                <div class="thumbnail">
+                    <img ng-src="@{{ photo.url }}" class="img-responsive" alt="...">
+                </div>
+            </div>
+        </div>
+
+
 
     <div class="form-group">
         <label for="photos">Images</label>

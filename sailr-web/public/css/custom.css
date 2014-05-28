@@ -353,3 +353,73 @@ input.ng-valid.ng-dirty:focus {
 [data-edit] {
     /* font-size: 16px; */
 }
+
+.add-photos-gallery {
+    max-width: 612px;
+    min-height: 612px;
+    width: 100%;
+    height: 100%;
+    background: purple;
+    -webkit-transition: all .2s ease-in-out;
+    border-width: 3px;
+    border-style: dashed;
+    border-color: grey;
+    color: #ffffff;
+}
+
+.center-middle {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dragover{
+    /*
+    content: "Drop!";
+    background: #ffff00;
+    color: red;
+    */
+
+    -webkit-transform: scale(0.95);
+    border: none;
+}
+.dragover > .h3 {
+    color: #ffffff;
+    content: "hello!!!";
+}
+
+.gallery-content {
+    padding-top: 50%;
+}
+
+input[type="file"] {
+    opacity: 0;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    height: 0;
+    width: 0;
+    overflow:hidden;
+
+}
+
+.fit-gallery-sq {
+    max-height: 612px;
+    max-width: 612px;
+}
+
+
+.img-square-clip {
+    /*
+    position: fixed;
+    clip:rect(0,180px,180px,0);
+    */
+
+    height: 90px;
+}
+
+
+img {
+    /*
+    clip:rect(0,180px,180px,0);
+    position: relative;
+    */
+}
