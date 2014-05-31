@@ -5,5 +5,5 @@ return [
     'attributes' => ['href'],
     'linkify' => true,
     'nofollow' => true,
-    'autoParagraph' => false,
+    'autoParagraph' => true,
 ];
