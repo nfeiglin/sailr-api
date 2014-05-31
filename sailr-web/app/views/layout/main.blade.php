@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.min.js"></script>
+    <title>Sailr | {{{$title}}}</title>
+
+    <script src="{{ URL::asset('js/angular-file/angular-file-upload-shim.min.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="{{ URL::asset('js/angular-file/angular-file-upload.min.js') }}"></script>
     <script src="{{ URL::asset('js/directives.js') }}"></script>
-   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="{{-- URL::asset('css/bootstrap.css') --}}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('slick/slick.css') }}">
-    @yield('head','')
-   <title>Sailr | {{{$title}}}</title>
+    <script>
+        var csrfToken = '{{ Session::token() }}';
+        var baseURL = 'http://homestead.app:8000';
+    </script>
 
+    @yield('head','')
 </head>
 
 <body class="purpleBackground">
@@ -39,10 +46,9 @@
 
 
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{ URL::asset('slick/slick.min.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
+    <script type="text/javascript" src="{{-- URL::asset('js/main.js') --}}"></script>
 </body>
 
 </html>

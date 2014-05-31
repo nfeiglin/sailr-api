@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
+    <title>Sailr | {{{$title}}}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
     <script src="{{ URL::asset('js/directives.js') }}"></script>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -10,8 +11,11 @@
     <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('slick/slick.css') }}">
 
-    <title>Sailr | {{{$title}}}</title>
-
+    <script>
+        var csrfToken = '{{ Session::token() }}';
+        var baseURL = 'http://homestead.app:8000';
+    </script>
+    @yield('head', '')
 </head>
 
 <body>

@@ -1,51 +1,16 @@
 @extends('layout.main')
+
+@section('head')
+<script>
+    var currencyCodes = {{ json_encode(Config::get('currencies.codes')) }};
+</script>
+
+<script src="{{ URL::asset('js/controllers/items/indexController.js') }}"></script>
+@stop
+
 @section('content')
 
-<div class="row" data-ng-controller="indexController">
-    <script>
-        var currencyCodes = {{ json_encode(Config::get('currencies.codes')) }};
-    </script>
-
-    <script>
-        function indexController($scope, $http, $q, $location) {
-            $scope.currency = 'USD';
-            $scope.codes = currencyCodes;
-            $scope.handleCodeChange = function($index) {
-                $scope.currency = $scope.codes[$index];
-                console.log($scope.currency);
-            };
-
-            $scope.toggleAdd = function() {
-                $scope.shouldShowAdd = !$scope.shouldShowAdd;
-                $('#addItem').slideToggle(300);
-                console.log('Show pressed');
-            };
-
-        document.scope = $scope;
-
-        $scope.formSubmit = function() {
-            $scope.posting = true;
-            $scope.formData = {_token: $('#csrf-token').val(), title: $scope.title, currency: $scope.currency, price: $scope.price};
-            console.log($scope.formData);
-
-            $http.post('/items', JSON.stringify($scope.formData))
-                .success(function(data, status, headers, config){
-                    console.log('the data to be sent is ' + JSON.stringify(data));
-                    $scope.responseData = data;
-                    console.log($scope.responseData);
-                    window.location = $scope.responseData.redirect_url;
-                    $scope.posting = false;
-                })
-
-            .error(function(data, status, headers, config) {
-                    console.log(data);
-                    $scope.posting = false;
-
-            });
-        };
-
-        }
-    </script>
+<div class="row" ng-controller="indexController">
     <div class="cont">
         <div class="panel">
 
@@ -55,7 +20,7 @@
 
             <div class="add-new-form panel animate-down vis-hidden" id="addItem">
                 <form class='form-horizontal' data-ng-submit="formSubmit()" name="itemForm">
-                <input type="hidden" value="{{ Session::token() }}" ng-init="{{ Session::token() }}" data-ng-model="csrftoken" id="csrf-token">
+                <input type="hidden" value="{{ Session::token() }}" name="_token">
                 <div class="product-list panel-body">
                     <div class="col-xs-5 col-lg-8 col-md-8 col-sm-7">
                         <input type="text" class="form-control" placeholder="Item name" name="title" data-ng-model="title" ng-maxlength="255" required="required">

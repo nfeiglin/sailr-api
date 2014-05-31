@@ -1,37 +1,38 @@
-angular.module('app', ['angularFileUpload']).
-    directive('contenteditable', function() {
-        return {
-            restrict: 'A', // only activate on element attribute
-            require: '?ngModel', // get a hold of NgModelController
-            link: function(scope, element, attrs, ngModel) {
-                if(!ngModel) return; // do nothing if no ng-model
+var app = angular.module('app', ['angularFileUpload']);
 
-                // Specify how UI should be updated
-                ngModel.$render = function() {
-                    element.html(ngModel.$viewValue);
-                };
+app.directive('contenteditable', function () {
+    return {
+        restrict: 'A', // only activate on element attribute
+        require: '?ngModel', // get a hold of NgModelController
+        link: function (scope, element, attrs, ngModel) {
+            if (!ngModel) return; // do nothing if no ng-model
 
-                // Listen for change events to enable binding
-                element.on('blur keyup change input', function() {
-                    scope.$apply(read);
-                });
-                read(); // initialize
+            // Specify how UI should be updated
+            ngModel.$render = function () {
+                element.html(ngModel.$viewValue);
+            };
 
-                // Write data to the model
-                function read() {
-                    var html = element.html();
-                    // When we clear the content editable the browser leaves a <br> behind
-                    // If strip-br attribute is provided then we strip this out
-                    if( attrs.stripBr && html == '<br>' ) {
-                        html = '';
-                    }
-                    ngModel.$setViewValue(html);
+            // Listen for change events to enable binding
+            element.on('blur keyup change input', function () {
+                scope.$apply(read);
+            });
+            read(); // initialize
+
+            // Write data to the model
+            function read() {
+                var html = element.html();
+                // When we clear the content editable the browser leaves a <br> behind
+                // If strip-br attribute is provided then we strip this out
+                if (attrs.stripBr && html == '<br>') {
+                    html = '';
                 }
+                ngModel.$setViewValue(html);
             }
-        };
-    })
+        }
+    };
+});
 
-.directive('num-binding', function () {
+app.directive('num-binding', function () {
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -44,20 +45,7 @@ angular.module('app', ['angularFileUpload']).
             }
         }
     };
-})
-
-.service('scopeService', function() {
-    return {
-        safeApply: function ($scope, fn) {
-            var phase = $scope.$root.$$phase;
-            if (phase == '$apply' || phase == '$digest') {
-                if (fn && typeof fn === 'function') {
-                    fn();
-                }
-            } else {
-                $scope.$apply(fn);
-            }
-        },
-    };
 });
+
+
 

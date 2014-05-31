@@ -1,3 +1,4 @@
+
 var totalPriceText = $('#total-price');
 var checkoutBtn = $('#checkout-btn');
 $(document).ready(function(){
@@ -18,7 +19,10 @@ $('#hidden-form').hide();
 
 var total = 0;
 
-item['price'] = parseFloat(item['price']);
+if (!typeof item === 'undefined') {
+    item['price'] = parseFloat(item['price']);
+}
+
 
 var doUpdatePrice = function() {
   if($('#country').val() == item['country']) {
