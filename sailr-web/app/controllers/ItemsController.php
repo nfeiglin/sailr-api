@@ -79,7 +79,13 @@ class ItemsController extends BaseController
     }
 
     public function edit($id) {
-        $item = Item::withTrashed()->where('user_id', '=', Auth::user()->id)->where('id', '=', $id)->firstOrFail();
+        $item = Item::where('user_id', '=', Auth::user()->id)->with([
+           'Photos' => function($x) {
+               $x->where('type', '=', 'thumbnail');
+               $x->select(['item_id', 'url']);
+           }
+        ])->withTrashed()->where('id', '=', $id)->firstOrFail();
+
        return View::make('items.edit')->with('title', 'Add a product')->with('item', $item)->with('jsonItem', $item->toJson());
     }
 
@@ -117,8 +123,7 @@ class ItemsController extends BaseController
     public function toggleVisibility($id) {
         $item = Item::where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->firstOrFail(['id', 'public']);
         $numberOfPhotos = Photo::where('item_id', '=', $id)->count();
-
-       // if
+        //NOW VALIDATE THAT IT IS SAFE TO SHOW publically
 
     }
 
