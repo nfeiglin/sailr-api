@@ -2,6 +2,7 @@
 use Intervention\Image\Facades;
 
     Route::post('buy/{id}', 'BuyController@store', ['before' => 'auth']);
+    //Testing
 /*
 |--------------------------------------------------------------------------
 | Application Routes
