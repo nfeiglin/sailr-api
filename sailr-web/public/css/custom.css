@@ -360,7 +360,6 @@ input.ng-valid.ng-dirty:focus {
     width: 100%;
     height: 100%;
     background: purple;
-    -webkit-transition: all .2s ease-in-out;
     border-width: 3px;
     border-style: dashed;
     border-color: grey;
@@ -372,15 +371,22 @@ input.ng-valid.ng-dirty:focus {
     vertical-align: middle;
 }
 
+.ease-in-out {
+    -webkit-transition: all .2s ease-in-out;
+}
 .dragover{
-    /*
-    content: "Drop!";
-    background: #ffff00;
-    color: red;
-    */
+    padding-top: 25%;
+    padding-bottom: 25%;
 
-    -webkit-transform: scale(0.95);
-    border: none;
+    border-width: 3px;
+    border-style: dashed;
+    border-color: grey;
+    color: #ffffff;
+    -webkit-transform: scale(0.96);
+}
+
+.dragover:before {
+
 }
 .dragover > .h3 {
     color: #ffffff;
