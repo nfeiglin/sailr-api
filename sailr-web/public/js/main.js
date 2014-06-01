@@ -1482,8 +1482,8 @@ var mediumEditor = new MediumEditor('[data-md-ed]', {
     firstHeader: 'h3',
     secondHeader:'h4',
     cleanPastedHTML: false,
-    buttons: ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote', 'unorderedlist'],
-    disableEditing: true,
+    buttons: ['bold', 'italic', 'anchor', 'header1', 'header2', 'blockquote', 'unorderedlist'],
+    disableEditing: false
 
 
 });
