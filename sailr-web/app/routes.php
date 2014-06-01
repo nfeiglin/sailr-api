@@ -98,6 +98,9 @@ Route::group(['before' => 'csrf'], function () {
     Route::group(['before' => ['auth']], function () {
         Route::resource('{username}/profile_img', 'ProfileImageController');
         Route::post('photo/upload/{item_id}', 'PhotosController@store');
+        Route::delete('photo/{item_id}', 'PhotosController@destroy');
+        Route::put('photo/{item_id}', 'PhotosController@destroy');
+
         Route::post('buy/{id}', 'BuyController@store');
         Route::any('buy/{id}/cancel', 'BuyController@cancel');
         Route::get('buy/{id}/confirm', 'BuyController@showConfirm');

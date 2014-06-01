@@ -6,6 +6,7 @@
     var updateURL = '{{ URL::action('ItemsController@update', $item->id) }}'
     var countries = {{ json_encode(Config::get('countries')) }};
     var itemModel = {{ $jsonItem }};
+    var currencies = {{ json_encode(Config::get('currencies.both')) }};
 </script>
 <script src="{{ URL::asset('js/controllers/items/editController.js') }}"></script>
 @stop
@@ -19,9 +20,12 @@
     <div class="row file-drop ease-in-out" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-            <div class="col-sm-4 col-lg-4 col-sm-4 col-md-4" data-ng-repeat="photo in photos">
+            <div class="col-sm-4 col-lg-4 col-sm-4 col-md-4" data-ng-repeat="photo in photos" ng-if="!photo.deleted">
                 <div class="thumbnail">
                     <img ng-src="@{{ photo.url }}" class="img-responsive" alt="Thumbnail preview image" draggable="false">
+                    <button ng-if="photo.set_id" ng-click="deletePhoto($index)" class="btn btn-xs btn-block btn-danger delete-image">
+                        <i class="glyphicon glyphicon-trash"></i> Delete
+                    </button>
                 </div>
             </div>
 
@@ -30,7 +34,7 @@
                     <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
                     <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
                 </a>
-                <p class="help-block">Photos will be automagically cropped and scaled to a square. Maximum size 8MB.</p>
+                <p class="help-block">Photos will be automagically cropped and scaled to a square. Square photos of at least 612px horizontally are encouraged. Maximum size 7MB.</p>
             </div>
 
         </div>
@@ -46,14 +50,7 @@
     <div class="row form-group">
         <div class="col-sm-6">
             <label for="currency">Currency</label>
-            <select class="selectpicker form-control" name="currency" id="currency" data-live-search="true" data-ng-model="item.currency">
-
-                @foreach(Config::get('currencies.both') as $currencyCode => $currencyName)
-                <option value="{{ $currencyCode }}" data-subtext="{{ $currencyCode }}">
-                    {{ $currencyCode }} ({{ $currencyName }})
-                </option>
-                @endforeach
-
+            <select class="selectpicker form-control" name="currency" id="currency" data-live-search="true" data-ng-model="item.currency" ng-options="currencyCode as currencyName + ' (' + currencyCode + ')' for (currencyCode, currencyName) in currencies">
             </select>
         </div>
 
@@ -62,7 +59,7 @@
 
             <div class="input-group">
                 <span class="input-group-addon ease-in-out">@{{ item.currency }}</span>
-                <input class="form-control" name="price" id="item-price" placeholder="0.00" type="number" num-binding step="any" ng-model="item.price" min="0" max="9999999">
+                <input class="form-control" name="price" id="item-price" placeholder="0.00" type="number" step="any" ng-model="item.price" min="0" max="99999">
             </div>
 
         </div>
@@ -73,8 +70,7 @@
     <div class="row form-group">
         <div class="col-sm-6">
             <label for="shipping-country">Where will you ship to?</label>
-            <select class="form-control" name="ships_to" id="shipping-country" data-ng-model="item.ships_to">
-                <option data-ng-repeat="(code, name) in countries" value="@{{ code }}">@{{ name }}</option>
+            <select class="form-control" name="ships_to" id="shipping-country" ng-init="item.ships_to" ng-model="item.ships_to" ng-options="code as name for (code, name) in countries">
             </select>
         </div>
 
@@ -104,8 +100,7 @@
         <div class="form-group">
             <h3>Description</h3>
 
-            <div ng-model="item.description" class="well" contenteditable data-edit data-md-ed
-                 id="item-description"></div>
+            <div ng-model="item.description" class="well" contenteditable data-edit data-md-ed id="item-description"></div>
         </div>
 
     </div>
@@ -125,5 +120,25 @@
 
 </div>
 
+<div class="modal fade" id="crop-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <div id="image_input"></div>
+                <h3>Crop</h3>
+                <img id="image_output" class="img-responsive noSelect">
+                <textarea id="image_source" style="height:100px;width:200px"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 @stop

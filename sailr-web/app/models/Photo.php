@@ -2,9 +2,11 @@
 
 class Photo extends \Eloquent
 {
-    protected $fillable = ['user_id', 'item_id', 'type', 'url'];
+    protected $fillable = ['user_id', 'item_id', 'type', 'url', 'set_id'];
     protected $hidden = ['item_id'];
     protected $softDelete = true;
+    public static $setIDs = [];
+    public static $thumbURLs = [];
 
     public function item()
     {
@@ -51,29 +53,40 @@ class Photo extends \Eloquent
         return true;
     }
     public static function resizeAndStoreUploadedImages ($files, Item $item) {
-
+        $i = 0;
         $photoSizes = array(
             'full_res' => ['size' => 612, 'quality' => 80],
             'thumbnail' => ['size' => 150, 'quality' => 60]
         );
+
         foreach ($files as $image) {
+            $set_id = uniqid(); //This id allows us to easily select the same photo in all its different sizes.
+
             foreach ($photoSizes as $type => $sizeAndQuality) {
                 $newPath = 'img/' . sha1(microtime()) . '.jpg';
                 $encodedImage = Image::make($image->getRealPath());
-                $encodedImage->resize($sizeAndQuality['size'], $sizeAndQuality['size'], false);
+                $encodedImage->fit($sizeAndQuality['size'], $sizeAndQuality['size']);
                 $encodedImage->encode('jpg', $sizeAndQuality['quality']);
                 $encodedImage->save($newPath);
 
-
+                $savedURL = asset($newPath);
                 Photo::create([
                     'user_id' => $item->user_id,
                     'item_id' => $item->id,
+                    'set_id' => $set_id,
                     'type' => $type,
-                    'url' => asset($newPath)
+                    'url' => $savedURL
                 ]);
 
-            }
 
+                if ($type == 'thumbnail') {
+                    Photo::$thumbURLs[$i] = $savedURL;
+                    Photo::$setIDs[$i] = $set_id;
+                }
+
+
+            }
+            $i++;
         }
 
         return true;

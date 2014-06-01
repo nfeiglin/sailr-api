@@ -42,9 +42,9 @@ class PhotosController extends \BaseController
         $item = Item::where('user_id', '=', Auth::user()->id)->where('id', '=', $item_id)->firstOrFail(['id', 'title', 'user_id']);
         $files = Input::file($filePostedKeyName);
 
-        $v = Validator::make(['photo' => $files], ['photo' => 'image|size:7168']);
+        $v = Validator::make(['photo' => $files], ['photo' => 'image|max:7168']); //7MB
         if ($v->fails()) {
-            return Response::json('Your file is too large. Please compress it first or try another', 400);
+            return Response::json('Your file is too large.', 400);
 
         }
         $filesArray = $files;
@@ -55,8 +55,12 @@ class PhotosController extends \BaseController
 
 
         $p = Photo::resizeAndStoreUploadedImages($filesArray, $item);
+
         if($p) {
-            $res = ['input' => $input, 'headers' => $headers, 'file' => $files];
+            $setID = Photo::$setIDs[0];
+            $thumbailURL = Photo::$thumbURLs[0];
+
+            $res = ['set_id' => $setID, 'url' => $thumbailURL];
             return Response::json($res, 201);
         }
         return Response::json('There was an error uploading the photo', 400);
@@ -98,12 +102,15 @@ class PhotosController extends \BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int $item_id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($item_id)
     {
-        //
+        $photos = Photo::where('item_id', '=', $item_id)->where('user_id', '=', Auth::user()->id)->where('set_id', '=', (string) Input::get('set_id'))->delete();
+
+        return Response::make(null,204);
+
     }
 
 }
