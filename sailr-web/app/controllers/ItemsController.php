@@ -10,7 +10,7 @@ class ItemsController extends BaseController
      */
     public function index()
     {
-        $items = Item::WhereUser(Auth::user())->get(['title', 'price', 'currency']);
+        $items = Item::WhereUser(Auth::user())->get(['title', 'price', 'currency', 'id']);
         return View::make('items.index')
             ->with('title', 'My products')
             ->with('items', $items->toArray())

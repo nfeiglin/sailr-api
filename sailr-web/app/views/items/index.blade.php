@@ -63,7 +63,7 @@
         @foreach($items as $item)
         <div class="product-list panel panel-body">
             <div class="col-xs-9 col-lg-9 col-md-9 col-sm-9">
-                {{{ $item['title'] }}}
+                <a href="{{ URL::action('ItemsController@edit', $item['id']) }}">{{{ $item['title'] }}}</a>
             </div>
 
             <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3">
