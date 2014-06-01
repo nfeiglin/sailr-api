@@ -10,6 +10,7 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.1.*",
+        "erusev/parsedown": "dev-master",
         "ezyang/htmlpurifier": "dev-master"
     },
     "autoload": {
