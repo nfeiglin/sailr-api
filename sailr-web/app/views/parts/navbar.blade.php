@@ -33,7 +33,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                             <div>
-                                <a class="btn btn-primary navbar-btn" href="{{ URL::action('ItemsController@create') }}"><span class="glyphicon glyphicon-plus-sign"></span> Add item</a>
+                                <a class="btn btn-primary navbar-btn" href="{{ URL::action('ItemsController@index') }}"><span class="glyphicon glyphicon-tags"></span> Products</a>
                             </div>
                     </li>
 
