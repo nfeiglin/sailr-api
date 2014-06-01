@@ -38,10 +38,9 @@
     </form>
 
     @foreach($item['comment'] as $comment)
-    <?php $comment['user']['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
     <div class="panel panel-default item-user comment">
         <a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"><img
-                src="{{ $comment['user']['profile_img'][0]['url'] }}" class="profile-img img-circle"></a>
+                src="{{ $comment['user']['profile_img'][0]['url'] or ''}}" class="profile-img img-circle"></a>
         <a href="{{{ action('UsersController@show', $comment['user']['username']) }}}" class="h6 text-primary">{{ '@' .
             $comment['user']['username'] }}</a>
         <span class="h6">{{{ $comment['comment'] }}}</span>
