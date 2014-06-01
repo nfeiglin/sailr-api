@@ -29,7 +29,7 @@ class ProfileImg extends \Eloquent
         foreach (ProfileImg::$photoSizes as $type => $sizeAndQuality) {
             $newPath = 'img/' . sha1(microtime()) . '.jpg';
             $encodedImage = Image::make($image->getRealPath());
-            $encodedImage->resize($sizeAndQuality['size'], $sizeAndQuality['size'], false);
+            $encodedImage->fit($sizeAndQuality['size'], $sizeAndQuality['size']);
             $encodedImage->encode('jpg', $sizeAndQuality['quality']);
             $encodedImage->save($newPath);
 
