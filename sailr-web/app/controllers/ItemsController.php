@@ -82,7 +82,7 @@ class ItemsController extends BaseController
         $item = Item::where('user_id', '=', Auth::user()->id)->with([
            'Photos' => function($x) {
                $x->where('type', '=', 'thumbnail');
-               $x->select(['item_id', 'url']);
+               $x->select(['item_id','set_id', 'url']);
            }
         ])->withTrashed()->where('id', '=', $id)->firstOrFail();
 
