@@ -423,9 +423,6 @@ input[type="file"] {
 }
 
 
-img {
-    /*
-    clip:rect(0,180px,180px,0);
-    position: relative;
-    */
+.btn.delete-image {
+    margin-top: 15px;
 }
