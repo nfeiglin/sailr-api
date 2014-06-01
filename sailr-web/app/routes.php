@@ -82,7 +82,7 @@ Route::group(['before' => 'csrf'], function () {
     Route::get('item/show/{id}', 'BuyController@create');
     Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
 
-    Route::resource('items', 'ItemsController');
+    Route::resource('items', 'ItemsController', ['only' => ['create', 'store', 'show', 'edit', 'update']]);
 
     Route::group(['before' => 'guest'], function () {
         Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
