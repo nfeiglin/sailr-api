@@ -28,14 +28,6 @@
         <div class="caption">
             <a href="{{ action('BuyController@create', $item['id']) }}" class="btn btn-primary btn-lg btn-block h3"
                role="button">Buy now for {{$item['currency']}}{{$item['price']}}</a>
-            @if(Auth::check())
-                @if($user['id'] == Auth::user()->id)
-                     {{ Form::open(['action' => array('ItemsController@destroy', $item['id']), 'method' => 'delete']) }}
-                     {{Form::token()}}
-                    <button value="submit" class="glyphicon glyphicon-trash btn btn-danger btn-sm del-btn"></button>
-                    {{Form::close()}}
-                @endif
-            @endif
         </div>
 
     </div>
