@@ -146,9 +146,6 @@ class ItemsController extends BaseController
                     $x->with('ProfileImg');
                   $x->select(['id', 'name', 'username']);
                 },
-            'Shipping' => function($z) {
-                    $z->select(['type', 'price', 'desc', 'item_id']);
-                },
         ))->where('id', '=', $id)->firstOrFail();
 
         /*
@@ -206,19 +203,5 @@ class ItemsController extends BaseController
         return $item;
     }
 
-    public function doShippingFromInput(array $input, $item_id)
-    {
-        foreach(Shipping::$shippingTypes as $name => $values) {
-            $priceKey = $values[0];
-            $descKey = $values[1];
-
-            $shipping = new Shipping();
-            $shipping->item_id = $item_id;
-            $shipping->type = $name;
-            $shipping->price = $input[$priceKey];
-            $shipping->desc = e($input[$descKey]);
-            $shipping->save();
-        }
-    }
 
 }

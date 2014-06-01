@@ -12,9 +12,6 @@ class Item extends Eloquent
         return $this->belongsTo('User');
     }
 
-    public function shipping() {
-        return $this->hasMany('Shipping');
-    }
 
     public function photos()
     {

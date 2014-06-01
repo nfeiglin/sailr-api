@@ -15,9 +15,6 @@ class BuyController extends \BaseController
     {
 
         $item = Item::where('id', '=', $id)->with([
-            'Shipping' => function ($x) {
-                    $x->select(['item_id', 'type', 'price', 'desc']);
-                },
             'User' => function ($y) {
                     $y->with([
                         'ProfileImg' => function ($z) {

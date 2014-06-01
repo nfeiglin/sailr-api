@@ -1,12 +1,13 @@
 @extends('layout.simple')
+    @section('head')
+<script>
+     var item = {{ json_encode($item) }};
+     item.ship_price = parseFloat(item.ship_price);
+</script>
+    @stop
 
 	@section('content')
-	<script async="async" defer="defer">
-	var item = {{ json_encode($item) }};
-	var internationalShippingPrice = {{ $item['shipping'][1]['price'] or '999'}};
-	var domesticShippingPrice = {{ $item['shipping'][0]['price']  or '999' }};
-	</script>
-    
+
 		<div class="form-signin wide panel">
 			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price'] }}</small></h2>
             <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
@@ -14,16 +15,12 @@
 
 </div>
 
-			<?php $item['user']['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg' ?>
-
 			<div class="well item buy-page" id="{{ $item['id'] }}">
 					<div class="caption">
         				<p> {{ $item['description'] }}</p>
         			</div>
 
         			<div class="img-gallery">
-                        <?php $item['photos'][0]['url'] = 'http://sailr.web/img/default-lg.jpg' ?>
-                        <?php $item['photos'][1]['url'] = 'http://sailr.web/img/default-lg.jpg' ?>
 						@foreach($item['photos'] as $photo)
       						<div class="gallery-item">
       							<img draggable="false" src=" {{ $photo['url'] }}" class="img-responsive" alt="Photo of {{{ $item['title'] }}}">
@@ -36,7 +33,7 @@
                 </div>
 
                 <h4>Shipping</h4>
-                <?php $shippings = $item['shipping'] ?>
+
                 <div class="table">
                     <table class="table table-bordered">
                         <thead>
