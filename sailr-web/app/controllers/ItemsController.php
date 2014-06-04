@@ -19,14 +19,13 @@ class ItemsController extends BaseController
     }
 
 
-
-
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         return View::make('items.create')->with('title', 'Add a product');
     }
 
@@ -36,7 +35,8 @@ class ItemsController extends BaseController
      * @return Response
      */
 
-    public function store() {
+    public function store()
+    {
 
         $input = Input::json()->all();
 
@@ -72,34 +72,36 @@ class ItemsController extends BaseController
             'message' => 'Success',
             'id' => $item->id,
             'redirect_url' => URL::action('ItemsController@edit', $item->id)
-          ];
+        ];
 
         return Response::json($res, 201);
 
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $item = Item::where('user_id', '=', Auth::user()->id)->with([
-           'Photos' => function($x) {
-               $x->where('type', '=', 'thumbnail');
-               $x->select(['item_id','set_id', 'url']);
-           }
+            'Photos' => function ($x) {
+                $x->where('type', '=', 'thumbnail');
+                $x->select(['item_id', 'set_id', 'url']);
+            }
         ])->withTrashed()->where('id', '=', $id)->firstOrFail();
 
-       return View::make('items.edit')->with('title', 'Add a product')->with('item', $item)->with('jsonItem', $item->toJson());
+        return View::make('items.edit')->with('title', 'Add a product')->with('item', $item)->with('jsonItem', $item->toJson());
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         $input = Input::json()->all();
-        if(isset($input['created_at'])) {
+        if (isset($input['created_at'])) {
             unset($input['created_at']);
         }
 
-        if(isset($input['description'])) {
+        if (isset($input['description'])) {
             $input['description'] = Holystone::sanitize($input['description']);
         }
 
-        if(isset($input['title'])) {
+        if (isset($input['title'])) {
             $input['title'] = htmlentities($input['title']);
         }
 
@@ -120,10 +122,41 @@ class ItemsController extends BaseController
         return Response::json($item->toArray(), 200);
     }
 
-    public function toggleVisibility($id) {
-        $item = Item::where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->firstOrFail(['id', 'public']);
+    public function toggleVisibility($id)
+    {
+        $item = Item::where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
         $numberOfPhotos = Photo::where('item_id', '=', $id)->count();
-        //NOW VALIDATE THAT IT IS SAFE TO SHOW publically
+        $errors = [];
+
+        if (!$numberOfPhotos > 0) {
+            $errors[] = 'Please add at least one photo before publishing';
+            $res = ['errors' => $errors];
+            return Response::json($res, 400);
+        }
+
+        $rules = [
+            'title' => 'required',
+        ];
+        $v = Validator::make($item->toArray(), $rules);
+
+        if ($v->fails()) {
+            $res = ['errors' => $v->errors()->toArray())];
+            return Response::json($res, 400);
+        }
+
+
+        $message = '';
+        if ($item->public) {
+            $item->public = 0;
+            $item->save();
+            $message = 'Successfully unpublished';
+        } else {
+            $item->public = 1;
+            $item->save();
+
+            $message = 'Excellent. Successfully published';
+        }
+        return Response::json(['message' => $message, 'public' => $item->public], 200);
 
     }
 
@@ -140,12 +173,12 @@ class ItemsController extends BaseController
          */
         $item = Item::with(array(
             'Photos' => function ($y) {
-                    $y->select(['item_id', 'type', 'url']);
-                },
-            'User' => function($x) {
-                    $x->with('ProfileImg');
-                  $x->select(['id', 'name', 'username']);
-                },
+                $y->select(['item_id', 'type', 'url']);
+            },
+            'User' => function ($x) {
+                $x->with('ProfileImg');
+                $x->select(['id', 'name', 'username']);
+            },
         ))->where('id', '=', $id)->firstOrFail();
 
         /*
