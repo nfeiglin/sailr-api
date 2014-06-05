@@ -426,3 +426,7 @@ input[type="file"] {
 .btn.delete-image {
     margin-top: 15px;
 }
+
+.text-white {
+    color: #ffffff;
+}
