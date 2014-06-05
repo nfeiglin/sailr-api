@@ -65,6 +65,8 @@ if (Auth::check()) {
     });
 }
 
+Route::get('/s/{query}', 'SearchesController@show');
+
 Route::group(['before' => 'csrf'], function () {
     Route::get('test', function () {
         return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);

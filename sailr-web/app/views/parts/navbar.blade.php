@@ -22,16 +22,22 @@
                         <span class="glyphicon glyphicon-home"></span> Home</a>
 
                     @if(Auth::check())
-                    <a class="btn btn-primary navbar-btn"
-                       href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
-                        <span class="glyphicon glyphicon-user"></span> Me</a>
-                    @endif
+                    <a class="btn btn-primary navbar-btn" href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
+                        <span class="glyphicon glyphicon-user"></span> Me
+                    </a>
+                   @endif
                 </div>
 
                 @if(Auth::check())
 
                 <ul class="nav navbar-nav navbar-right">
                     <li>
+                        <form ng-submit="submitSearchForm()">
+                            <input class="form-inline form-control navbar-btn" placeholder="Search..." ng-model="searchText">
+                        </form>
+                    </li>
+                    <li>
+
                             <div>
                                 <a class="btn btn-primary navbar-btn" href="{{ URL::action('ItemsController@index') }}"><span class="glyphicon glyphicon-tags"></span> Products</a>
                             </div>

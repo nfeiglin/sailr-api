@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('slick/slick.css') }}">
 
+    <script src="{{ URL::asset('js/controllers/feed/feedController.js') }}"></script>
     <script>
         var csrfToken = '{{ Session::token() }}';
         var baseURL = 'http://homestead.app:8000';
@@ -21,7 +22,7 @@
     @yield('head','')
 </head>
 
-<body class="purpleBackground">
+<body class="purpleBackground" ng-controller="feedController">
     @if($hasNavbar == 1)
         @include('parts.navbar')
         <div id="backgroundSwag" class="jumbotron">
