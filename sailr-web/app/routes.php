@@ -15,6 +15,7 @@ use Intervention\Image\Facades;
 */
 
 /*
+
 Event::listen('illuminate.query', function($sql, $bindings, $time){
     //echo $sql;          // select * from my_table where id=? 
     //print_r($bindings); // Array ( [0] => 4 )
@@ -26,6 +27,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
     echo '<pre>' . $full_sql . '</pre>';
 });
 */
+
 
 View::composer('*', function ($view) {
     if (!array_key_exists('hasNavbar', $view->getData())) {
@@ -114,6 +116,9 @@ Route::group(['before' => 'csrf'], function () {
 
         Route::get('items/create', 'ItemsController@create');
         Route::get('dashboard/products', 'ItemsController@index');
+
+        Route::put('item/toggle/{id}', 'ItemsController@toggleVisibility');
+        Route::post('item/toggle/{id}', 'ItemsController@toggleVisibility');
     });
 
 

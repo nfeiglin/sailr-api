@@ -139,4 +139,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         );
         return Response::json($res, 401);
     }
+
+    public function scopeWhereLike($query, $column, $value) {
+        return $query->where($column, 'LIKE', '%' . $value . '%');
+    }
+
+    public function scopeOrWhereLike($query, $column, $value) {
+        return $query->orWhere($column, 'LIKE', '%' . $value . '%');
+    }
+
 }

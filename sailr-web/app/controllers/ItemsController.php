@@ -105,14 +105,19 @@ class ItemsController extends BaseController
             $input['title'] = htmlentities($input['title']);
         }
 
-        array_filter($input);
+        $input  = array_filter($input);
 
-        //TODO: VALIDATE
+        $v = Validator::make($input, Item::$updateRules);
+
+        if($v->fails()) {
+            $res = ['errors' => $v->errors()];
+            return Response::json($res, 400);
+        }
 
         $item = Item::withTrashed()->where('user_id', '=', Auth::user()->id)->where('id', '=', $id)->firstOrFail();
 
         if (Auth::user()->id != $item->user_id) {
-            $res = ['message' => 'Sorry, you can only edit your own products'];
+            $res = ['errors' => ['Sorry, you can only edit your own products']];
             return Response::json($res, 403);
         }
 
@@ -134,29 +139,38 @@ class ItemsController extends BaseController
             return Response::json($res, 400);
         }
 
-        $rules = [
-            'title' => 'required',
-        ];
-        $v = Validator::make($item->toArray(), $rules);
+        $v = Validator::make($item->toArray(), Item::$updateRules);
 
         if ($v->fails()) {
-            $res = ['errors' => $v->errors()->toArray())];
+            $res = ['errors' => $v->errors()];
             return Response::json($res, 400);
         }
 
 
         $message = '';
+        $res = [];
         if ($item->public) {
             $item->public = 0;
             $item->save();
             $message = 'Successfully unpublished';
+
+            $res = [
+                'message' => $message,
+                'public' => $item->public
+            ];
+
         } else {
             $item->public = 1;
             $item->save();
 
             $message = 'Excellent. Successfully published';
+
+            $res = [
+                'message' => $message,
+                'public' => $item->public
+            ];
         }
-        return Response::json(['message' => $message, 'public' => $item->public], 200);
+        return Response::json($res, 200);
 
     }
 
