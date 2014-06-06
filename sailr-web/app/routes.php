@@ -29,31 +29,20 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 */
 
 
+
 View::composer('*', function ($view) {
     if (!array_key_exists('hasNavbar', $view->getData())) {
         $view->with('hasNavbar', 1);
     }
-});
 
-Route::get('i/i/i', function() {
-    $input = ['title' => 'title', 'currency' => 'zzz', 'price' => 32.55];
-    $rules = [
-        'title' => 'required|max:255',
-        'currency' => 'required|currency',
-        'price' => 'required|numeric|max:999999'
-    ];
-
-    $v = Validator::make($input, $rules);
-
-    if($v->passes()) {
-        echo 'yolo';
+    $count = Notification::where('user_id', '=', Auth::user()->id)->where('viewed', 'exists', true)->count();
+    $count = 44;
+    if($count > 0) {
+        $view->with('unread_notifications_count', $count);
     }
-
-    //TODO add currency validator
-
-    $v = Validator::make($input, $rules);
-    //return Holystone::sanitize('<blockquote>yoyoyoyo</blockquote> <a href="http://google.com">test</a>  http://facebook.com');
 });
+
+
 Route::get('/i/info', function () {
     phpinfo();
 });
