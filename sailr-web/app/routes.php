@@ -119,6 +119,7 @@ Route::group(['before' => 'csrf'], function () {
 
         Route::put('item/toggle/{id}', 'ItemsController@toggleVisibility');
         Route::post('item/toggle/{id}', 'ItemsController@toggleVisibility');
+        Route::resource('notifications', 'NotificationsController');
     });
 
 

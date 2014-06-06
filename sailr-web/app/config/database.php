@@ -83,6 +83,15 @@ return array(
             'prefix' => '',
         ),
 
+        'mongodb' => array(
+            'driver'   => 'mongodb',
+            'host'     => 'localhost',
+            'port'     => 27017,
+            'username' => 'sailr',
+            'password' => 'password',
+            'database' => 'sailr'
+        ),
+
     ),
 
     /*

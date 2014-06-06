@@ -9,7 +9,8 @@
 		"way/generators": "dev-master",
         "fzaninotto/faker": "v1.3.0",
         "intervention/image":"2.*",
-        "paypal/merchant-sdk-php":"v2.5.106"
+        "paypal/merchant-sdk-php":"v2.5.106",
+        "jenssegers/mongodb": "v1.3.2"
 
 
 	},

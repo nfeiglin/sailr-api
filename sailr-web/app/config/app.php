@@ -108,6 +108,7 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'Way\Generators\GeneratorsServiceProvider',
         'Intervention\Image\ImageServiceProvider',
+        'Jenssegers\Mongodb\MongodbServiceProvider',
         'Sailr\Holystone\HolystoneServiceProvider',
         'Sailr\Validator\ValidatorServiceProvider',
 
