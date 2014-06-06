@@ -10,7 +10,8 @@
         "fzaninotto/faker": "v1.3.0",
         "intervention/image":"2.*",
         "paypal/merchant-sdk-php":"v2.5.106",
-        "jenssegers/mongodb": "v1.4.*"
+        "jenssegers/mongodb": "v1.4",
+        "guzzlehttp/guzzle": "~4.0"
 
 
 	},
