@@ -25,6 +25,14 @@
                     <a class="btn btn-primary navbar-btn" href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
                         <span class="glyphicon glyphicon-user"></span> Me
                     </a>
+
+                    <a class="btn btn-primary navbar-btn" href="{{ URL::action('NotificationsController@index') }}">
+                        <span class="glyphicon glyphicon-bell"></span> Notifications
+                        @if(isset($unread_notifications_count))
+                            <span class="badge">{{ $unread_notifications_count }}</span>
+                        @endif
+
+                    </a>
                    @endif
                 </div>
 
