@@ -6,12 +6,13 @@ class Notification extends Jenssegers\Mongodb\Model {
     use SoftDeletingTrait;
 
     protected $connection = 'mongodb';
-    protected $timestamps = true;
-	protected $fillable = [];
+    public  $timestamps = true;
+	protected $guarded = [];
 
     public static function boot() {
         parent::boot();
 
+        /*
         Notification::creating(function(Notification $notification) {
             if(Auth::check()) {
                 $notification->user_id = Auth::user()->id;
@@ -19,5 +20,6 @@ class Notification extends Jenssegers\Mongodb\Model {
 
             return true;
         });
+        */
     }
 }
