@@ -1,8 +1,12 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class Comment extends \Eloquent {
+    use SoftDeletingTrait;
+
 	protected $fillable = ['user_id', 'item_id', 'comment'];
-   protected $hidden = ['updated_at', 'deleted_at'];
+    protected $hidden = ['updated_at', 'deleted_at'];
     protected $softDelete = true;
     //protected $appends = ['user'];
 

@@ -1,6 +1,9 @@
 <?php
 
+use Jenssegers\Mongodb\Eloquent\SoftDeletingTrait;
+
 class Notification extends Jenssegers\Mongodb\Model {
+    use SoftDeletingTrait;
 
     protected $connection = 'mongodb';
     protected $timestamps = true;

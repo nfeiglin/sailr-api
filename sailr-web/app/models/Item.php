@@ -1,7 +1,11 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class Item extends Eloquent
 {
+    use SoftDeletingTrait;
+
     protected $hidden = array('updated_at', 'deleted_at', 'user_id');
     protected $fillable = ['user_id', 'price', 'currency', 'initial_units', 'description', 'title', 'ships_to', 'public', 'ship_price'];
     protected $softDelete = true;

@@ -1,16 +1,16 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"name": "sailr/sailr-web",
+	"description": "The Sailr website.",
+	"keywords": ["sailr", "laravel"],
 	"license": "MIT",
 	"require": {
-		"laravel/framework": "4.1.*",
+		"laravel/framework": "4.2.*",
 		"doctrine/dbal": "dev-master",
 		"way/generators": "dev-master",
         "fzaninotto/faker": "v1.3.0",
         "intervention/image":"2.*",
         "paypal/merchant-sdk-php":"v2.5.106",
-        "jenssegers/mongodb": "v1.3.2"
+        "jenssegers/mongodb": "v1.4.*"
 
 
 	},

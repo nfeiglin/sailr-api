@@ -1,7 +1,12 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class Photo extends \Eloquent
+
 {
+    use SoftDeletingTrait;
+
     protected $fillable = ['user_id', 'item_id', 'type', 'url', 'set_id'];
     protected $hidden = ['item_id'];
     protected $softDelete = true;

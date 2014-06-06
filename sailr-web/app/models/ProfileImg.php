@@ -1,7 +1,11 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class ProfileImg extends \Eloquent
 {
+    use SoftDeletingTrait;
+
     protected $fillable = ['user_id', 'type', 'url'];
     protected $hidden = ['created_at','updated_at', 'deleted_at', 'id', 'user_id'];
     protected $table = 'profileimgs';
