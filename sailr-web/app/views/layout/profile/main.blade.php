@@ -11,7 +11,7 @@
 
     @foreach($user['profile_img'] as $prof_array)
         @if ($prof_array['type'] == 'medium')
-            <img src="{{ $prof_array['url'] }}" alt="{{{ $user['name']}}}'s profile image" class="img-circle img-responsive center-block" draggable="false">
+            <img src="{{ $prof_array['url'] }}" alt="{{{ $user['name'] or '' }}}'s profile image" class="img-circle img-responsive center-block" draggable="false">
         @endif
     @endforeach
 

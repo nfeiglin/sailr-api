@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
-    <title>Sailr | {{{$title}}}</title>
+    <title>Sailr | {{{ Str::limit($title, 140) }}}</title>
 
     <script src="{{ URL::asset('js/angular-file/angular-file-upload-shim.min.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
