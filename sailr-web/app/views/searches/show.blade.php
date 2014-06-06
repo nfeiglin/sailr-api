@@ -15,7 +15,8 @@
 <div data-ng-controller="searchController">
 
     <div class="row">
-        <p class="lead text-white" ng-hide="results.users.length > 0">Sorry, no users match your search</p>
+        <h3 class="text-white">Users & Shops</h3>
+        <p class="lead text-white" ng-if="results.users.length < 1">Sorry, no users match your search</p>
         <div class="col-md-4 col-lg-3 col-sm-4 col-xs-6" ng-repeat="user in results.users">
             <div class="thumbnail">
                 <a ng-href="@{{ baseURL + '/' + user.username }}"><h3>@{{ user.name }}</h3></a>
@@ -31,7 +32,8 @@
     </div>
 
     <div class="row">
-        <p class="lead text-white" ng-hide="results.items.length > 1">Sorry, no products match your search</p>
+        <h3 class="text-white">Products</h3>
+        <p class="lead text-white" ng-if="results.items.length < 1">Sorry, no products match your search</p>
         <div class="col-md-4 col-lg-3 col-sm-4 col-xs-6" ng-repeat="item in results.items">
             <div class="thumbnail">
                 <a ng-href="@{{ baseURL + '/item/' + item.id }}"><h3>@{{ item.title }}</h3>
