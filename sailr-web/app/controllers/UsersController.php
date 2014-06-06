@@ -43,6 +43,8 @@ class UsersController extends \BaseController
         Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
         ProfileImg::setDefaultProfileImages($user);
 
+        Event::fire('user.create', $user);
+
         return Redirect::to('/')->with('message', 'Signed up! Welcome to Sailr');
     }
 

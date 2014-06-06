@@ -52,6 +52,7 @@ class RelationshipsController extends \BaseController
         $relationship->follows_user_id = $followUser->id;
 
         $relationship->save();
+        Event::fire('relationship.create', $relationship);
 
         $res = array(
             'meta' => array(
