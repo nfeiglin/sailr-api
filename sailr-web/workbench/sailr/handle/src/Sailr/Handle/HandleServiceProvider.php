@@ -18,7 +18,14 @@ class HandleServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+
+		$this->app->events->subscribe(new EventHandler($this->app));
+        /*
+
+        $this->app->events->subscribe = $this->app->share(function() {
+           return new EventHandler;
+        });
+        */
 	}
 
 	/**
