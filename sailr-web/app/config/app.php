@@ -112,6 +112,7 @@ return array(
         'Jenssegers\Mongodb\MongodbServiceProvider',
         'Sailr\Holystone\HolystoneServiceProvider',
         'Sailr\Validator\ValidatorServiceProvider',
+        'Sailr\Handle\HandleServiceProvider'
 
     ),
 
