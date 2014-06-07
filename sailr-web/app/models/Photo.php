@@ -6,7 +6,7 @@ class Photo extends \Eloquent
 
 {
     use SoftDeletingTrait;
-
+    protected $dates = ['created_at', 'updated_at'];
     protected $fillable = ['user_id', 'item_id', 'type', 'url', 'set_id'];
     protected $hidden = ['item_id'];
     protected $softDelete = true;

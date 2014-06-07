@@ -3,10 +3,11 @@
 use Jenssegers\Mongodb\Eloquent\SoftDeletingTrait;
 
 class Notification extends Jenssegers\Mongodb\Model {
-    use SoftDeletingTrait;
+    //use SoftDeletingTrait;
 
     protected $connection = 'mongodb';
     public  $timestamps = true;
+    protected $dates = ['created_at', 'updated_at'];
 	protected $guarded = [];
 
     public static function boot() {
