@@ -8,7 +8,18 @@ $(document).ready(function(){
         arrows: false
 
     });
+    
+/* Link the hashtags and usernames */
+    var textsToLink = $('.autolink-text');
+    textsToLink.each(function(index, object){
+        var tempHTML = $(this).html();
+        console.log('TEMP HTML::::   ');
+        console.log(tempHTML);
 
+        $(this).html(twttr.txt.autoLink(tempHTML));
+
+    });
+/* ==== */
 
 
 
@@ -28,7 +39,7 @@ var doUpdatePrice = function() {
   if($('#country').val() == item['country']) {
     //Domestic shipping
     total = item['price'] + domesticShippingPrice;
-    var text = 
+    var text =
     totalPriceText.html(item['currency'] + total.toFixed(2));
   }
 
