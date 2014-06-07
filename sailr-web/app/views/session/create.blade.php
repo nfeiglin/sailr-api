@@ -16,6 +16,6 @@
     <input type="text" class="form-control" value="{{{ Input::old('username') }}}" placeholder="Email address or Username" name="username" required="required" autofocus>
     <input type="password" class="form-control" placeholder="Password" name="password" required="required">
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    <button class="btn btn-lg btn-big btn-turq btn-block" type="submit">Login</button>
 </form>
 @stop
