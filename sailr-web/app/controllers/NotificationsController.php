@@ -10,66 +10,30 @@ class NotificationsController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
-	}
+	    $notifications = Notification::where('user_id', '=', Auth::user()->id)->get(['_id', 'short_text', 'data']);
+        Event::fire('notification.index', Auth::user()->id);
 
-	/**
-	 * Show the form for creating a new resource.
-	 * GET /notifications/create
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
+        return View::make('notifications.index')
+            ->with('title', 'Notifications')
+            ->with('notifications', $notifications->toJSON());
 
-	/**
-	 * Store a newly created resource in storage.
-	 * POST /notifications
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
 	}
 
 	/**
 	 * Display the specified resource.
 	 * GET /notifications/{id}
 	 *
-	 * @param  int  $id
+	 * @param  string $id
 	 * @return Response
 	 */
 	public function show($id)
 	{
-		//
+		$notification = Notification::where('_id', '=', (string)$id)->where('user_id','=', Auth::user()->id)->firstOrFail();
+        return View::make('notifications.show')
+            ->with('title', $notification->short_text)
+            ->with('notification', $notification->toJSON());
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 * GET /notifications/{id}/edit
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 * PUT /notifications/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
 
 	/**
 	 * Remove the specified resource from storage.
@@ -80,7 +44,9 @@ class NotificationsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+        $notification = Notification::where('_id', '=', $id)->where('user_id','=', Auth::user()->id)->firstOrFail();
+        $notification->viewed = 1;
+        $notification->save();
 	}
 
 }

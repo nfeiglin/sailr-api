@@ -1,1 +1,36 @@
-/home/vagrant/web/app/views/notifications/index.blade.php
+@extends('layout.main')
+
+@section('head')
+<script>
+    var sailr = {
+        notifications: {{ $notifications }}
+    };
+</script>
+<script src="{{ URL::asset('js/controllers/notifications/notificationsController.js') }}"></script>
+@stop
+
+@section('content')
+
+<div data-ng-controller="notificationsController">
+
+    <div class="row">
+        <p class="lead text-white" ng-if="notifications.length < 1">You have no notifications</p>
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="alert alert-success" ng-repeat="notification in notifications">
+                        <a ng-href="@{{ baseURL + '/me/notifications/' + notification._id }}">
+                            <p>@{{ notification.short_text }}</p>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@stop

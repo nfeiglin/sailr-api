@@ -15,7 +15,6 @@ use Intervention\Image\Facades;
 */
 
 /*
-
 Event::listen('illuminate.query', function($sql, $bindings, $time){
     //echo $sql;          // select * from my_table where id=? 
     //print_r($bindings); // Array ( [0] => 4 )
@@ -35,11 +34,19 @@ View::composer('*', function ($view) {
         $view->with('hasNavbar', 1);
     }
 
-    $count = Notification::where('user_id', '=', Auth::user()->id)->where('viewed', 'exists', true)->count();
-    $count = 44;
-    if($count > 0) {
-        $view->with('unread_notifications_count', $count);
+
+    if (Auth::check()) {
+        if (!array_key_exists('unread_notifications_count', $view->getData())) {
+            $count = Notification::where('user_id', '=', Auth::user()->id)->where('viewed', 'exists', 0)->count();
+            $view->with('unread_notifications_count', $count);
+        }
+
+
     }
+});
+
+View::composer('index', function($view){
+    $view->with('purpleBG', false);
 });
 
 
@@ -110,6 +117,7 @@ Route::group(['before' => 'csrf'], function () {
         Route::put('item/toggle/{id}', 'ItemsController@toggleVisibility');
         Route::post('item/toggle/{id}', 'ItemsController@toggleVisibility');
         Route::resource('me/notifications', 'NotificationsController');
+        Route::get('me/notification/{id}', 'NotificationsController@show');
     });
 
 

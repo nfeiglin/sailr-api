@@ -12,6 +12,7 @@ class EventHandler {
     public function subscribe($events) {
         $events->listen('user.create', 'Sailr\Handle\EventHandler@onUserCreate');
         $events->listen('relationship.create', 'Sailr\Handle\EventHandler@onRelationshipCreate');
+        $events->listen('notification.index', 'Sailr\Handle\EventHandler@onNotificationIndexView');
 
     }
 
@@ -22,20 +23,24 @@ class EventHandler {
     }
 
     public function onRelationshipCreate(\Relationship $relationship) {
-        $follower = \User::where('id', '=', $relationship->user_id)->firstOrFail(['id', 'username', 'name']);
+        $follower = \User::where('id', '=', $relationship->user_id)->firstOrFail(['id', 'username', 'name','bio']);
         $following = \User::where('id', '=', $relationship->follows_user_id)->firstOrFail(['id', 'username', 'name', 'email']);
 
         $data = ['follower' => $follower->toArray(), 'following' => $following->toArray()];
 
-        \Queue::push(function($job) use ($relationship, $follower, $following) {
+        $relationshipID = $relationship->id;
 
+        \Queue::push(function($job) use ($relationshipID) {
+
+            $relationship = \Relationship::findOrFail($relationshipID);
+            $follower = \User::where('id', '=', $relationship->user_id)->firstOrFail(['username']);
             $relationship->setHidden(array_merge($relationship->getHidden(), ['updated_at', 'created_at']));
 
             \Notification::create([
                 'short_text' => 'Followed by ' . $follower->username,
-                'data' => ['relationship' => $relationship->toArray()],
                 'type' => 'user.follow',
-                'user_id' => $relationship->user_id
+                'user_id' => $relationship->follows_user_id,
+                'data' => ['relationship' => $relationship->toArray()],
             ]);
 
             $job->delete();
@@ -44,5 +49,16 @@ class EventHandler {
         \Mail::queue('emails.relationship.newFollower', $data, function($message) use ($follower, $following) {
             $message->to($following->email)->subject($follower->name . ' (' . $follower->username . ') ' . 'is now following you on Sailr');
         });
+    }
+
+    public function onNotificationIndexView($userID) {
+
+        /* Set all the users notifications to viewed */
+        $wheres = ['user_id' => ['$in' => [$userID]], 'viewed' => ['$exists' => false]];
+        $changeTo = ['$set' => ['viewed' => true]];
+        $options = ['multi' => true];
+        $sailrDB = \DB::connection('mongodb');
+        $notificationsCollection = $sailrDB->selectCollection('notifications');
+        $notificationsCollection->update($wheres, $changeTo, $options);
     }
 } 
