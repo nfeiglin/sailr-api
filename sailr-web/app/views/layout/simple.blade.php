@@ -59,14 +59,15 @@
 {{ HTML::script('js/angular-file/angular-file-upload-shim.min.js') }}
 {{ HTML::script('js/angular-file/angular-file-upload.min.js') }}
 
-<script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
-<link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">
 
+<link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/themes/original.min.css">
 <link type="text/css" rel="style" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/css/jquery.Jcrop.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/humane.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/js/jquery.Jcrop.min.js"></script>
+<script src="{{ URL::asset('js/twitter-text-1.9.1.js') }}"></script>
 <script src="{{ URL::asset('js/lib/medium-editor.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
 
 </body>
 
