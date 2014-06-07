@@ -430,3 +430,59 @@ input[type="file"] {
 .text-white {
     color: #ffffff;
 }
+
+.btn-big {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 24px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.btn-big:hover:after {
+    content: ' Do it!';
+}
+
+.btn-long {
+    padding-left: 60px;
+    padding-right: 60px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+.btn-purple {
+    background-color: #5856D6;
+    border-color: #5c5ada;
+    color: #ffffff;
+}
+
+.btn-purple:hover {
+    color: #ffffff;
+    background-color: #615fff;
+}
+
+.btn-turq {
+    background-color: #1abc9c;
+    border-color: #1ac6a6;
+    color: #ffffff;
+}
+
+.btn-turq:hover {
+    background-color: #1ac6a6;
+    border-color: #1ac6a6;
+    color: #ffffff;
+}
+
+.btn-emerald {
+    background-color: #2ecc71;
+    border-color: #2ed77c;
+    color: #ffffff;
+}
+
+.btn-emerald:hover {
+    background-color: #2edd81;
+    border-color: #2ed77c;
+    color: #ffffff;
+}
