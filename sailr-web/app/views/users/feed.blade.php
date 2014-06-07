@@ -39,7 +39,7 @@
 	        				<div class="panel panel-default item-user comment">
 	        					<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"><img src="{{ $comment['user']['profile_img'][0]['url'] }}" class="profile-img img-circle"></a>
 								<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"class="h6 text-primary">{{ '@' . $comment['user']['username'] }}</a>
-								<span class="h6">{{{ $comment['comment'] }}}</span>
+								<span class="h6 autolink-text">{{{ $comment['comment'] }}}</span>
 
 								@if($comment['user_id'] == Auth::user()->id)
 								{{ Form::open(['action' => array('CommentsController@destroy', $comment['id']), 'method' => 'delete']) }}
