@@ -66,6 +66,7 @@
 <link type="text/css" rel="style" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/css/jquery.Jcrop.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/humane.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/js/jquery.Jcrop.min.js"></script>
+<script src="{{ URL::asset('js/lib/medium-editor.js') }}"></script>
 
 </body>
 

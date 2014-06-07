@@ -66,6 +66,7 @@
     <script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/themes/original.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/humane.min.js"></script>
+    <script src="{{ URL::asset('js/lib/medium-editor.js') }}"></script>
 </body>
 
 </html>
