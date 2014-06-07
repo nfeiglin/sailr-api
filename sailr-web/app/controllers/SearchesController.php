@@ -7,14 +7,19 @@ class SearchesController extends \BaseController {
 	 * Display the specified resource.
 	 * GET /s/{query}
 	 *
-	 * @param  string $query
+	 * @param  string $initialQuery
 	 * @return Response
 	 */
-	public function show($query)
+	public function show($initialQuery)
 	{
-        $query = urldecode($query);
+        $initialQuery = urldecode($initialQuery);
 
-        $userResults = User::whereLike('name', $query)->orWhereLike('username', $query)->with([
+        $newQuery = $initialQuery;
+        if($initialQuery[0] == '@') {
+            $newQuery = ltrim($initialQuery, '@');
+        }
+
+        $userResults = User::whereLike('name', $newQuery)->orWhereLike('username', $newQuery)->with([
             'ProfileImg' => function($q) {
                $q->where('type', '=', 'small');
                //$q->first();
@@ -22,7 +27,7 @@ class SearchesController extends \BaseController {
             }
         ])->get(['id', 'name', 'username', 'bio'])->toArray();
 
-        $itemResults = Item::whereLike('title', $query)->orWhereLike('description', $query)->where('public', '=', 0)->with([
+        $itemResults = Item::whereLike('title', $newQuery)->orWhereLike('description', $newQuery)->where('public', '=', 0)->with([
             'Photos' => function($q) {
                 $q->where('type', '=', 'thumbnail');
                 //$q->first();
@@ -41,7 +46,7 @@ class SearchesController extends \BaseController {
 
        return View::make('searches.show')
            ->with('results', $res)->
-           with('title', 'Search / ' . htmlentities($query));
+           with('title', 'Search / ' . htmlentities($initialQuery));
 
 
 	}
