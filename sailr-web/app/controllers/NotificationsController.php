@@ -31,7 +31,7 @@ class NotificationsController extends \BaseController {
 		$notification = Notification::where('_id', '=', (string)$id)->where('user_id','=', Auth::user()->id)->firstOrFail();
         return View::make('notifications.show')
             ->with('title', $notification->short_text)
-            ->with('notification', $notification->toJSON());
+            ->with('notifications', $notification->toJSON());
 	}
 
 
