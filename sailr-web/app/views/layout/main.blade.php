@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
+    @if(isset($title))
     <title>Sailr | {{{ Str::limit($title, 140) }}}</title>
+    @else
+    <title>Sailr</title>
+    @endif
+
 
     <script src="{{ URL::asset('js/angular-file/angular-file-upload-shim.min.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
@@ -22,17 +27,25 @@
     @yield('head','')
 </head>
 
+@if(!isset($purpleBG))
 <body class="purpleBackground" ng-controller="feedController">
+@else
+<body class="no-purple" ng-controller="feedController">
+@endif
+
     @if($hasNavbar == 1)
         @include('parts.navbar')
-        <div id="backgroundSwag" class="jumbotron">
-            <div class="container">
-                <h1>{{ $title }}</h1>
+        @if(isset($title))
+            <div id="backgroundSwag" class="jumbotron">
+                <div class="container">
+                    <h1>{{ $title }}</h1>
+                </div>
             </div>
-        </div>
+        @endif
     @endif
 
     <div class="row">
+        @yield('full-width-top', '')
             <div class="container">
                 <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
                     @if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif
@@ -43,7 +56,7 @@
                     @yield('content')
                 </div>
             </div>
-
+        @yield('full-width-bottom', '')
     </div>
 
 
