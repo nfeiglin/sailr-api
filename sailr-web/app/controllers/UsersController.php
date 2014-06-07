@@ -45,7 +45,7 @@ class UsersController extends \BaseController
 
         Event::fire('user.create', $user);
 
-        return Redirect::to('/')->with('message', 'Signed up! Welcome to Sailr');
+        return Redirect::action('UsersController@show', $input['username'])->with('message', 'Signed up! Welcome to Sailr');
     }
 
     /**
