@@ -17,11 +17,14 @@
             <div class="collapse navbar-collapse" id="navbar-collapse">
 
                 <div class="nav navbar-nav navbar-left">
-                    <a class="btn btn-primary navbar-btn"
-                       href="{{ URL::to('/') }}">
-                        <span class="glyphicon glyphicon-home"></span> Home</a>
+                    @if(Auth::guest())
+                   <a href="{{ URL::action('UsersController@create') }}" class="btn btn-emerald navbar-btn btn-block btn-long">Register</a>
+                    @endif
 
                     @if(Auth::check())
+                    <a class="btn btn-primary navbar-btn" href="{{ URL::to('/') }}">
+                        <span class="glyphicon glyphicon-home"></span> Home</a>
+
                     <a class="btn btn-primary navbar-btn" href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
                         <span class="glyphicon glyphicon-user"></span> Me
                     </a>
@@ -29,16 +32,22 @@
                     <a class="btn btn-primary navbar-btn" href="{{ URL::action('NotificationsController@index') }}">
                         <span class="glyphicon glyphicon-bell"></span> Notifications
                         @if(isset($unread_notifications_count))
-                            <span class="badge">{{ $unread_notifications_count }}</span>
+                           @if($unread_notifications_count > 0)
+                                <span class="badge">{{ $unread_notifications_count }}</span>
+                            @endif
                         @endif
 
                     </a>
                    @endif
                 </div>
 
-                @if(Auth::check())
 
                 <ul class="nav navbar-nav navbar-right">
+                    @if(Auth::guest())
+                        <a href="/session/create" class="btn btn-link navbar-btn">Login</a>
+                    @endif
+
+                    @if(Auth::check())
                     <li>
                         <form ng-submit="submitSearchForm()">
                             <input class="form-inline form-control navbar-btn" placeholder="Search..." ng-model="searchText">
@@ -65,10 +74,8 @@
                             <li><a href="{{ URL::action('SessionController@destroy') }}">Logout</a></li>
                         </ul>
                     </li>
-
-
+                 @endif
                 </ul>
-             @endif
 
             </div>
             <!-- /.navbar-collapse -->
