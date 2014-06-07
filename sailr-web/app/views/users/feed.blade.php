@@ -14,7 +14,6 @@
 				<div class="thumbnail">
 					<div class="caption">
         				<a href="{{ action('BuyController@create', $item['id']) }}"><h3>{{{ $item['title'] }}}</h3></a>
-        				<p> {{ $item['description'] }}</p>
         			</div>
 
         			<div class="img-gallery">
