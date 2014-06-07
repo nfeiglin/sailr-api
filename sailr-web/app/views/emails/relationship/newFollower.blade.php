@@ -7,10 +7,11 @@
     <table class="button twitter">
         <tr>
             <td>
-                <h2>{{{ $follower['name'] }}} <small>{{{ '@' . $follower['username'] }}}</small> </h2>
+                <h2>{{{ $follower['name'] }}} <small>{{{ '@' . $follower['username'] }}}</small></h2>
             </td>
         </tr>
     </table>
+    <p>{{{ $follower['bio'] or '' }}}</p>
 
 </a>
 
