@@ -3,8 +3,8 @@
 return array(
 
     'mailgun' => array(
-        'domain' => 'your-mailgun-domain',
-        'secret' => 'your-mailgun-key',
+        'domain' => 'worldburrow.mailgun.org',
+        'secret' => 'key-7uuj7agiy7foz-8yk5a1edm0u766tl28',
     ),
 
     'mandrill' => array(
