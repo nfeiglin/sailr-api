@@ -13,6 +13,7 @@ class EventHandler {
         $events->listen('user.create', 'Sailr\Handle\EventHandler@onUserCreate');
         $events->listen('relationship.create', 'Sailr\Handle\EventHandler@onRelationshipCreate');
         $events->listen('notification.index', 'Sailr\Handle\EventHandler@onNotificationIndexView');
+        $events->listen('illuminate.log', 'Sailr\Handle\EventHandler@onLoggingEvent');
 
     }
 
@@ -60,5 +61,29 @@ class EventHandler {
         $sailrDB = \DB::connection('mongodb');
         $notificationsCollection = $sailrDB->selectCollection('notifications');
         $notificationsCollection->update($wheres, $changeTo, $options);
+    }
+
+    public function onLoggingEvent($level, $message, $context) {
+
+        \Queue::push(function($job) use ($level, $message, $context){
+
+            \Config::set('mail.driver', 'mailgun'); //Let's send these with Mailgun rathern than Mandrill to lessen the load
+
+
+            $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
+
+            \Mail::send('emails.admin.log', $data, function($message) use ($level) {
+                $message->from(['tech@sailr.co' => 'Sailr Log-bot']);
+                $message->to(\Config::get('admin.email'));
+                $message->subject('A log from Sailr has been recorded. Level: ' . $level);
+            });
+
+
+            \Config::set('mail.driver', 'mandrill');
+
+            $job->delete();
+        });
+
+
     }
 } 
