@@ -1,5 +1,25 @@
 <?php
 
+use PayPal\EBLBaseComponents\SetExpressCheckoutRequestDetailsType;
+use PayPal\CoreComponentTypes\BasicAmountType;
+use PayPal\EBLBaseComponents\AddressType;
+use PayPal\EBLBaseComponents\SellerDetailsType;
+use PayPal\EBLBaseComponents\PaymentDetailsItemType;
+use \PayPal\EBLBaseComponents\PaymentDetailsType;
+use \PayPal\PayPalAPI\SetExpressCheckoutReq;
+use \PayPal\PayPalAPI\SetExpressCheckoutRequestType;
+use \PayPal\PayPalAPI\SetExpressCheckoutResponseType;
+use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
+use \PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
+use \PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
+use \PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
+use \PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
+use PayPal\Core\PPAPIService;
+use PayPal\Service\PayPalAPIInterfaceServiceService;
+use \PayPal\PayPalAPI\DoExpressCheckoutPaymentResponseType;
+//use Paypal\EBLBaseComponents\PaymentDetailsType;
+
+
 class BuyController extends \BaseController
 {
 
@@ -92,7 +112,9 @@ class BuyController extends \BaseController
 
         $itemArray = $item->toArray();
 
-
+        if ($item->user_id == Auth::user()->id) {
+            return Redirect::back()->withMessage("You can't buy your own item");
+        }
         $validator = Validator::make($input, BuyController::$rules);
         if ($validator->fails()) {
             return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors($validator);
@@ -122,7 +144,7 @@ class BuyController extends \BaseController
 
         $config = Config::get('paypal.sandbox');
 
-        $baseURL = 'http://sailr.web';
+        $baseURL = URL::to('/');
         $returnURL = $baseURL . '/buy/' . $checkout->id . '/confirm';
         $cancelURL = $baseURL . '/buy/' . $checkout->id . '/cancel';
 
@@ -263,7 +285,7 @@ class BuyController extends \BaseController
         $service = new PayPalAPIInterfaceServiceService($config);
 
 
-        $response = new $service->SetExpressCheckout($setExpressCheckoutReq);
+        $response = $service->SetExpressCheckout($setExpressCheckoutReq);
 
         //try {
         // ## Making API call
