@@ -30,8 +30,8 @@
                     <a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
                 </div>
 
-                <div class="caption">
-                    <p> {{ $item['description'] }}</p>
+                <div class="caption autolink-text">
+                   {{ $item['description'] or '' }}
                 </div>
 
                 <h4>Price</h4>

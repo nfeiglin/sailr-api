@@ -20,7 +20,7 @@
                     {{ '@' . $follower['username'] }}
                 </a>
 
-                <p>{{{ str_limit($follower['bio'], 200) }}}</p>
+                <p class="autolink-text">{{{ str_limit($follower['bio'], 200) }}}</p>
 
             </div>
         @endforeach

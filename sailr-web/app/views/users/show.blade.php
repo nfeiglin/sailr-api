@@ -1,11 +1,6 @@
 @extends('layout.profile.main')
 @section('below')
 
-{{--
-<pre>{{ print_r($items) }}</pre>
-<pre>{{ print_r($user) }}</pre>
-
---}}
 
 @foreach($items as $item)
 <div class="item" id="{{ $item['id'] }}">
@@ -13,8 +8,6 @@
     <div class="thumbnail">
         <div class="caption">
             <a href="{{ action('BuyController@create', $item['id']) }}"><h3> {{{ $item['title'] }}} </h3></a>
-
-            <p> {{ $item['description'] }}</p>
         </div>
 
         <div class="img-gallery">
@@ -43,7 +36,7 @@
                 src="{{ $comment['user']['profile_img'][0]['url'] or ''}}" class="profile-img img-circle"></a>
         <a href="{{{ action('UsersController@show', $comment['user']['username']) }}}" class="h6 text-primary">{{ '@' .
             $comment['user']['username'] }}</a>
-        <span class="h6">{{{ $comment['comment'] }}}</span>
+        <span class="h6 autolink-text">{{{ $comment['comment'] }}}</span>
 
         @if(Auth::check())
             @if($comment['user_id'] == Auth::user()->id)
