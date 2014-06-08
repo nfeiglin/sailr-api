@@ -6,6 +6,7 @@ use PayPal\EBLBaseComponents\AddressType;
 use PayPal\EBLBaseComponents\SellerDetailsType;
 use PayPal\EBLBaseComponents\PaymentDetailsItemType;
 use \PayPal\EBLBaseComponents\PaymentDetailsType;
+use \PayPal\EBLBaseComponents\PaymentInfoType;
 use \PayPal\PayPalAPI\SetExpressCheckoutReq;
 use \PayPal\PayPalAPI\SetExpressCheckoutRequestType;
 use \PayPal\PayPalAPI\SetExpressCheckoutResponseType;
@@ -14,6 +15,8 @@ use \PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
 use \PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
 use \PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
 use \PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
+use \PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
+use \PayPal\EBLBaseComponents\DoExpressCheckoutPaymentResponseDetailsType;
 use PayPal\Core\PPAPIService;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
 use \PayPal\PayPalAPI\DoExpressCheckoutPaymentResponseType;
@@ -314,7 +317,7 @@ class BuyController extends \BaseController
             // `redirectURL="https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=". $response->Token();`
 
             // Express Checkout Token
-            Log::debug("EC Token:" . $response->Token);
+            //Log::debug("EC Token:" . $response->Token);
 
             $checkout->ack = $response->Ack;
             $checkout->token = $response->Token;
@@ -358,7 +361,7 @@ class BuyController extends \BaseController
         $paypalToken = $input['token'];
 
         //Validate that the user is getting their own transaction not someone else's!
-        $checkout = Checkout::findOrFail($id);
+        $checkout = Checkout::where('id', '=', $id)->where('completed', '=', 0)->firstOrFail();
         $checkout->payerID = $input['PayerID'];
         $checkout->save();
 
@@ -463,25 +466,20 @@ class BuyController extends \BaseController
             if ($getECResponse->Errors[0]->ErrorCode == '10411') {
                 //Paypal token expired
 
-                echo '<pre>' . print_r($getECResponse) . '</pre>';
-                dd();
+                Log::error('<pre>' . print_r($getECResponse) . '</pre>');
                 return Redirect::to('/')->with('fail', 'Sorry, this Paypal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
             }
 
-            echo '<pre>' . print_r($getECResponse) . '</pre>';
-            dd();
+            Log::error('<pre>' . print_r($getECResponse) . '</pre>');
             return Redirect::to('/')->with('fail', 'Sorry, Paypal has encountered an error. This transaction has not been processed and you have not been charged');
         }
 
 
-        //$paymentDetails = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
-
-        $paymentDetails = new PaymentDetailsType();
 
         $paymentDetails = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
 
         //$paymentDetails->PaymentAction = 'Sale';
-        // $paymentDetails->NotifyURL = $ipnUrl;
+        //$paymentDetails->NotifyURL = $ipnUrl;
 
         $DoECRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
         $DoECRequestDetails->PayerID = $checkout->payerID;
@@ -504,11 +502,81 @@ class BuyController extends \BaseController
         }
 
         $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
-        echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
+        //echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
 
-        $checkout->txn_id = $DoECResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->TransactionID;
-        $checkout->save();
+        $paymentInfo = $DoECResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0];
+
+        if(isset($paymentInfo)) {
+            $checkout->txn_id = $paymentInfo->TransactionID;
+            $checkout->completed = 1; //Even if the payment isn't actually taken, we can't reuse the tokens etc so we need to start again anyway.
+            $checkout->save();
+        }
+        if ($DoECResponse->Ack != "Success") {
+
+            return Redirect::to('/')->with('message', 'We are afraid that the transaction has failed. Please try again.');
+        }
+
+        //echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
+
+
+        $buyerID = Auth::user()->id;
+        $sellerID = $item->user_id;
+        $eventArray = [
+            'buyer_user_id' => $buyerID,
+            'seller_id' => $sellerID,
+            'item_id' => $item->id,
+            'payment_info' => $paymentInfo];
+
+        switch($paymentInfo->PaymentStatus) {
+            case "Completed":
+                //Good news! it worked...
+                Event::fire('purchase.completed', $eventArray);
+                return Redirect::to('/')->with('success', 'Purchase successful! Check your emails and notifications shortly for a confirmation');
+
+                break;
+            case "Created":
+                //A German ELV payment is made using Express Checkout.
+                break;
+            case "Denied":
+                //The payment was denied. This happens only if the payment was previously pending because of one of the reasons listed for the pending_reason variable or the Fraud_Management_Filters_x var
+                return Redirect::to('/')->with('message', 'The PayPal transaction was denied. Check your PayPal account for more info');
+                break;
+            case "Expired":
+                //They took too long!
+                return Redirect::to('/')->with('message', 'The PayPal transaction session has expired. No payment has been made. Please try again.');
+                break;
+            case "Failed":
+                //Bank acct issues
+                return Redirect::to('/')->with('message', 'The PayPal transaction failed. Check your PayPal account for more info');
+                break;
+            case "Pending":
+                //Check the pending reason
+                if ($paymentInfo->PendingReason == 'unilateral') {
+                    //Tell the buyer to cancel the payment and seller to update their email.
+
+                    Event::fire('purchase.payment.pending.unilateral', $eventArray);
+                    //echo '<pre>' . print_r($eventArray, 1) . '</pre>';
+                    return Redirect::to('/')->withMessage('There has been an issue with the payment. Check your emails and PayPal account for more information');
+                }
+                //Go through the other pending reasons...
+                break;
+            /*
+            case "Reversed":
+                //A payment was reversed due to a chargeback or other type of reversal. The funds have been removed from your account balance and returned to the buyer. The reason for the reversal is specified in the ReasonCode element.
+                break;
+            case "Processed":
+                //Payment accepted
+                break;
+            case "Voided":
+                //This authorization has been voided.
+                break;
+            */
+        }
+
+        return Redirect::to('/')->with('message', 'We are afraid that the transaction may have failed. Please check your PayPal.');
+
     }
+
 
     public function cancel($id)
     {
