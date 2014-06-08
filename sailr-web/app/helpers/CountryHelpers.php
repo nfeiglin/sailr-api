@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Nathan
- * Date: 4/05/14
- * Time: 2:14 AM
- */
 
 class CountryHelpers {
     private static function getCountries() {
@@ -220,5 +214,9 @@ class CountryHelpers {
 
     public static function getISOCodeFromCountryName($countryname) {
         return array_search($countryname, self::getCountries());
+    }
+
+    public static function getCountryNameFromISOCode($isoCode) {
+        return self::getCountries()[$isoCode];
     }
 } 

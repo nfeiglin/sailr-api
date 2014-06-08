@@ -71,6 +71,7 @@ return array(
     "country" => "The :attribute must be a country",
     "UsernameOrUnique" => "The requested :attribute is already taken",
     "currency" => "This currency is unsupported",
+    "countryCode" => "The :attribute is unsupported",
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

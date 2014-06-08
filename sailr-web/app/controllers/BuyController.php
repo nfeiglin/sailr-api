@@ -3,7 +3,14 @@
 class BuyController extends \BaseController
 {
 
-    public static $rules = ['country' => 'required|country'];
+    public static $rules = [
+        'country' => 'required|countryCode',
+        'street_number' => 'required',
+        'street_name' => 'required',
+        'city' => 'required',
+        'state' => 'required',
+        'zipcode' => 'required'
+    ];
 
     /**
      * Show the form for creating a new resource.
@@ -78,8 +85,6 @@ class BuyController extends \BaseController
         $u->setHidden([]);
 
         $item = Item::where('id', '=', $id)->with([
-            'Shipping' => function ($x) {
-                },
             'User' => function ($y) {
 
                 }
@@ -94,17 +99,14 @@ class BuyController extends \BaseController
 
         }
 
-        $shippingFee = 0.00;
-        $shippingName = 'shipping';
-        if ($item->country == $input['country']) {
-            //Charge domestic shipping
-            $shippingFee = $item['shipping'][0]['price'];
-            $shippingName = 'Domestic ' . $shippingName;
-        } else {
-            //Charge international shipping fee
-            $shippingFee = $itemArray['shipping'][1]['price'];
-            $shippingName = 'International ' . $shippingName;
+        if ($input['country'] != $item->ships_to) {
+            $messageBag = new \Illuminate\Support\MessageBag();
+            $messageBag->add('country', 'The seller currently does not ship this item to ' . CountryHelpers::getCountryNameFromISOCode($input['country']));
+            return Redirect::back()->with('message', 'Sorry...')->withErrors($messageBag);
         }
+
+
+        $shippingFee = $item->ship_price;
 
         //Store some initial info in the database
         $checkout = new Checkout();
@@ -231,7 +233,7 @@ class BuyController extends \BaseController
         $shipToAddress1->Street1 = $address1;
         $shipToAddress1->CityName = $input['city'];
         $shipToAddress1->StateOrProvince = $input['state'];
-        $shipToAddress1->Country = CountryHelpers::getISOCodeFromCountryName($input['country']);
+        $shipToAddress1->Country = $input['country'];
         $shipToAddress1->PostalCode = $input['zipcode'];
 
         // Your URL for receiving Instant Payment Notification (IPN) about this transaction. If you do not specify this value in the request, the notification URL from your Merchant Profile is used, if one exists.
@@ -257,14 +259,17 @@ class BuyController extends \BaseController
         // ## Creating service wrapper object
         // Creating service wrapper object to make API call and loading
         // configuration file for your credentials and endpoint
+
         $service = new PayPalAPIInterfaceServiceService($config);
-        // $response = new PayPalAPIInterfaceServiceService($config);
+
+
+        $response = new $service->SetExpressCheckout($setExpressCheckoutReq);
+
         //try {
         // ## Making API call
         // Invoke the appropriate method corresponding to API in service
         // wrapper object
 
-        $response = $service->SetExpressCheckout($setExpressCheckoutReq);
 
 
         //} catch (Exception $ex) {

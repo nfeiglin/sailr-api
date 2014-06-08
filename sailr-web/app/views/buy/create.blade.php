@@ -10,15 +10,13 @@
 
 		<div class="form-signin wide panel">
 			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price'] }}</small></h2>
-            <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
+            <button class="btn btn-primary btn-lg btn-turq btn-big btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
+            <p class="ships_to lead">Ships to {{ CountryHelpers::getCountryNameFromISOCode($item['ships_to']) }}</p>
 				<div class="row">
 
 </div>
 
-			<div class="well item buy-page" id="{{ $item['id'] }}">
-					<div class="caption">
-        				<p> {{ $item['description'] }}</p>
-        			</div>
+			<div class="item buy-page" id="{{ $item['id'] }}">
 
         			<div class="img-gallery">
 						@foreach($item['photos'] as $photo)
@@ -32,29 +30,17 @@
                     <a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
                 </div>
 
-                <h4>Shipping</h4>
-
-                <div class="table">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <td>{{ $shippings[0]['type'] or ''}}</td>
-                            <td>{{ $shippings[1]['type'] or '' }}</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{{ $shippings[0]['desc'] or '' }}}</td>
-                            <td>{{{ $shippings[1]['desc'] or '' }}}</td>
-                        </tr>
-                            <tr>
-                                <td>{{ $item['currency']}}{{$shippings[0]['price'] or ''}}</td>
-                                <td>{{ $item['currency']}}{{$shippings[1]['price'] or ''}}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="caption">
+                    <p> {{ $item['description'] }}</p>
                 </div>
+
+                <h4>Price</h4>
+
+                <div class="table col-md-6">
+                    @include('parts.shippingTable')
+                </div>
+
+
     		</div>
 
             <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
@@ -75,7 +61,7 @@
                             <div class="row">
                             <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 form-group">
                                 <div class="col-lg-8 col-sm-8 col-md-8">
-                                    <img src="{{ $profileURL }}" class="img-responsive img-circle pull-left">
+                                    <img src="{{ $profileURL or '' }}" class="img-responsive img-circle pull-left">
                                     <div class="buyer-info">
                                         <p class="h5">{{{ Auth::user()->name }}}</p>
                                         <p class="h5">{{{ Auth::user()->email }}}</p>
@@ -92,7 +78,7 @@
                             <h4>Where should it be shipped?</h4>
 
                             <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" placeholder="Shipping address" class="form-control" id="autocomplete" autocomplete="false" autocomplete="off">
+                                <input type="text" placeholder="Shipping address" class="form-control" id="autocomplete" autocomplete="false" autocomplete="off" required="required">
                             </div>
 
                             <div id="hidden-form">
@@ -121,16 +107,14 @@
                                 </div>
                             </div>
 
-
-
-
+                            @include('parts.shippingTable')
                         </div>
 
 
                         </div>
                         <div class="modal-footer">
-                            <span class="h4 pull-left text-primary"> Total price (including shipping) </span><span class="h4 pull-right text-primary" id="total-price">&hellip;</span>
-                            <button value="submit" class="btn btn-lg btn-block paypal-btn pull-right" disabled="disabled" id="checkout-btn">Checkout with Paypal</button>
+                            <button value="submit" class="btn btn-lg btn-block paypal-btn pull-left" id="checkout-btn">Checkout with Paypal</button>
+                            <button value="submit" class="btn btn-lg btn-block btn-turq btn-big" id="checkout-btn">Checkout with Paypal</button>
                             {{ Form::close() }}
                         </div>
                     </div><!-- /.modal-content -->
@@ -139,7 +123,7 @@
 
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 @else
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="buyModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
