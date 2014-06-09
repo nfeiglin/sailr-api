@@ -262,7 +262,7 @@ class BuyController extends \BaseController
         $shipToAddress1->PostalCode = $input['zipcode'];
 
         // Your URL for receiving Instant Payment Notification (IPN) about this transaction. If you do not specify this value in the request, the notification URL from your Merchant Profile is used, if one exists.
-        $paymentDetails1->NotifyURL = "http://localhost/ipn";
+        $paymentDetails1->NotifyURL = URL::action('ipn');
 
         $paymentDetails1->ShipToAddress = $shipToAddress1;
 
@@ -439,7 +439,7 @@ class BuyController extends \BaseController
         $input = Input::all();
         $paypalToken = $checkout->token;
 
-        $ipnUrl = 'http://localhost.com';
+        $ipnUrl = URL::action('ipn');
 
         if ($checkout->user_id != Auth::user()->id) {
             return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');

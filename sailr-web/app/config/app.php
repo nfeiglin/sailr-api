@@ -112,7 +112,8 @@ return array(
         'Jenssegers\Mongodb\MongodbServiceProvider',
         'Sailr\Holystone\HolystoneServiceProvider',
         'Sailr\Validator\ValidatorServiceProvider',
-        'Sailr\Handle\HandleServiceProvider'
+        'Sailr\Handle\HandleServiceProvider',
+        'LogicalGrape\PayPalIpnLaravel\PayPalIpnServiceProvider',
 
     ),
 
@@ -181,6 +182,7 @@ return array(
         'View' => 'Illuminate\Support\Facades\View',
         'Image' => 'Intervention\Image\Facades\Image',
         'Holystone' => 'Sailr\Holystone\Facades\Holystone',
+        'IPN' => 'LogicalGrape\PayPalIpnLaravel\Facades\IPN',
 
 
     ),

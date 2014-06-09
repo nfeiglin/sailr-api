@@ -64,6 +64,7 @@ if (Auth::check()) {
 }
 
 Route::get('/s/{query}', 'SearchesController@show');
+Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
 
 Route::group(['before' => 'csrf'], function () {
     Route::get('test', function () {
