@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Sailr | {{{ Str::limit($title, 140) }}}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
     <script src="{{ URL::asset('js/directives.js') }}"></script>

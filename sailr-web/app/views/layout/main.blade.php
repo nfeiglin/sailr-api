@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     @if(isset($title))
     <title>Sailr | {{{ Str::limit($title, 140) }}}</title>
     @else
