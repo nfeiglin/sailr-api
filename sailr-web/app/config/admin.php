@@ -1,6 +1,6 @@
 <?php
 return array(
 
-    'email' => 'nathan+sailrLogs@sailr.co',
+    'email' => 'nathan@sailr.co',
     'name' => 'Nathan F'
 );
