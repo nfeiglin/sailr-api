@@ -31,6 +31,13 @@ $env = $app->detectEnvironment(array(
 ));
 
 /*
+ * Register the Stripe key
+ */
+
+User::setStripeKey(Config::get('stripe.sandbox.secret'));
+
+
+/*
 |--------------------------------------------------------------------------
 | Bind Paths
 |--------------------------------------------------------------------------

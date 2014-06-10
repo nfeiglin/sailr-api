@@ -4,11 +4,15 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
+use Laravel\Cashier\BillableTrait;
+use Laravel\Cashier\BillableInterface;
 
-class User extends Eloquent implements UserInterface, RemindableInterface
+class User extends Eloquent implements UserInterface, RemindableInterface, BillableInterface
 {
     use SoftDeletingTrait;
-    protected $dates = ['created_at', 'updated_at'];
+    use BillableTrait;
+
+    protected $dates = ['created_at', 'updated_at', 'trial_ends_at', 'subscription_ends_at'];
     protected $softDelete = true;
 
     /**

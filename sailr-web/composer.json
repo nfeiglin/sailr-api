@@ -12,7 +12,9 @@
         "paypal/merchant-sdk-php": "v3.6.106",
         "jenssegers/mongodb": "v1.4",
         "guzzlehttp/guzzle": "~4.0",
-        "logicalgrape/paypal-ipn-laravel": "dev-master"
+        "logicalgrape/paypal-ipn-laravel": "dev-master",
+        "laravel/cashier": "~2.0"
+
 
 
 	},

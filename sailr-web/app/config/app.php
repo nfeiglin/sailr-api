@@ -114,6 +114,7 @@ return array(
         'Sailr\Validator\ValidatorServiceProvider',
         'Sailr\Handle\HandleServiceProvider',
         'LogicalGrape\PayPalIpnLaravel\PayPalIpnServiceProvider',
+        'Laravel\Cashier\CashierServiceProvider',
 
     ),
 
