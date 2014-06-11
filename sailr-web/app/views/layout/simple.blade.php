@@ -30,8 +30,9 @@
 @endif
 
 <div class="row">
-    <div class="container">
-        <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12" style="margin-top: 30px">
+    <div class="container" style="margin-top: 30px">
+
+        <div class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2 col-sm-12 col-xs-12">
             @if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif
             @if(Session::has('success'))<div class="alert alert-success">{{ Session::get('success') }}</div> @endif
             @if(Session::has('error'))<div class="alert alert-warning">{{ Session::get('error') }}</div> @endif
@@ -47,7 +48,6 @@
             @yield('content')
         </div>
     </div>
-
 </div>
 
 
