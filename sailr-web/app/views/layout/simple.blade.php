@@ -17,7 +17,7 @@
 
     <script>
         var csrfToken = '{{ Session::token() }}';
-        var baseURL = 'http://homestead.app:8000';
+        var baseURL = '{{ URL::to('/') }}';
     </script>
     @yield('head', '')
 </head>
