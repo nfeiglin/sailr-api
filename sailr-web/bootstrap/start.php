@@ -30,11 +30,6 @@ $env = $app->detectEnvironment(array(
 
 ));
 
-/*
- * Register the Stripe key
- */
-
-User::setStripeKey(Config::get('stripe.sandbox.secret'));
 
 
 /*
@@ -64,6 +59,13 @@ $app->bindInstallPaths(require __DIR__.'/paths.php');
 $framework = $app['path.base'].'/vendor/laravel/framework/src';
 
 require $framework.'/Illuminate/Foundation/start.php';
+
+
+/*
+ * Register the Stripe key
+ */
+
+User::setStripeKey(Config::get('stripe.sandbox.secret'));
 
 /*
 |--------------------------------------------------------------------------
