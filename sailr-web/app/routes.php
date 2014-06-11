@@ -65,6 +65,7 @@ if (Auth::check()) {
 
 Route::get('/s/{query}', 'SearchesController@show');
 Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
+Route::post('payment/stripe/webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
 
 Route::group(['before' => 'csrf'], function () {
     Route::get('test', function () {
@@ -107,7 +108,14 @@ Route::group(['before' => 'csrf'], function () {
         Route::any('buy/{id}/cancel', 'BuyController@cancel');
         Route::get('buy/{id}/confirm', 'BuyController@showConfirm');
         Route::post('buy/{id}/confirm', 'BuyController@doConfirm');
-        Route::controller('settings', 'SettingsController');
+
+        Route::group(['prefix' => 'settings'], function() {
+            Route::get('account', 'SettingsController@getAccount');
+            Route::put('account', 'SettingsController@putAccounts');
+            Route::resource('subscription', 'SubscriptionsController');
+        });
+
+
         Route::delete('relationship', 'RelationshipsController@destroy');
         Route::resource('relationship', 'RelationshipsController');
         Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
