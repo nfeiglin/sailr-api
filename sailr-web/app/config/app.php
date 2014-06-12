@@ -113,6 +113,7 @@ return array(
         'Sailr\Holystone\HolystoneServiceProvider',
         'Sailr\Validator\ValidatorServiceProvider',
         'Sailr\Handle\HandleServiceProvider',
+        'Sailr\Handle\VipServiceProvider',
         'LogicalGrape\PayPalIpnLaravel\PayPalIpnServiceProvider',
         'Laravel\Cashier\CashierServiceProvider',
 
@@ -183,6 +184,7 @@ return array(
         'View' => 'Illuminate\Support\Facades\View',
         'Image' => 'Intervention\Image\Facades\Image',
         'Holystone' => 'Sailr\Holystone\Facades\Holystone',
+        'VIP' => 'Sailr\Holystone\Facades\VIP',
         'IPN' => 'LogicalGrape\PayPalIpnLaravel\Facades\IPN',
 
 
