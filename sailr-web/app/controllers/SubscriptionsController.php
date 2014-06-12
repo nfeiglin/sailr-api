@@ -89,9 +89,18 @@ class SubscriptionsController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy()
 	{
-		//
+		$user = Auth::user();
+
+		if($user->isSubscribed()) {
+			$user->subscription->cancel();
+			return Redirect::back()->with('message', 'Subscription canceled');
+		}
+
+		else {
+			return Redirect::back()->with('fail', 'You do not have a subscription to cancel');
+		}
 	}
 
 }
