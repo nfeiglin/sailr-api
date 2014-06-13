@@ -18,7 +18,8 @@ class VipServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('sailr/vip');
+		$this->package('sailr/vip', 'vip');
+
 	}
 
 	/**
@@ -28,7 +29,9 @@ class VipServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+        $this->app['vip'] = $this->app->share(function($app) {
+            return new VIP;
+        });
 	}
 
 	/**

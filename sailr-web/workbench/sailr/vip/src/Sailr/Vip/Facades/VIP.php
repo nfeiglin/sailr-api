@@ -11,7 +11,7 @@ class VIP extends Facade {
      * @return string
      */
     protected static function getFacadeAccessor() {
-        return 'VIP';
+        return 'vip';
     }
 
 }
