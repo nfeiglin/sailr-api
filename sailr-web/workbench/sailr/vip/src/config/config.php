@@ -14,9 +14,7 @@ return [
          'count' => [
              'product' => [
                  'create' => [
-                     'db' => function() {
-                         return DB::table('items');
-                     },
+                     'db' => DB::table('items'),
                      'max' => 4
                  ]
              ]

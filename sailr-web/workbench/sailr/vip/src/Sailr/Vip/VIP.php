@@ -36,7 +36,15 @@ class VIP
 
         $rulesArray = array_get($this->config, $this->buildArrayGetString($planId, $actionName));
 
-        $query = $rulesArray['db']();
+        /* Support for closures and pure variables.. */
+        if ($rulesArray['db'] instanceof Closure) {
+            $query = $rulesArray['db']();
+        }
+
+        else {
+            $query = $rulesArray['db'];
+        }
+
 
         $maximumAmount = $rulesArray['max'];
 
