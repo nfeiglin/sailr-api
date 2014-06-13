@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Laravel\Cashier\BillableTrait;
 use Laravel\Cashier\BillableInterface;
 
+use Sailr\Vip\VipTrait;
+
 class User extends Eloquent implements UserInterface, RemindableInterface, BillableInterface
 {
     use SoftDeletingTrait;
     use BillableTrait;
+    use VipTrait;
 
     protected $dates = ['created_at', 'updated_at', 'trial_ends_at', 'subscription_ends_at'];
     protected $softDelete = true;
