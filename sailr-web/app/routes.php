@@ -14,7 +14,7 @@ use Intervention\Image\Facades;
 |
 */
 
-/*
+
 Event::listen('illuminate.query', function($sql, $bindings, $time){
     //echo $sql;          // select * from my_table where id=? 
     //print_r($bindings); // Array ( [0] => 4 )
@@ -25,7 +25,6 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
     $full_sql = vsprintf($sql, $bindings);
     echo '<pre>' . $full_sql . '</pre>';
 });
-*/
 
 
 
@@ -51,7 +50,18 @@ View::composer('index', function($view){
 
 
 Route::get('/i/info', function () {
-    phpinfo();
+    //VIP::canPerformAction('product.create', User::findOrFail(11)
+
+    $user = User::findOrFail(11);
+
+    if ($user->canPerformActionOnPlan('product.create')) {
+        return 'YESSS';
+    }
+
+    else {
+        return 'NO!!';
+    }
+    //phpinfo();
 });
 
 
