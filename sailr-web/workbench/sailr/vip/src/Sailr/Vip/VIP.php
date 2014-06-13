@@ -8,8 +8,9 @@ class VIP
     /*
         @property User $user The user instance to check against
     */
-    protected  $user;
+    protected $user;
     protected $config;
+    protected $planId = '';
 
     /**
      * Work out if thee user can perform a specific action based on their plan and activity within the last 30 days.
@@ -24,24 +25,21 @@ class VIP
 
         $this->config = \Config::get('vip::config.plans');
         $this->user = $user;
-        $planId = '';
 
         if (!$this->user->subscribed()) {
             //Default
-            $planId = 'default';
+            $this->planId = 'default';
         } else {
-            $planId = $this->user->subscription()->planId();
+            $this->planId = $this->user->subscription()->planId();
         }
 
 
-        $rulesArray = array_get($this->config, $this->buildArrayGetString($planId, $actionName));
+        $rulesArray = array_get($this->config, $this->buildArrayGetString($this->planId, $actionName));
 
         /* Support for closures and pure variables.. */
         if ($rulesArray['db'] instanceof Closure) {
             $query = $rulesArray['db']();
-        }
-
-        else {
+        } else {
             $query = $rulesArray['db'];
         }
 
@@ -55,15 +53,8 @@ class VIP
 
 
         $count = $query->where('user_id', '=', $this->user->getAuthIdentifier())->whereBetween('created_at', [$todayLess30Days, $today])->count();
-        echo '<p> Count is::: ' . $count . '</p>';
-        if ($count >= $maximumAmount) {
-            return false;
-        }
 
-        else {
-            return true;
-        }
-
+        return $count >= $maximumAmount;
 
     }
 
