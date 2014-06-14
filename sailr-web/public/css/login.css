@@ -1,7 +1,9 @@
 body {
     padding-top: 0px;
     padding-bottom: 40px;
+}
 
+body .purpleBackground {
     background: url('../images/swag-bg.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -21,6 +23,9 @@ nav {
     margin-top: 80px !important;
     margin-left: auto;
     margin-right: auto;
+}
+.form-signin .no-top-margin {
+    margin-top: 0 !important;
 }
 
 .form-signin .message {

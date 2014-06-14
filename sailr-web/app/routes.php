@@ -14,7 +14,7 @@ use Intervention\Image\Facades;
 |
 */
 
-
+/*
 Event::listen('illuminate.query', function($sql, $bindings, $time){
     //echo $sql;          // select * from my_table where id=? 
     //print_r($bindings); // Array ( [0] => 4 )
@@ -25,7 +25,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
     $full_sql = vsprintf($sql, $bindings);
     echo '<pre>' . $full_sql . '</pre>';
 });
-
+*/
 
 
 View::composer('*', function ($view) {
@@ -121,8 +121,9 @@ Route::group(['before' => 'csrf'], function () {
 
         Route::group(['prefix' => 'settings'], function() {
             Route::get('account', 'SettingsController@getAccount');
-            Route::put('account', 'SettingsController@putAccounts');
-            Route::resource('subscription', 'SubscriptionsController');
+            Route::put('account', 'SettingsController@putAccount');
+            Route::resource('subscription', 'SubscriptionsController', ['only' => ['index', 'destroy', 'store']]);
+            Route::resource('billing', 'BillingsController', ['only' => ['index', 'destroy', 'store', 'show', 'create']]);
         });
 
 

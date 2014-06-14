@@ -1,12 +1,18 @@
-@extends('layout.simple')
+@extends('layout.settings.main')
 @section('content')
-    {{ Form::model($user, ['action' => 'SettingsController@putAccount', 'method' => 'PUT', 'class' => 'form-signin panel', 'validate' => 'validate' ]) }}
-        <a href="{{url('')}}"><img src="/images/logo-500.png" class="img-responsive"></a>
+    <div class="">
+        {{ Form::model($user, ['action' => 'SettingsController@putAccount', 'method' => 'PUT', 'class' => '', 'validate' => 'validate' ]) }}
         <h2>Account settings</h2>
+        //TODO ADD PROFILE PHOTO UPLOAD HERE
 
         <div class="form-group">
             {{ Form::label('Name') }}
             {{ Form::text('name',null, ['class' => 'form-control']) }}
+        </div>
+
+        <div class="form-group">
+            {{ Form::label('Username') }}
+            {{ Form::text('username',null, ['class' => 'form-control']) }}
         </div>
 
         <div class="form-group">
@@ -16,10 +22,6 @@
 
         </div>
 
-        <div class="form-group">
-            {{ Form::label('Username') }}
-            {{ Form::text('username',null, ['class' => 'form-control']) }}
-        </div>
 
         <div class="form-group">
             {{ Form::label('Bio') }}
@@ -28,6 +30,8 @@
 
 
 
-        <button class="btn btn-lg btn-primary btn-block" value="submit" type="submit">Update</button>
-    {{ Form::close() }}
+        <button class="btn btn-lg btn-primary btn-block" value="submit" type="submit">Save</button>
+        {{ Form::close() }}
+    </div>
+
 @stop

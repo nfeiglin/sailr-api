@@ -1,7 +1,7 @@
-@extends('layout.simple')
+@extends('layout.settings.main')
 @section('content')
-<div class="form-signin panel wide">
-<h3 class="form-signin-heading">Subscription</h3>
+
+<h2>Subscription</h2>
     {{-- @if($user->subscribed())
         {{ print_r($user->subscription(), 1) }}
     @else --}}
