@@ -123,7 +123,8 @@ Route::group(['before' => 'csrf'], function () {
             Route::get('account', 'SettingsController@getAccount');
             Route::put('account', 'SettingsController@putAccount');
             Route::resource('subscription', 'SubscriptionsController', ['only' => ['index', 'destroy', 'store']]);
-            Route::resource('billing', 'BillingsController', ['only' => ['index', 'destroy', 'store', 'show', 'create']]);
+            Route::resource('billing', 'BillingsController');
+            Route::put('billing', 'BillingsController@update');
         });
 
 
