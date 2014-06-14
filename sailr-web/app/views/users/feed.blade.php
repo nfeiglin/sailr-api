@@ -7,7 +7,7 @@
 			{{-- <pre> json_encode($item) </pre> --}}
 			<div class="item" id="{{ $item['id'] }}">
 				<div class="item-user panel panel-default">
-						<a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
+						<a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] or '' }}" class="item-user-img img-circle"></a>
 						<a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username text-primary">{{ '@' . $item['user']['username'] }}</a>
 				</div>
 
