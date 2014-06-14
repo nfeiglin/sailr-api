@@ -511,3 +511,34 @@ input[type="file"] {
     margin-right: 0 !important;
     margin-left: 0 !important;
 }
+
+
+.square-btn {
+    margin-bottom: 15px;
+    margin-top: 15px;
+
+    padding-bottom: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    position: relative;
+    min-height: 50px;
+    max-height: 100%;
+    width: 100%;
+    background-color: turquoise;
+}
+
+
+.square-content{
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: white;
+}
+
+.big-font {
+    font-size: 80px;
+}
