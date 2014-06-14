@@ -466,6 +466,23 @@ input[type="file"] {
     background-color: #615fff;
 }
 
+.btn-purple:disabled {
+    color: #ffffff;
+    background-color: #343468;
+    border-color: #454491;
+}
+
+.btn-purple:active {
+    color: #ffffff;
+    background-color: #615fff;
+}
+
+.btn-purple:active:hover {
+    color: #ffffff;
+    background-color: #615fff;
+}
+
+
 .btn-turq {
     background-color: #1abc9c;
     border-color: #1ac6a6;
