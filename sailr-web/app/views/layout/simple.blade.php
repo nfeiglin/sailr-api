@@ -22,7 +22,12 @@
     @yield('head', '')
 </head>
 
+@if(isset($purpleBG) && $purpleBG == true)
+<body ng-controller="feedController" class="purpleBackground">
+@else
 <body ng-controller="feedController">
+@endif
+
 @if($hasNavbar == 1)
 
     @include('parts.navbar')

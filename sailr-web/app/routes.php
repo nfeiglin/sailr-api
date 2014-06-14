@@ -48,6 +48,9 @@ View::composer('index', function($view){
     $view->with('purpleBG', false);
 });
 
+View::composer('users.create', function($view){
+    $view->with('purpleBG', true);
+});
 
 Route::get('/i/info', function () {
     //VIP::canPerformAction('product.create', User::findOrFail(11)
