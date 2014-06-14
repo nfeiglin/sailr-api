@@ -12,6 +12,8 @@ class BillingsController extends \BaseController {
 	{
         $user = Auth::user();
 
+        $invoices = $user->invoices();
+
         $card = $user->subscription()->getStripeCustomer()->cards->all(['limit' => 1])['data'][0];
         //dd($card);
 
@@ -19,7 +21,7 @@ class BillingsController extends \BaseController {
         $last4 = $card->last4;
         $title = 'Billing Settings';
 
-		return View::make('settings.billing', compact('cardType', 'last4', 'title', 'user'));
+		return View::make('settings.billing', compact('cardType', 'last4', 'title', 'user', 'invoices'));
 	}
 
 	/**
@@ -48,12 +50,19 @@ class BillingsController extends \BaseController {
 	 * Display the specified resource.
 	 * GET /billings/{id}
 	 *
-	 * @param  int  $id
+	 * @param  string  $id The invoice id string
 	 * @return Response
 	 */
 	public function show($id)
 	{
-		//
+        //Render a page with a basic html receipt
+
+        $u = Auth::user();
+        return $u->findInvoiceOrFail($id)->render([
+            'vendor' => 'Sailr',
+            'product' => 'Subscription'
+        ]);
+
 	}
 
 	/**

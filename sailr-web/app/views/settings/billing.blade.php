@@ -83,8 +83,36 @@
                 </td>
             </tr>
             </tbody>
-
         </table>
+
+        <h3>Invoices</h3>
+        @if(count($invoices) < 1)
+        <p>Your invoices will show up here upon <a href="{{ URL::action('SubscriptionsController@index') }}">subscribing</a> to a paid</p>
+        @else
+        <table class="table">
+            <thead>
+                <td>Invoice Id</td>
+                <td>Invoice date</td>
+                <td>Amount</td>
+            </thead>
+
+            <tbody>
+            @foreach($invoices as $invoice)
+            <tr>
+                <td>
+                    <a href="{{ URL::action('BillingsController@show', $invoice->id) }}" target="_blank">#{{ $invoice->id }}</a>
+                </td>
+                <td>
+                   {{ $invoice->dateString() }}
+                </td>
+                <td>
+                    {{ $invoice->dollars() }}
+                </td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
+        @endif
 
     </div>
 
