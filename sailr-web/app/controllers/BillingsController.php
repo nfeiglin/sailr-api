@@ -70,14 +70,25 @@ class BillingsController extends \BaseController {
 
 	/**
 	 * Update the specified resource in storage.
-	 * PUT /billings/{id}
+	 * PUT /billings/
 	 *
-	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update()
 	{
-		//
+		$stripeToken = Input::json('stripeToken');
+        $user = Auth::user();
+        $res = ['message' => 'Card updated successfully'];
+
+        try {
+            $user->subscription()->updateCard($stripeToken);
+        }
+        catch (Stripe_CardError $e) {
+            $res['message'] = $e->getMessage();
+        }
+
+
+        return Response::json($res, 200);
 	}
 
 	/**
