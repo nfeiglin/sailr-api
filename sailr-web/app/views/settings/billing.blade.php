@@ -1,16 +1,17 @@
 @extends('layout.settings.main')
 @section('head')
 <link rel="stylesheet" href="{{ URL::asset('js/card/css/card.css') }}">
+<script src="{{ URL::asset('js/card/js/card.js') }}"></script>
 <script src="{{ URL::asset('js/controllers/billing/billingController.js') }}"></script>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script>
     var cardType = '{{ $cardType or '' }}';
-    var last4 = '{{ $last4 or '' }}'
-
-</script>
-<script>
+    var last4 = '{{ $last4 or '' }}';
+    var usersName = '{{{ $user->name or ''}}}';
     Stripe.setPublishableKey('{{ Config::get("stripe.sandbox.publishable") }}');
 </script>
+
+
 
 @stop
 
@@ -28,19 +29,19 @@
                     <div class="card-wrapper"></div>
                 </div>
 
-                <p class="text-primary">Please enter the details of the new credit card here</p>
+                <p>Please enter the details of the new credit card here</p>
                 <div class="row">
-                    <form id="cardForm" name="cardForm" ng-submit="updateCard()" class="form-horizontal panel"
-                          novalidate="novalidate">
-                        <input hidden="hidden" id="ZZZusersName" value="{{{ $user->name or '' }}}">
+                    <form id="cardForm" name="cardForm" ng-submit="updateCard()" class="form-horizontal panel" novalidate="novalidate">
 
-                        <div class="form-group">
                             <div class="col-sm-12 col-lg-12 col-md-12">
-                                <input ng-model="card.number" id="cardNumber" class="form-control" type="text"
-                                       maxlength="25" placeholder="Card number" name="number" required="required"
-                                       name="cardNumber">
+                                <div class="form-group">
+                                    <input ng-model="card.name" ng-value="card.name" id="cardName" class="form-control" type="text" maxlength="60" placeholder="Name on card" name="name">
+                                </div>
+
+                                <div class="form-group">
+                                    <input ng-model="card.number" id="cardNumber" class="form-control" type="text" maxlength="25" placeholder="Card number" name="number" required="required" id="cardNumber" focus-me="showUpdateCard">
+                                </div>
                             </div>
-                        </div>
 
                         <div class="form-group">
                             <div class="col-sm-4 col-lg-4 col-md-4">
@@ -63,7 +64,7 @@
                 </div>
 
             </div>
-
+        <input type="hidden" value="{{ $user->name or ''}}" id="initName">
         </div>
 
 
@@ -121,20 +122,24 @@
 @stop
 
 @section('bottom')
-<script src="{{ URL::asset('js/card/js/card.js') }}"></script>
 <script>
 
-    $('#cardForm').card({
+    var cardPreview = $('#cardForm').card({
         // a selector or jQuery object for the container
         // where you want the card to appear
         container: '.card-wrapper', // *required*
         numberInput: 'input#cardNumber', // optional — default input[name="number"]
         expiryInput: 'input#cardExpiry', // optional — default input[name="expiry"]
         cvcInput: 'input#cardCVC', // optional — default input[name="cvc"]
-        nameInput: 'input#ZZZusersName', // optional - defaults input[name="name"]
+        nameInput: 'input#cardName', // optional - defaults input[name="name"]
 
         width: 360, // optional — default 350px
         formatting: true // optional - default true
     });
+
+    if (usersName.length > 0) {
+        $('input#cardName').val(usersName);
+        $('input#cardName').trigger('change');
+    }
 </script>
 @stop
