@@ -455,6 +455,13 @@ input[type="file"] {
     -webkit-border-radius: 0;
 }
 
+.btn-md-long {
+    padding-left: 25px;
+    padding-right: 25px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    max-width: 1000%;
+}
 .btn-purple {
     background-color: #5856D6;
     border-color: #5c5ada;
@@ -490,6 +497,18 @@ input[type="file"] {
 }
 
 .btn-turq:hover {
+    background-color: #1ac6a6;
+    border-color: #1ac6a6;
+    color: #ffffff;
+}
+
+.btn-turq:active {
+    background-color: #1ac6a6;
+    border-color: #1ac6a6;
+    color: #ffffff;
+}
+
+.btn-turq:hover:active {
     background-color: #1ac6a6;
     border-color: #1ac6a6;
     color: #ffffff;
@@ -541,4 +560,36 @@ input[type="file"] {
 
 .big-font {
     font-size: 80px;
+}
+
+.fat-bar {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background: #EEEEEE;
+}
+
+.plan-choice-icon {
+    padding-top: 15px;
+    margin-bottom: 0;
+}
+.bottom.you-should-know {
+    margin-top: 70px;
+    margin-bottom: 0 !important;
+    padding-bottom: 60px;
+}
+* {
+    -webkit-transition: all 0.2s ease;
+    -moz-transition:    all 0.2s ease;
+    -ms-transition:     all 0.2s ease;
+    -o-transition:      all 0.2s ease;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0 !important;
+}
+
+.hide-name .name.display {
+    visibility: hidden;
 }
