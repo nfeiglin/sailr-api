@@ -555,9 +555,6 @@
             this.attachHandlers();
             this.handleInitialValues();
 
-            this.$nameInput.bindVal(this.$nameDisplay, {
-                fill: false
-            });
         }
 
         Card.prototype.render = function() {
