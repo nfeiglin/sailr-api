@@ -9,7 +9,7 @@ app.controller('billingController', ['$scope', '$http', function ($scope, $http)
     $scope.card = {};
     $scope.token = {};
     $scope.posting = false;
-
+    $scope.card.name = usersName;
     $scope.card.last4 = last4;
     $scope.card.type = cardType;
 
@@ -17,13 +17,20 @@ app.controller('billingController', ['$scope', '$http', function ($scope, $http)
 
         var expiryArray = stripWhiteSpace($scope.card.expiry).split('/');
 
-
-        Stripe.card.createToken({
+        $scope.card.stripeData = {
             number: stripWhiteSpace($scope.card.number),
             cvc: stripWhiteSpace($scope.card.cvc),
             exp_month: expiryArray[0],
             exp_year: expiryArray[1]
-        }, stripeResponseHandler);
+        };
+
+        /* If there is a cardholder name, add it to the request to be sent to Stripe */
+        if ($scope.card.name.length > 1) {
+            $scope.card.stripeData.name = $scope.card.name;
+        }
+
+
+        Stripe.card.createToken($scope.card.stripeData, stripeResponseHandler);
 
 
         function stripeResponseHandler(status, response) {
