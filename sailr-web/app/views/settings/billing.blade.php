@@ -35,7 +35,7 @@
 
                             <div class="col-sm-12 col-lg-12 col-md-12">
                                 <div class="form-group">
-                                    <input ng-model="card.name" ng-value="card.name" id="cardName" class="form-control" type="text" maxlength="60" placeholder="Name on card" name="name">
+                                    <input ng-model="card.name" id="cardName" class="form-control" type="text" maxlength="60" placeholder="Name on card" name="name">
                                 </div>
 
                                 <div class="form-group">
