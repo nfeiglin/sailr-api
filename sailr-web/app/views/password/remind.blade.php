@@ -2,6 +2,7 @@
 
 @section('content')
 <form class="form-signin panel" role="form" action="{{URL::action('RemindersController@postRemind')}}" method="post" validate="validate">
+    {{ Form::token() }}
     <a href="{{url('')}}"><img src="/images/logo-500.png" class="img-responsive"></a>
     @if(Session::get('message'))
     	<p class="form-signin message h5 well well-sm text-danger">{{ Session::get('message') }}</p>
