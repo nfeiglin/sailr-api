@@ -52,6 +52,14 @@ View::composer('users.create', function($view){
     $view->with('purpleBG', true);
 });
 
+View::composer('password.remind', function($view){
+    $view->with('purpleBG', true);
+});
+
+View::composer('password.reset', function($view){
+    $view->with('purpleBG', true);
+});
+
 Route::get('plans/choose', function() {
     return View::make('subscriptions.pick')->with('title', 'Welcome to Sailr | Choose a plan');
 });
