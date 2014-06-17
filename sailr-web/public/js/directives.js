@@ -1,4 +1,4 @@
-var app = angular.module('app', ['angularFileUpload']);
+var app = angular.module('app', ['angularFileUpload', 'ngAnimate']);
 
 app.directive('contenteditable', function () {
     return {
@@ -73,3 +73,60 @@ app.directive('focusMe', function($timeout, $parse) {
 });
 
 
+app.factory('StripeFactory', function($q, $rootScope) {
+   var service = {};
+
+    service.sayHello = function() {
+        return 'HELLO FROM STRIPE FACTORY';
+    };
+
+    service.setPublishableKey = function(key) {
+        Stripe.setPublishableKey(key);
+    };
+
+
+    service.createToken = function(cardData) {
+        var defered = $q.defer();
+        Stripe.card.createToken(cardData, function(status, response) {
+
+            if (response.error) {
+                service.errors = response.error;
+                $rootScope.$apply(function(){
+                    defered.reject(response);
+                });
+
+            }
+
+            else {
+                service.token = response;
+                $rootScope.$apply(function(){
+                    defered.resolve(response);
+                });
+
+            }
+        });
+
+        return defered.promise;
+    };
+
+    service.getToken = function() {
+        return service.token;
+    };
+
+    service.getErrors = function() {
+        return service.errors;
+    };
+
+    return service;
+});
+
+app.factory('HelperFactory', function($http) {
+    var service = {};
+
+    service.stripWhiteSpace = function (string) {
+        string = string.replace(/\s/g, "");
+        return string;
+    };
+
+    return service;
+});
