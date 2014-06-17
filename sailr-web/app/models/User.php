@@ -13,6 +13,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
 {
     use SoftDeletingTrait;
     use BillableTrait;
+    use \Illuminate\Auth\Reminders\RemindableTrait;
     use VipTrait;
 
     protected $dates = ['created_at', 'updated_at', 'trial_ends_at', 'subscription_ends_at'];
