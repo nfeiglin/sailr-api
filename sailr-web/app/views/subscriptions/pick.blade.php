@@ -1,11 +1,11 @@
 @extends('layout.barebones')
 
 @section('head')
-
+<script src="{{ URL::asset('js/controllers/subscription/chooseController.js') }}"></script>
 @stop
 
 @section('body')
-<div class="content">
+<div class="content" ng-controller="chooseController">
     <div class="row">
         <div class="fat-bar">
             <div class="container">
@@ -72,58 +72,62 @@
                             <li>No Sailr fees</li>
                         </ul>
 
-                        <div class="row" style="margin-bottom: 25px;">
-                            <div class="hide-name">
-                                <div class="card-wrapper"></div>
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="updateCard col-sm-12 col-lg-12 col-md-12 col-xs-12">
-                                <div class="row">
-                                    <form id="cardForm" name="cardForm" ng-submit="updateCard()"
-                                          class="form-horizontal" novalidate="novalidate">
-
-                                        <div class="form-group">
-                                            <div class="col-sm-12 col-lg-10 col-lg-offset-1 col-md-12">
-                                                <input ng-model="card.number" id="cardNumber" class="form-control"
-                                                       type="text" maxlength="25" placeholder="Card number" name="number"
-                                                       required="required" id="cardNumber" focus-me="showUpdateCard">
-                                            </div>
-
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <div class="col-sm-6 col-lg-6 col-lg-push-1 col-md-6">
-                                                <input ng-model="card.expiry" name="expiry" id="cardExpiry"
-                                                       placeholder="MM/YY"
-                                                       class="form-control" required="required" maxlength="9">
-                                            </div>
-                                            <div class="col-sm-6 col-lg-4 col-lg-offset-1 col-md-6">
-                                                <input ng-model="card.cvc" name="cvc" id="cardCVC" placeholder="CVC"
-                                                       class="form-control" maxlength="4" required="required"
-                                                       name="cvc">
-                                            </div>
-
-                                        </div>
-                                        <div class="form-group col-lg-8 col-lg-push-1 stripe-form-badge">
-                                            <a href="https://stripe.com" target="_blank">
-                                                <img class="pull-left" draggable="false" src="{{ URL::asset('images/stripe-dark-sm.png') }}">
-                                            </a>
-                                        </div>
-
-                                    </form>
+                        <div class="row" id="cardFormContainer" ng-show="showCardForm" ng-animate="'animate'">
+                            <div class="row" style="margin-bottom: 25px;">
+                                <div class="hide-name">
+                                    <div class="card-wrapper"></div>
                                 </div>
 
                             </div>
-                            <input type="hidden" value="{{ $user->name or ''}}" id="initName">
+                            <div class="row">
+                                <div class="updateCard col-sm-12 col-lg-12 col-md-12 col-xs-12">
+                                    <div class="row">
+                                        <form id="cardForm" name="cardForm" ng-submit="subscribeToPlan('awesome')" class="form-horizontal" novalidate="novalidate">
+
+                                            <div class="form-group">
+                                                <div class="col-sm-12 col-lg-10 col-lg-offset-1 col-md-12">
+                                                    <input ng-model="card.number" id="cardNumber" class="form-control"
+                                                           type="text" maxlength="25" placeholder="Card number"
+                                                           required="required" id="cardNumber" focus-me="showUpdateCard">
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="col-sm-6 col-lg-6 col-lg-push-1 col-md-6">
+                                                    <input ng-model="card.expiry" id="cardExpiry"
+                                                           placeholder="MM/YY"
+                                                           class="form-control" required="required" maxlength="9">
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 col-lg-offset-1 col-md-6">
+                                                    <input ng-model="card.cvc" id="cardCVC" placeholder="CVC"
+                                                           class="form-control" maxlength="4" required="required"
+                                                           >
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group col-lg-8 col-lg-push-1 stripe-form-badge">
+                                                <a href="https://stripe.com" target="_blank">
+                                                    <img class="pull-left" draggable="false" src="{{ URL::asset('images/stripe-dark-sm.png') }}">
+                                                </a>
+                                            </div>
+
+                                            <input ng-hide="posting" type="submit" value="Subscribe AU12.99/month" class="btn btn-lg btn-turq btn-md-long" ng-if="showingCreditForm" ng-disabled="cardForm.$invalid && showingCreditForm">
+                                        </form>
+                                    </div>
+
+                                </div>
+                                <input type="hidden" value="{{ $user->name or ''}}" id="initName">
+                            </div>
                         </div>
 
-                        <a href="#" class="btn btn-lg btn-turq btn-md-long" ng-click="showForm"
-                           ng-disabled="cardForm.$invalid && showForm" ng-if="!posting || showForm">Start Awesome
-                            ($12.99/month)</a>
+                        <button class="btn btn-lg btn-turq btn-md-long" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
+                            Start Awesome ($12.99/month)
+                        </button>
+                        <div class="dots" ng-if="posting">Subscribing...</div>
+
+
                     </div>
                 </div>
             </div>
@@ -143,7 +147,7 @@
     </div>
 
 </div>
-
+<input id="zzzCardName" type="hidden" hidden="hidden">
 <script>
 
     var cardPreview = $('#cardForm').card({
@@ -153,7 +157,7 @@
         numberInput: 'input#cardNumber', // optional — default input[name="number"]
         expiryInput: 'input#cardExpiry', // optional — default input[name="expiry"]
         cvcInput: 'input#cardCVC', // optional — default input[name="cvc"]
-        nameInput: 'input#cardName', // optional - defaults input[name="name"]
+        nameInput: 'input#zzzCardName', // optional - defaults input[name="name"]
 
         width: 380, // optional — default 350px
         formatting: true // optional - default true
