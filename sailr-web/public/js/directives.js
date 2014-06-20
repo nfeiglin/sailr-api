@@ -87,21 +87,18 @@ app.factory('StripeFactory', function($q, $rootScope) {
 
     service.createToken = function(cardData) {
         var defered = $q.defer();
+
         Stripe.card.createToken(cardData, function(status, response) {
 
             if (response.error) {
                 service.errors = response.error;
-                $rootScope.$apply(function(){
-                    defered.reject(response);
-                });
+                defered.reject(response);
 
             }
 
             else {
                 service.token = response;
-                $rootScope.$apply(function(){
-                    defered.resolve(response);
-                });
+                defered.resolve(response);
 
             }
         });
@@ -155,5 +152,69 @@ app.factory('HelperFactory', function($http) {
 });
 
 
+app.factory('SubscriptionFactory', function($q, $rootScope, $http) {
+
+    var service = {};
+    service.subscriptionURL = baseURL + '/settings/subscription';
+    console.log('SUBSCRIPTION URL:: ' + service.subscriptionURL);
+
+    service.sayHello = function () {
+        return 'HELLO FROM STRIPE FACTORY';
+    };
+
+    service.createSubscription = function (planID, stripeToken) {
+
+        var data = {
+            _token: csrfToken,
+            stripeToken: stripeToken,
+            plan: 'awesome'
+        };
+
+        var defered = $q.defer();
+
+        $http.post(service.subscriptionURL, data)
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+
+            .error(function (data, status, headers, config) {
+                var rejectObject = {
+                    data: data,
+                    status: status,
+                    headers: headers,
+                    config: config
+                };
+
+                defered.reject(rejectObject);
+
+            });
+
+        return defered.promise;
+    };
+
+    service.cancelSubscription = function() {
+
+        var configObject = {
+          params: {
+              _token: csrfToken
+          }
+        };
+
+        var defered = $q.defer();
+
+        $http.delete(service.subscriptionURL, configObject)
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+            .error(function (data, status) {
+                defered.reject(data);
+
+            });
+
+        return defered.promise;
+
+    };
+
     return service;
+
 });
