@@ -26,23 +26,27 @@ class SubscriptionsController extends \BaseController {
 	public function store()
 	{
 		$user = Auth::user();
-        $input = Input::all();
-        $creditCardToken = $input['stripeToken'];
+        $creditCardToken = Input::get('stripeToken');
         $subscriptionID = 'awesome';
 
         if ($user->subscribed()) {
-            return Redirect::back()->with('message', 'You are already subscribed');
+            $res = ['message' => 'You are already subscribed'];
+            return Response::json($res, 400);
         }
-        $user->subscription($subscriptionID)->create($creditCardToken);
-        $customer = $user->subscription()->getStripeCustomer();
 
-        $customer->email = $user->email;
-        $customer->metadata = ['name' => $user->name, 'user_id' => $user->id];
-        $customer->save();
+        $subscription = $user->subscription($subscriptionID);
 
+        if (Input::has('coupon')) {
+            $subscription->withCoupon(Input::get('coupon'));
+        }
+        $subscription->create($creditCardToken,
+            ['email'=> $user->email,
+            'metadata' => ['name' => $user->name, 'user_id' => $user->id]
+            ]
+        );
 
-
-        dd($input);
+        $res = ['message' => "✓ Subscription successful. You're officially awesome!", 'redirect_url' => URL::to('/')];
+        return Response::json($res, 201);
 
 	}
 
@@ -86,7 +90,6 @@ class SubscriptionsController extends \BaseController {
 	 * Remove the specified resource from storage.
 	 * DELETE /subscriptions/{id}
 	 *
-	 * @param  int  $id
 	 * @return Response
 	 */
 	public function destroy()
@@ -95,11 +98,15 @@ class SubscriptionsController extends \BaseController {
 
 		if($user->isSubscribed()) {
 			$user->subscription->cancel();
-			return Redirect::back()->with('message', 'Subscription canceled');
+            $res = ['message' => 'Subscription canceled'];
+            Event::fire('user.subscription.cancel');
+
+			return Response::json($res, 200);
 		}
 
 		else {
-			return Redirect::back()->with('fail', 'You do not have a subscription to cancel');
+            $res = ['message' => 'You do not have a subscription to cancel'];
+			return Response::json($res, 400);
 		}
 	}
 
