@@ -1,37 +1,60 @@
-app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'HelperFactory', function ($scope, $http, $q, StripeFactory, HelperFactory) {
+app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'HelperFactory', 'SubscriptionFactory', function ($scope, $http, $q, StripeFactory, HelperFactory, SubscriptionFactory) {
+
     $scope.showingCreditForm = false;
     $scope.showCardForm = false;
     $scope.posting = false;
+    //$scope.successSubscribe = false;
     $scope.card = {};
 
     $scope.subscribeToPlan = function(planID) {
         console.log('PLAN ID::: ' + planID);
-        var expiryArray = HelperFactory.stripWhiteSpace($scope.card.expiry).split('/');
-        $scope.card.stripeData = {
-            number: HelperFactory.stripWhiteSpace($scope.card.number),
-            cvc: HelperFactory.stripWhiteSpace($scope.card.cvc),
-            exp_month: expiryArray[0],
-            exp_year: expiryArray[1]
-        };
-
-        /* If there is a cardholder name, add it to the request to be sent to Stripe */
-        if ($scope.card.name && $scope.card.length > 1) {
-            $scope.card.stripeData.name = $scope.card.name;
-        }
 
         $scope.posting = true;
-        var StripePromise = StripeFactory.createToken($scope.card.stripeData);
+
+        var stripeCard = HelperFactory.createStripeCardObjectFromFormattedInput($scope.card);
+
+        var StripePromise = StripeFactory.createToken(stripeCard);
 
         StripePromise.then(function(response)
         {
             console.log(response);
             console.log(StripeFactory.getToken());
-            //HTTP CALL HERE
-            $scope.posting = false;
+
+            var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id);
+
+            createSubscriptionPromise.then(function(responseObject) {
+
+                $scope.posting = false;
+                $scope.showCardForm = false;
+                //Success!
+                console.log('SUCCESS on server subscription create');
+                console.log(responseObject);
+                humane.log(responseObject.message);
+                window.location =  responseObject.redirect_url;
+            },
+
+            function(responseObject) {
+                //Fail :(
+                $scope.posting = false;
+                $scope.$apply(function() {
+                    $scope.posting = false;
+                });
+
+                console.log('Subscription fail::   --');
+                console.log(responseObject);
+                humane.log(responseObject.message);
+
+            });
+
+
         }, function(response)
        {
            $scope.posting = false;
+           console.log('Stripe card fail::::');
+           console.log(response);
+
            humane.log(StripeFactory.getErrors().message);
+
        });
 
     };

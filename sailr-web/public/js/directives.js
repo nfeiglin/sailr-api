@@ -128,5 +128,32 @@ app.factory('HelperFactory', function($http) {
         return string;
     };
 
+    service.createStripeCardObjectFromFormattedInput = function(inputObject) {
+
+        var returnCard = {};
+        var expiryArray = service.stripWhiteSpace(inputObject.expiry).split('/');
+
+        returnCard = {
+            number: service.stripWhiteSpace(inputObject.number),
+            cvc: service.stripWhiteSpace(inputObject.cvc),
+            exp_month: expiryArray[0],
+            exp_year: expiryArray[1]
+        };
+
+        /* If there is a cardholder name, add it to the card object */
+        if (typeof inputObject.name !== 'undefined') {
+            if (inputObject.name.length > 0) {
+                returnCard.name = inputObject.name;
+            }
+        }
+
+        return returnCard;
+
+    };
+
+    return service;
+});
+
+
     return service;
 });
