@@ -73,7 +73,7 @@
                         </ul>
 
                         <div class="row" id="cardFormContainer" ng-show="showCardForm" ng-animate="'animate'">
-                            <div class="row" style="margin-bottom: 25px;">
+                            <div class="row hidden-xs" style="margin-bottom: 25px;">
                                 <div class="hide-name">
                                     <div class="card-wrapper"></div>
                                 </div>
@@ -82,38 +82,48 @@
                             <div class="row">
                                 <div class="updateCard col-sm-12 col-lg-12 col-md-12 col-xs-12">
                                     <div class="row">
-                                        <form id="cardForm" name="cardForm" ng-submit="subscribeToPlan('awesome')" class="form-horizontal" novalidate="novalidate">
+                                        <form id="cardForm" name="cardForm" ng-submit="subscribeToPlan('awesome')" novalidate="novalidate">
 
-                                            <div class="form-group">
+
                                                 <div class="col-sm-12 col-lg-10 col-lg-offset-1 col-md-12">
-                                                    <input ng-model="card.number" id="cardNumber" class="form-control"
-                                                           type="text" maxlength="25" placeholder="Card number"
-                                                           required="required" id="cardNumber" focus-me="showUpdateCard">
-                                                </div>
+                                                    <div class="form-group">
+                                                        <input ng-model="card.number" id="cardNumber" class="form-control"
+                                                               type="text" maxlength="25" placeholder="Card number"
+                                                               required="required" id="cardNumber" focus-me="showUpdateCard" ng-class="{success: successSubscribe}">
+                                                    </div>
 
                                             </div>
 
 
-                                            <div class="form-group">
-                                                <div class="col-sm-6 col-lg-6 col-lg-push-1 col-md-6">
-                                                    <input ng-model="card.expiry" id="cardExpiry"
-                                                           placeholder="MM/YY"
-                                                           class="form-control" required="required" maxlength="9">
-                                                </div>
-                                                <div class="col-sm-6 col-lg-4 col-lg-offset-1 col-md-6">
-                                                    <input ng-model="card.cvc" id="cardCVC" placeholder="CVC"
-                                                           class="form-control" maxlength="4" required="required"
-                                                           >
+
+                                                <div class="col-sm-6 col-xs-6 col-lg-6 col-lg-push-1 col-md-6">
+                                                    <div class="form-group">
+                                                        <input ng-model="card.expiry" id="cardExpiry"
+                                                               placeholder="MM/YY"
+                                                               class="form-control" required="required" maxlength="9" ng-class="{success: successSubscribe}">
+                                                    </div>
+
                                                 </div>
 
-                                            </div>
+                                                <div class="col-sm-6 col-xs-6 col-lg-4 col-lg-offset-1 col-md-6">
+                                                    <div class="form-group">
+                                                        <input ng-model="card.cvc" id="cardCVC" placeholder="CVC"
+                                                               class="form-control" maxlength="4" required="required" ng-class="{success: successSubscribe}">
+                                                    </div>
+
+                                                </div>
+
+
                                             <div class="form-group col-lg-8 col-lg-push-1 stripe-form-badge">
                                                 <a href="https://stripe.com" target="_blank">
                                                     <img class="pull-left" draggable="false" src="{{ URL::asset('images/stripe-dark-sm.png') }}">
                                                 </a>
                                             </div>
-
-                                            <input ng-hide="posting" type="submit" value="Subscribe AU12.99/month" class="btn btn-lg btn-turq btn-md-long" ng-if="showingCreditForm" ng-disabled="cardForm.$invalid && showingCreditForm">
+                                            <div class="col-xs-12 col-lg-12">
+                                                <div class="form-group">
+                                                    <input ng-hide="posting" type="submit" value="Subscribe AU12.99/month" class="btn btn-lg btn-block btn-turq" ng-if="showingCreditForm" ng-disabled="cardForm.$invalid && showingCreditForm">
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
 
