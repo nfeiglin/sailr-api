@@ -60,10 +60,6 @@ View::composer('password.reset', function($view){
     $view->with('purpleBG', true);
 });
 
-Route::get('plans/choose', function() {
-    return View::make('subscriptions.pick')->with('title', 'Welcome to Sailr | Choose a plan');
-});
-
 Route::get('/i/info', function () {
     //VIP::canPerformAction('product.create', User::findOrFail(11)
 
@@ -141,6 +137,11 @@ Route::group(['before' => 'csrf'], function () {
             Route::resource('billing', 'BillingsController');
             Route::put('billing', 'BillingsController@update');
         });
+
+        Route::get('plans/choose', ['before' => 'not-subscribed', function() {
+            return View::make('subscriptions.pick')->with('title', 'Welcome to Sailr | Choose a plan');
+        }]);
+
 
 
         Route::delete('relationship', 'RelationshipsController@destroy');

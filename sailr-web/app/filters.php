@@ -88,6 +88,7 @@ Route::filter('guest', function () {
     if (Auth::check()) return Redirect::to('/')->with('success', 'You are already logged in');
 });
 
+
 /*
 |--------------------------------------------------------------------------
 | CSRF Protection Filter
@@ -106,5 +107,12 @@ Route::filter('csrf', function () {
             throw new Illuminate\Session\TokenMismatchException;
 
         }
+    }
+});
+
+Route::filter('not-subscribed', function() {
+
+    if (Auth::user()->subscribed()) {
+        return Redirect::action('SubscriptionsController@index')->with('success', 'You are already subscribed');
     }
 });
