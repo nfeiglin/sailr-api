@@ -89,7 +89,7 @@
                                                     <div class="form-group">
                                                         <input ng-model="card.number" id="cardNumber" class="form-control"
                                                                type="text" maxlength="25" placeholder="Card number"
-                                                               required="required" id="cardNumber" focus-me="showUpdateCard" ng-class="{success: successSubscribe}">
+                                                               required="required" id="cardNumber" focus-me="showUpdateCard">
                                                     </div>
 
                                             </div>
@@ -100,7 +100,7 @@
                                                     <div class="form-group">
                                                         <input ng-model="card.expiry" id="cardExpiry"
                                                                placeholder="MM/YY"
-                                                               class="form-control" required="required" maxlength="9" ng-class="{success: successSubscribe}">
+                                                               class="form-control" required="required" maxlength="9">
                                                     </div>
 
                                                 </div>
@@ -108,7 +108,7 @@
                                                 <div class="col-sm-6 col-xs-6 col-lg-4 col-lg-offset-1 col-md-6">
                                                     <div class="form-group">
                                                         <input ng-model="card.cvc" id="cardCVC" placeholder="CVC"
-                                                               class="form-control" maxlength="4" required="required" ng-class="{success: successSubscribe}">
+                                                               class="form-control" maxlength="4" required="required">
                                                     </div>
 
                                                 </div>
