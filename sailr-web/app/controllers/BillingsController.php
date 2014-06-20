@@ -85,7 +85,7 @@ class BillingsController extends \BaseController {
 	 */
 	public function update()
 	{
-		$stripeToken = Input::json('stripeToken');
+		$stripeToken = Input::get('stripeToken');
         $user = Auth::user();
         $res = ['message' => 'Card updated successfully'];
 
