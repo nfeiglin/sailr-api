@@ -27,6 +27,16 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
+Route::get('views/{zero}/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}', function($zero, $one = null, $two = null, $three = null, $four = null, $five = null, $six = null){
+    $args = func_get_args();
+    $string = '';
+    foreach($args as $key => $value) {
+        $string = $string . '.' . $value;
+    }
+
+    return View::make($string)->with('title', 'title');//->with('isPartial', 1);
+
+});
 
 View::composer('*', function ($view) {
     if (!array_key_exists('hasNavbar', $view->getData())) {
