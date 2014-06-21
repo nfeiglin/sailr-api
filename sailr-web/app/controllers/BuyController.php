@@ -334,7 +334,9 @@ class BuyController extends \BaseController
         // Access error values from error list using getter methods
         else {
             Log::error("API Error Message : " . $response->Errors[0]->LongMessage);
-            dd($response);
+
+            return Redirect::to('/')->with('fail', 'Paypal has encountered an error');
+            //dd($response);
         }
 
 
