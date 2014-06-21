@@ -39,7 +39,55 @@ class IpnController extends \BaseController {
                 Log::alert('No Checkout model found for transaction ID: ' . $order->txn_id);
             }
 
+            $eventArray = ['itemID' => $checkout->item_id, 'buyerID' => $checkout->user_id, 'sellerID' => $sellerID, 'ipn' => $order];
 
+            switch($order->payment_status) {
+                case "Completed":
+                    //Good news! it worked...
+                    Event::fire('ipn.success.completed', $eventArray);
+
+                    break;
+                case "Created":
+                    //A German ELV payment is made using Express Checkout.
+                    Event::fire('ipn.success.created', $eventArray);
+                    break;
+                case "Denied":
+                    //The payment was denied. This happens only if the payment was previously pending because of one of the reasons listed for the pending_reason variable or the Fraud_Management_Filters_x var
+                    Event::fire('ipn.fail.denied', $eventArray);
+                    break;
+                case "Expired":
+                    //They took too long!
+
+                    break;
+                case "Failed":
+                    //Bank acct issues
+                    Event::fire('ipn.fail.failed', $eventArray);
+                    break;
+                case "Pending":
+                    //Check the pending reason
+                    if ($order->pending_reason == 'unilateral') {
+
+                        Event::fire('ipn.fail.unilateral', $eventArray);
+                    }
+                    //Tell the buyer to cancel the payment and seller to update their email.
+
+                    //Go through the other pending reasons...
+                    break;
+
+                case "Reversed":
+                    //A payment was reversed due to a chargeback or other type of reversal. The funds have been removed from your account balance and returned to the buyer. The reason for the reversal is specified in the ReasonCode element.
+                    Event::fire('ipn.success.reversed', $eventArray);
+                    break;
+                case "Processed":
+                    //Payment accepted
+                    Event::fire('ipn.success.processed', $eventArray);
+                    break;
+                case "Voided":
+                    //This authorization has been voided.
+                    Event::fire('ipn.fail.voided', $eventArray);
+                    break;
+
+            }
         }
 
         catch (LogicalGrape\PayPalIpnLaravel\Exception\InvalidIpnException $e) {
