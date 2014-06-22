@@ -1,0 +1,20 @@
+{
+    "name": "sailr/emporium",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nathan Feiglin",
+            "email": "nathanfeiglin@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sailr\\Emporium": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
