@@ -533,6 +533,7 @@ class BuyController extends \BaseController
             case "Completed":
                 //Good news! it worked...
                 Event::fire('purchase.completed', $eventArray);
+                //$item->initial_units = $item->initial_units - 1;
                 return Redirect::to('/')->with('success', 'Purchase successful! Check your emails and notifications shortly for a confirmation');
 
                 break;
