@@ -34,7 +34,11 @@ Route::get('views/{zero}/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}', functio
         $string = $string . '.' . $value;
     }
 
-    return View::make($string)->with('title', 'title');//->with('isPartial', 1);
+    $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail(7);
+
+    $ipn = new \Sailr\Emporium\Merchant\Webhooks\PaypalWebhook($ipnModel);
+
+    return View::make($string)->with('title', 'title')->with('ipn', $ipn);//->with('isPartial', 0);
 
 });
 

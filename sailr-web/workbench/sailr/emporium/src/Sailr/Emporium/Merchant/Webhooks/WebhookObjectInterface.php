@@ -1,6 +1,6 @@
 <?php
 
-namespace Sailr\Emporium\Webhooks;
+namespace Sailr\Emporium\Merchant\Webhooks;
 
 
 interface WebhookObjectInterface

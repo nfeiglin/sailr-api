@@ -1,7 +1,7 @@
 <?php
 
 namespace Sailr\Handle;
-use \Sailr\Emporium\Webhooks\PaypalWebhook;
+use \Sailr\Emporium\Merchant\Webhooks\PaypalWebhook;
 
 class IpnEventHandler {
 
