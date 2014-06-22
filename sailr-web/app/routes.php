@@ -42,6 +42,42 @@ Route::get('views/{zero}/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}', functio
 
 });
 
+Route::get('events/{zero}/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}', function($zero, $one = null, $two = null, $three = null, $four = null, $five = null, $six = null){
+    $args = func_get_args();
+    $string = '';
+    foreach($args as $key => $value) {
+
+        if ($key == 0) {
+            $string = $value;
+        } else {
+            $string = "$string.$value";
+        }
+
+    }
+
+    $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail(7);
+
+
+    $eventArray = array(
+        'buyerID' => 11,
+        'sellerID' => 12,
+        'itemID' => 9,
+        'ipn' => $ipnModel,
+    );
+
+    $eventArray = (object) $eventArray;
+
+    //dd($eventArray);
+
+    Event::fire($string, $eventArray);
+
+    echo $string;
+    echo '<br>FIRED';
+});
+
+
+
+
 View::composer('*', function ($view) {
     if (!array_key_exists('hasNavbar', $view->getData())) {
         $view->with('hasNavbar', 1);
