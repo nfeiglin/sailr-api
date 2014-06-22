@@ -1,7 +1,7 @@
 <?php
 
 namespace Sailr\Handle;
-
+use \Sailr\Emporium\Webhooks\PaypalWebhook;
 
 class IpnEventHandler {
 
@@ -25,7 +25,12 @@ class IpnEventHandler {
             $user = \User::findOrFail($eventArray['buyerID']);
             $seller = \User::findOrFail($eventArray['sellerID']);
             $product = \Item::findOrFail($eventArray['itemID']);
-            $ipn = \DB::table('ipn_orders')->find($eventArray['ipnID']);
+
+
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+
+            $ipn = PaypalWebhook::make($ipnModel);
+
             $checkout = \Checkout::where('txn_id', '=', $ipn->txn_id)->firstOrFail();
 
             $data = ['user' => $user, 'seller' => $seller, 'product' => $product, 'ipn' => $ipn, 'checkout' => $checkout;
@@ -57,7 +62,11 @@ class IpnEventHandler {
             $user = \User::findOrFail($eventArray['sellerID']);
             $buyer = \User::findOrFail($eventArray['buyerID']);
             $product = \Item::findOrFail($eventArray['itemID']);
-            $ipn = \DB::table('ipn_orders')->find($eventArray['ipnID']);
+
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+
+            $ipn = PaypalWebhook::make($ipnModel);
+
             $checkout = \Checkout::where('txn_id', '=', $ipn->txn_id)->firstOrFail();
 
             $data = ['user' => $user, 'buyer' => $buyer, 'product' => $product, 'ipn' => $ipn, 'isPartial' => 1];
@@ -70,9 +79,9 @@ class IpnEventHandler {
                 'data' => ['product' => $product->toArray(), 'checkout' => $checkout->toArray()],
             ]);
 
-            $email = $user->email;
-            \Mail::queue('emails.purchase.sold', $data, function($message) use ($email) {
-                $message->to($email);
+            $sendToEmail = $user->email;
+            \Mail::queue('emails.purchase.sold', $data, function($message) use ($sendToEmail) {
+                $message->to($sendToEmail);
                 $message->subject('Your product has sold');
 
             });

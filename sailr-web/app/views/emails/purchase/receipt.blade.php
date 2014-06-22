@@ -73,10 +73,10 @@
                                                     <table>
                                                         <tr>
                                                             <td>
-                                                                <p>{{{ $ipn->address_name or 'SHIPPING NAME' }}}</p>
-                                                                <p>{{{ $ipn->address_street or '000 PLACEHOLDER ST' }}}, {{{ $ipn->address_city or 'CITY' }}}</p>
-                                                                <p>{{{ $ipn->address_state or 'STATE' }}}, {{{ $ipn->address_zip or 'ZIPCODE' }}}</p>
-                                                                <p>{{{ $ipn->address_country or 'COUNTRY' }}}</p>
+                                                                <p>{{{ $ipn->getShipToName() }}}</p>
+                                                                <p>{{{ $ipn->getAddress1() }}}, {{{ $ipn->getCity() }}}</p>
+                                                                <p>{{{ $ipn->getState() }}}, {{{ $ipn->getZipCode() }}}</p>
+                                                                <p>{{{ $ipn->getCountry() }}}</p>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -94,8 +94,8 @@
                                             <tr>
                                                 <td class="last right-text-pad">
                                                     <h5>Payment</h5>
-                                                    <p>Shipping price: {{ $ipn->mc_shipping or 'N.NN' }} {{ $ipn->mc_currency or 'ZZZ' }}</p>
-                                                    <p><b>Total paid:</b> {{ $ipn->mc_gross or 'N.NN'}} {{ $ipn->mc_currency or 'ZZZ' }}</p>
+                                                    <p>Shipping price: {{ $ipn->getShippingPrice() }} {{ $ipn->getCurrencyCode() }}</p>
+                                                    <p><b>Total paid:</b> {{ $ipn->getGrossAmount() }} {{ $ipn->getCurrencyCode() }}</p>
                                                 </td>
                                                 <td class="expander"></td>
                                             </tr>
