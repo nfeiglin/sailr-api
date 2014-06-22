@@ -7,10 +7,12 @@ class IpnEventHandler {
 
     // $eventArray = ['itemID' => $checkout->item_id, 'buyerID' => $checkout->user_id, 'sellerID' => $sellerID, 'ipn' => $order];
 
-    public function onPaymentSuccess(array $eventArray) {
+    public function onPaymentSuccess($eventArray) {
 
 
-        $eventArray['ipnID'] = $eventArray['ipn']->id;
+        $ipn = $eventArray['ipn'];
+        \Log::debug('SENT TO onPaymentSuccess::: ' . print_r($eventArray, 1));
+        $eventArray['ipnID'] = $ipn->id;
 
         $this->messageBuyerSuccess($eventArray);
         $this->messageSellerSuccess($eventArray);
@@ -18,7 +20,7 @@ class IpnEventHandler {
 
    }
 
-    protected function messageBuyerSuccess(array $eventArray) {
+    public function messageBuyerSuccess(array $eventArray) {
 
         \Queue::push(function($job) use ($eventArray) {
 
@@ -31,21 +33,32 @@ class IpnEventHandler {
 
             $ipn = PaypalWebhook::make($ipnModel);
 
-            $checkout = \Checkout::where('txn_id', '=', $ipn->txn_id)->firstOrFail();
+            $checkout = \Checkout::where('txn_id', '=', $ipn->getTransactionIdentifier())->firstOrFail();
 
-            $data = ['user' => $user, 'seller' => $seller, 'product' => $product, 'ipn' => $ipn, 'checkout' => $checkout;
+            $data = ['user' => $user, 'seller' => $seller, 'product' => $product, 'ipn' => $ipn, 'checkout' => $checkout, 'isPartial' => 1];
 
-            \Notification::create([
+
+            $view = \View::make('emails.purchase.receipt', $data)->render();
+
+
+            $notificationData = [
                 'short_text' => "Purchased " . \Str::limit($product->title, 40),
-                'long_html' => \View::make('emails.purchase.receipt', $data)->with('isPartial', 1),
+                'long_html' => $view,
                 'type' => 'purchase.create',
                 'user_id' => $user->id,
                 'data' => ['product' => $product->toArray(), 'checkout' => $checkout->toArray()],
-            ]);
+            ];
 
-            $email = $user->email;
-            \Mail::queue('emails.purchase.receipt', $data, function($message) use ($email) {
-                $message->to($email);
+            //dd($notificationData);
+
+            \Notification::create($notificationData);
+
+            $sendToEmail = $user->email;
+
+            $data['isPartial'] = 0;
+
+            \Mail::send('emails.purchase.receipt', $data, function($message) use ($sendToEmail) {
+                $message->to($sendToEmail);
                 $message->subject('Congratulations on your purchase');
 
             });
@@ -55,7 +68,7 @@ class IpnEventHandler {
 
     }
 
-    protected function messageSellerSuccess(array $eventArray) {
+    public function messageSellerSuccess(array $eventArray) {
 
         \Queue::push(function($job) use ($eventArray) {
 
@@ -67,20 +80,26 @@ class IpnEventHandler {
 
             $ipn = PaypalWebhook::make($ipnModel);
 
-            $checkout = \Checkout::where('txn_id', '=', $ipn->txn_id)->firstOrFail();
+            $checkout = \Checkout::where('txn_id', '=', $ipn->getTransactionIdentifier())->firstOrFail();
 
             $data = ['user' => $user, 'buyer' => $buyer, 'product' => $product, 'ipn' => $ipn, 'isPartial' => 1];
 
-            \Notification::create([
+            $view = \View::make('emails.purchase.seller', $data)->render();
+
+            $notificationData = [
                 'short_text' => "Purchased " . \Str::limit($product->title, 40),
-                'long_html' => \View::make('emails.purchase.seller', $data)->with('isPartial', 1),
+                'long_html' => $view,
                 'type' => 'purchase.create',
                 'user_id' => $user->id,
                 'data' => ['product' => $product->toArray(), 'checkout' => $checkout->toArray()],
-            ]);
+            ];
+
+            \Notification::create($notificationData);
 
             $sendToEmail = $user->email;
-            \Mail::queue('emails.purchase.sold', $data, function($message) use ($sendToEmail) {
+            $data['isPartial'] = 0;
+
+            \Mail::send('emails.purchase.seller', $data, function($message) use ($sendToEmail) {
                 $message->to($sendToEmail);
                 $message->subject('Your product has sold');
 
