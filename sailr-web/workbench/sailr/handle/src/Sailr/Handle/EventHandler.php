@@ -3,11 +3,7 @@
 namespace Sailr\Handle;
 
 class EventHandler {
-    protected $app;
 
-    public function ___construct($app = null) {
-        $this->app = $app;
-    }
 
     public function subscribe($events) {
         $events->listen('user.create', 'Sailr\Handle\EventHandler@onUserCreate');
