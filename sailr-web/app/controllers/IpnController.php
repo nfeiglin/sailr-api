@@ -67,7 +67,7 @@ class IpnController extends \BaseController {
                     //Check the pending reason
                     if ($order->pending_reason == 'unilateral') {
 
-                        Event::fire('ipn.fail.unilateral', $eventArray);
+                        Event::fire('ipn.fail.pending.unilateral', $eventArray);
                     }
                     //Tell the buyer to cancel the payment and seller to update their email.
 
