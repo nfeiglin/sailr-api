@@ -9,6 +9,8 @@ class IpnEventHandler {
 
     public function onPaymentSuccess($eventArray) {
 
+        $eventArray = (array)$eventArray;
+        //dd($eventArray);
 
         $ipn = $eventArray['ipn'];
         \Log::debug('SENT TO onPaymentSuccess::: ' . print_r($eventArray, 1));

@@ -5,7 +5,7 @@ namespace Sailr\Handle;
 class EventHandler {
 
     public function subscribe(\Illuminate\Events\Dispatcher $events) {
-        $events->listen('ipn.success.completed', 'Sailr\Handle\EventHandler@onPaymentSuccess');
+        $events->listen('ipn.success.completed', 'Sailr\Handle\IpnEventHandler@onPaymentSuccess');
         $events->listen('user.create', 'Sailr\Handle\EventHandler@onUserCreate');
         $events->listen('relationship.create', 'Sailr\Handle\EventHandler@onRelationshipCreate');
         $events->listen('notification.index', 'Sailr\Handle\EventHandler@onNotificationIndexView');
@@ -14,22 +14,6 @@ class EventHandler {
 
     }
 
-    public function onPaymentSuccess($eventArray) {
-
-        $eventArray = (array)$eventArray;
-        //dd($eventArray);
-
-        $ipn = $eventArray['ipn'];
-        \Log::debug('SENT TO onPaymentSuccess::: ' . print_r($eventArray, 1));
-        $eventArray['ipnID'] = $ipn->id;
-
-        $IPNEventHandler = new IpnEventHandler;
-
-        $IPNEventHandler->messageBuyerSuccess($eventArray);
-        $IPNEventHandler->messageSellerSuccess($eventArray);
-
-
-    }
 
 
    public function onUserCreate(\User $user) {
