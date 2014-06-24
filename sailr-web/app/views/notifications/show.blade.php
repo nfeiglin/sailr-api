@@ -17,8 +17,7 @@
         <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
             <div class="panel">
                 <div class="panel-body">
-                    <div class="long" ng-if="notifications.long_html">
-                        @{{ notification.long_html }}
+                    <div class="long" ng-if="notifications.long_html" ng-bind-html="notifications.long_html">
                     </div>
             </div>
 
