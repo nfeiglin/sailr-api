@@ -1,4 +1,4 @@
-app.controller('notificationsController', ['$scope', '$http', function ($scope, $http) {
+app.controller('notificationsController', ['$scope', function ($scope) {
     $scope.notifications = sailr.notifications;
     $scope.baseURL = baseURL;
 
