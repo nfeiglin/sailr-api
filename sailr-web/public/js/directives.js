@@ -1,4 +1,4 @@
-var app = angular.module('app', ['angularFileUpload', 'ngAnimate']);
+var app = angular.module('app', ['angularFileUpload', 'ngAnimate', 'ngSanitize']);
 
 app.directive('contenteditable', function () {
     return {

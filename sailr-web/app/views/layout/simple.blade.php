@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Sailr | {{{ Str::limit($title, 140) }}}</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.2.18/angular-animate.min.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular-sanitize.min.js"></script>
     <script src="{{ URL::asset('js/directives.js') }}"></script>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{-- URL::asset('css/bootstrap.css') --}}">

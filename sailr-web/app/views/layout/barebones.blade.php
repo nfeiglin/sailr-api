@@ -21,6 +21,7 @@
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="{{ URL::asset('js/angular-file/angular-file-upload.min.js') }}"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular-sanitize.min.js"></script>
     <script src="{{ URL::asset('js/directives.js') }}"></script>
     <script src="{{ URL::asset('js/controllers/feed/feedController.js') }}"></script>
     <script>
