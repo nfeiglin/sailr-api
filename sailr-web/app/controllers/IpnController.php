@@ -41,6 +41,8 @@ class IpnController extends \BaseController {
 
             $eventArray = ['itemID' => $checkout->item_id, 'buyerID' => $checkout->user_id, 'sellerID' => $sellerID, 'ipn' => $order];
 
+            $eventArray = (object) $eventArray;
+
             switch($order->payment_status) {
                 case "Completed":
                     //Good news! it worked...
@@ -65,19 +67,20 @@ class IpnController extends \BaseController {
                     break;
                 case "Pending":
                     //Check the pending reason
-                    if ($order->pending_reason == 'unilateral') {
-
-                        Event::fire('ipn.fail.pending.unilateral', $eventArray);
-                    }
+                        $eventArray->pending_reason = $order->pending_reason;
+                        Event::fire('ipn.fail.pending', $eventArray);
                     //Tell the buyer to cancel the payment and seller to update their email.
 
-                    //Go through the other pending reasons...
                     break;
 
                 case "Reversed":
                     //A payment was reversed due to a chargeback or other type of reversal. The funds have been removed from your account balance and returned to the buyer. The reason for the reversal is specified in the ReasonCode element.
                     Event::fire('ipn.success.reversed', $eventArray);
                     break;
+                case "Refunded":
+                    Event::fire('ipn.success.refunded', $eventArray);
+                    break;
+
                 case "Processed":
                     //Payment accepted
                     Event::fire('ipn.success.processed', $eventArray);

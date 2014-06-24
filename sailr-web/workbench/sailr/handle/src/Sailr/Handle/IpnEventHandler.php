@@ -19,8 +19,24 @@ class IpnEventHandler {
         $this->messageBuyerSuccess($eventArray);
         $this->messageSellerSuccess($eventArray);
 
-
    }
+
+    public function onTransactionPending(\stdClass $eventObject) {
+
+        $langBuyerString = "ipn.buyer.pending.$eventObject->pending_reason";
+        $langSellerString = "ipn.seller.pending.$eventObject->pending_reason";
+
+        $this->messageSellerPending($eventObject, $langSellerString);
+        $this->messageBuyerPending($eventObject, $langBuyerString);
+    }
+
+    protected function messageSellerPending($eventObject, $langRetrivalString) {
+
+    }
+
+    protected function messageBuyerPending($eventObject, $langRetrivalString) {
+
+    }
 
     public function messageBuyerSuccess(array $eventArray) {
 
@@ -89,7 +105,7 @@ class IpnEventHandler {
             $view = \View::make('emails.purchase.seller', $data)->render();
 
             $notificationData = [
-                'short_text' => "Purchased " . \Str::limit($product->title, 40),
+                'short_text' => "Sold " . \Str::limit($product->title, 40),
                 'long_html' => $view,
                 'type' => 'purchase.create',
                 'user_id' => $user->id,
