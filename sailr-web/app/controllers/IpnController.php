@@ -41,6 +41,8 @@ class IpnController extends \BaseController {
 
             $eventArray = ['itemID' => $checkout->item_id, 'buyerID' => $checkout->user_id, 'sellerID' => $sellerID, 'ipn' => $order];
 
+            $eventArray['errorShortReason'] = strtolower($order->payment_status);
+
             $eventArray = (object) $eventArray;
 
             switch($order->payment_status) {
