@@ -78,6 +78,10 @@ class PaypalWebhook implements WebhookObjectInterface {
         return $this->ipn->mc_shipping;
     }
 
+    public function getProductPrice() {
+        return $this->getProduct()->price;
+    }
+
     public function getBuyersNote() {
         if(isset($this->ipn->memo)) {
             return $this->ipn->memo;

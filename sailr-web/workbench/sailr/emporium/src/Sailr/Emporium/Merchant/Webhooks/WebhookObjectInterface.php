@@ -23,6 +23,7 @@ interface WebhookObjectInterface
     public function getPaymentProcessingFees();
     public function getCurrencyCode();
     public function getShippingPrice();
+    public function getProductPrice();
 
     /* Other goodies */
     public function getBuyersNote();
