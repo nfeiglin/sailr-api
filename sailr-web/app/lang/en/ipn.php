@@ -17,8 +17,11 @@ return [
 
         ],
 
-        'fail' => [
-            'failed' => 'The PayPal payment has failed. Please check your PayPal account for more information and make contact with the seller if necessary'
+        'error' => [
+            'failed' => 'The PayPal payment has failed. Please check your PayPal account for more information and make contact with the seller if necessary',
+            'denied' => 'The PayPal payment has been denied. Please check your PayPal account for more information and contact the seller if necessary',
+            'expired' => 'The PayPal payment authorization has expired so the payment could not be processed, contact the seller if necessary',
+            'default' => "There's been an error with the PayPal payment. Please check your PayPal account for more information and contact the seller if necessary"
         ],
 
     ],
@@ -39,8 +42,11 @@ return [
 
         ],
 
-        'fail' => [
-            'failed' => 'The PayPal payment has failed. Please check your PayPal account for more information and make contact with the buyer if necessary'
+        'error' => [
+            'failed' => 'The PayPal payment has failed. Please check your PayPal account for more information and make contact with the buyer if necessary',
+            'denied' => "The buyer's PayPal payment has been denied. Contact the buyer if necessary",
+            'expired' => "The buyer's PayPal payment authorization has expired so the payment could not be processed, contact the buyer if necessary",
+            'default' => "There's been an error with the PayPal payment from the buyer. Please check your PayPal account for more information and contact the buyer if necessary"
         ],
 
     ]
