@@ -110,9 +110,12 @@
             <div class="btn-group">
                 <a data-ng-click="saveChanges()" class="btn btn-lg btn-primary" ng-if="!posting">Save changes</a>
 
-                <div class="heartbeat" ng-if="posting">
-                    Loading..
+                <div ng-if="posting">
+                    <div class="dots">
+                        Loading...
+                    </div>
                 </div>
+
             </div>
             <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-turq" ng-if="!item.public && !posting"><i class="glyphicon glyphicon-eye-open"></i> Publish</a>
             <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-default" ng-if="item.public && !posting"><i class="glyphicon glyphicon-eye-close"></i> Unpublish</a>

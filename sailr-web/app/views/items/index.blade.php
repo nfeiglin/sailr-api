@@ -46,9 +46,11 @@
                     <div class="col-xs-2 col-sm-2 col-lg-1 col-md-1">
                         <input type="submit" class="btn btn-primary btn-block" value="Add" ng-disabled="itemForm.$invalid || posting" ng-if="!posting">
 
-                    <div class="heartbeat btn-block" ng-if="posting">
-                        Loading..
-                    </div>
+                        <div ng-if="posting">
+                            <div class="dots btn-block">
+                                Loading...
+                            </div>
+                        </div>
                     </div>
 
 
