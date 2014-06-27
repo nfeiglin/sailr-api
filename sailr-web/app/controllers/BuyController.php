@@ -90,19 +90,8 @@ class BuyController extends \BaseController
          * Paypal express checkout smaple code
          * https://github.com/paypal/codesamples-php/blob/master/Merchant/sample/code/SetExpressCheckout.php
          * https://github.com/paypal/codesamples-php/blob/master/Merchant/sample/code/DoExpressCheckout.php
-         *
-         *
          */
 
-        /*
-              '_token' => string '2fNauE5l2OGRV3Z45hPn5B5nKGGNNqgthfwmGP7z' (length=40)
-  'street_number' => string '275' (length=3)
-  'street_name' => string 'Kent St' (length=7)
-  'city' => string 'Sydney' (length=6)
-  'state' => string 'NSW' (length=3)
-  'zipcode' => string '2000' (length=4)
-  'country' => string 'Australia' (length=9)
-         */
         $input = Input::all();
         $u = new User();
         $u->setHidden([]);
@@ -118,6 +107,11 @@ class BuyController extends \BaseController
         if ($item->user_id == Auth::user()->id) {
             return Redirect::back()->withMessage("You can't buy your own item");
         }
+
+        if ($item->initial_units < 1) {
+            return Redirect::back()->withMessage('Product sold out');
+        }
+
         $validator = Validator::make($input, BuyController::$rules);
         if ($validator->fails()) {
             return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors($validator);
@@ -388,9 +382,9 @@ class BuyController extends \BaseController
             return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');
         }
 
-        $boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
+        //$boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
 
-        if ($boughtUnits >= $item->initial_units) {
+        if ($item->initial_units < 1) {
             return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
         }
 
@@ -413,7 +407,7 @@ class BuyController extends \BaseController
             return Redirect::to('/')->with('fail', 'Sorry, Paypal has encountered an error. This transaction has not been processed and you have not been charged');
         }
 
-        $item['photos'] = array(['url' => 'http://sailr.web/img/default-sm.jpg']);
+        //$item['photos'] = array(['url' => 'http://sailr.web/img/default-sm.jpg']);
 
         //return '<pre>' . print_r(json_decode(json_encode($getECResponse), true)) . '</pre>';
 
@@ -497,9 +491,9 @@ class BuyController extends \BaseController
         /* Right before the trasaction is commited and the user is charged we MUST verify there is sufficient stock of the item  */
         
         $item = Item::where('id', '=', $checkout->item_id)->firstOrFail(['id', 'initial_units']);
-        $boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
+        //$boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
 
-        if ($boughtUnits >= $item->initial_units) {
+        if ($item->initial_units < 1) {
             return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
         }
 
@@ -533,11 +527,14 @@ class BuyController extends \BaseController
             case "Completed":
                 //Good news! it worked...
                 Event::fire('purchase.completed', $eventArray);
-                //$item->initial_units = $item->initial_units - 1;
+                $item->initial_units = intval($item->initial_units) - 1;
+                $item->save();
                 return Redirect::to('/')->with('success', 'Purchase successful! Check your emails and notifications shortly for a confirmation');
 
                 break;
             case "Created":
+                $item->initial_units = intval($item->initial_units) - 1;
+                $item->save();
                 //A German ELV payment is made using Express Checkout.
                 break;
             case "Denied":
@@ -557,23 +554,17 @@ class BuyController extends \BaseController
                 if ($paymentInfo->PendingReason == 'unilateral') {
                     //Tell the buyer to cancel the payment and seller to update their email.
 
-                    Event::fire('purchase.payment.pending.unilateral', $eventArray);
+                    //Event::fire('purchase.payment.pending.unilateral', $eventArray);
                     //echo '<pre>' . print_r($eventArray, 1) . '</pre>';
                     return Redirect::to('/')->withMessage('There has been an issue with the payment. Check your emails and PayPal account for more information');
                 }
+
+                else {
+                    $item->initial_units = intval($item->initial_units) - 1;
+                    $item->save();
+                }
                 //Go through the other pending reasons...
                 break;
-            /*
-            case "Reversed":
-                //A payment was reversed due to a chargeback or other type of reversal. The funds have been removed from your account balance and returned to the buyer. The reason for the reversal is specified in the ReasonCode element.
-                break;
-            case "Processed":
-                //Payment accepted
-                break;
-            case "Voided":
-                //This authorization has been voided.
-                break;
-            */
         }
 
         return Redirect::to('/')->with('message', 'We are afraid that the transaction may have failed. Please check your PayPal.');
