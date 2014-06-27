@@ -18,10 +18,11 @@
         <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
             <div class="panel">
                 <div class="panel-body">
-                    <div class="alert alert-success" ng-repeat="notification in notifications">
+                    <div class="" ng-repeat="notification in notifications">
                         <a ng-href="@{{ baseURL + '/me/notifications/' + notification._id }}">
-                            <p>@{{ notification.short_text }}</p>
+                            <p class="h4">@{{ notification.short_text }}</p>
                         </a>
+                        <hr>
                     </div>
                 </div>
 
