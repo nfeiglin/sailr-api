@@ -62,6 +62,7 @@ class IpnController extends \BaseController {
                 case "Expired":
                     //They took too long!
 
+                    Event::fire('ipn.fail.expired');
                     break;
                 case "Failed":
                     //Bank acct issues
