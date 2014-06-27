@@ -53,7 +53,7 @@ class IpnController extends \BaseController {
                     break;
                 case "Created":
                     //A German ELV payment is made using Express Checkout.
-                    Event::fire('ipn.success.created', $eventArray);
+                    //Event::fire('ipn.success.created', $eventArray);
                     break;
                 case "Denied":
                     //The payment was denied. This happens only if the payment was previously pending because of one of the reasons listed for the pending_reason variable or the Fraud_Management_Filters_x var
