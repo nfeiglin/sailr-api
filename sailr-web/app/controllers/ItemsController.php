@@ -48,7 +48,6 @@ class ItemsController extends BaseController
             'price' => 'required|numeric|max:999999'
         ];
 
-        //TODO add currency validator
 
         $v = Validator::make($input, $rules);
 
@@ -67,7 +66,6 @@ class ItemsController extends BaseController
 
         $item->save();
 
-        //TODO: Assume things are sweet and now move them onto the edit page to finish up.
         $res = [
             'message' => 'Success',
             'id' => $item->id,
@@ -87,7 +85,7 @@ class ItemsController extends BaseController
             }
         ])->withTrashed()->where('id', '=', $id)->firstOrFail();
 
-        return View::make('items.edit')->with('title', 'Add a product')->with('item', $item)->with('jsonItem', $item->toJson());
+        return View::make('items.edit')->with('title', "Edit product | $item->title")->with('item', $item)->with('jsonItem', $item->toJson());
     }
 
     public function update($id)
