@@ -52,23 +52,52 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
 
         $http.put(updateURL, JSON.stringify(data))
             .success(function (data, status, headers, config) {
+                $scope.posting = false;
                 $scope.responseData = data;
                 console.log('The response data is: ');
                 console.log($scope.responseData);
                 //window.location = $scope.responseData.redirect_url;
                 $scope.item.description = data.description;
-                $scope.posting = false;
+
             })
 
             .error(function (data, status, headers, config) {
-                console.log(data);
                 $scope.posting = false;
+                console.log(data);
+
 
             });
 
     };
 
-    $scope.publish = function () {
+    $scope.toggleVisibility = function () {
+        $scope.saveChanges();
+        $scope.posting = true;
+
+        var data = {
+            _token: sessionToken
+        };
+
+        console.log('the data to be sent is ' + JSON.stringify(data));
+
+        $http.put(updateURL + '/toggle', JSON.stringify(data))
+            .success(function (data, status, headers, config) {
+                $scope.item.public = data.public;
+                $scope.posting = false;
+
+                humane.log(data.message);
+                console.log('The response data is: ');
+                console.log(data);
+
+            })
+
+            .error(function (data, status, headers, config) {
+                $scope.posting = false;
+                console.log(data);
+                humane.log(data.message);
+
+
+            });
 
     };
 

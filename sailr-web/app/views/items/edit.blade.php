@@ -114,7 +114,8 @@
                     Loading..
                 </div>
             </div>
-            <a data-ng-click="saveChanges()" class="btn btn-lg pull-right btn-default"><i class="glyphicon glyphicon-upload"></i> Publish</a>
+            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-turq" ng-if="!item.public && !posting"><i class="glyphicon glyphicon-eye-open"></i> Publish</a>
+            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-default" ng-if="item.public && !posting"><i class="glyphicon glyphicon-eye-close"></i> Unpublish</a>
         </div>
     </div>
 
