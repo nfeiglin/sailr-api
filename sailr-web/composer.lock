@@ -385,12 +385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "247bd099b8f74eed3d7bdb42a5e0bb1af1925dce"
+                "reference": "57186d5c6a02ca23aebc4655b6b89de5fb8808e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/247bd099b8f74eed3d7bdb42a5e0bb1af1925dce",
-                "reference": "247bd099b8f74eed3d7bdb42a5e0bb1af1925dce",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/57186d5c6a02ca23aebc4655b6b89de5fb8808e0",
+                "reference": "57186d5c6a02ca23aebc4655b6b89de5fb8808e0",
                 "shasum": ""
             },
             "require": {
@@ -451,7 +451,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-06-19 21:21:27"
+            "time": "2014-06-26 18:52:01"
         },
         {
             "name": "doctrine/inflector",
@@ -995,16 +995,16 @@
         },
         {
             "name": "laravel/cashier",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/cashier.git",
-                "reference": "8b1f1891a120cc36367a6937c8568a5f8d858d7a"
+                "reference": "e77ed8d178d1a350e6501dff8f7faa6d1e0a7400"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/cashier/zipball/8b1f1891a120cc36367a6937c8568a5f8d858d7a",
-                "reference": "8b1f1891a120cc36367a6937c8568a5f8d858d7a",
+                "url": "https://api.github.com/repos/laravel/cashier/zipball/e77ed8d178d1a350e6501dff8f7faa6d1e0a7400",
+                "reference": "e77ed8d178d1a350e6501dff8f7faa6d1e0a7400",
                 "shasum": ""
             },
             "require": {
@@ -1049,20 +1049,20 @@
                 "laravel",
                 "stripe"
             ],
-            "time": "2014-06-19 21:24:12"
+            "time": "2014-06-24 00:44:52"
         },
         {
             "name": "laravel/framework",
-            "version": "v4.2.4",
+            "version": "v4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "ee370ac91ee0a51303765c870e139b1ecd1e222c"
+                "reference": "30088567a133fadf14b708dcc4001d6c639b8c59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/ee370ac91ee0a51303765c870e139b1ecd1e222c",
-                "reference": "ee370ac91ee0a51303765c870e139b1ecd1e222c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/30088567a133fadf14b708dcc4001d6c639b8c59",
+                "reference": "30088567a133fadf14b708dcc4001d6c639b8c59",
                 "shasum": ""
             },
             "require": {
@@ -1166,7 +1166,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2014-06-18 05:07:22"
+            "time": "2014-06-26 17:33:59"
         },
         {
             "name": "logicalgrape/paypal-ipn-laravel",
@@ -2734,12 +2734,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JeffreyWay/Laravel-4-Generators.git",
-                "reference": "3d631c483849005005620a117624c39ad611a5d4"
+                "reference": "53d2f84e6d75856c2ab72d49aeee9731de1a0af3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JeffreyWay/Laravel-4-Generators/zipball/3d631c483849005005620a117624c39ad611a5d4",
-                "reference": "3d631c483849005005620a117624c39ad611a5d4",
+                "url": "https://api.github.com/repos/JeffreyWay/Laravel-4-Generators/zipball/53d2f84e6d75856c2ab72d49aeee9731de1a0af3",
+                "reference": "53d2f84e6d75856c2ab72d49aeee9731de1a0af3",
                 "shasum": ""
             },
             "require": {
@@ -2774,7 +2774,7 @@
                 }
             ],
             "description": "Rapidly generate resources, migrations, models, and much more.",
-            "time": "2014-06-02 14:21:07"
+            "time": "2014-06-27 00:26:58"
         }
     ],
     "packages-dev": [
