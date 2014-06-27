@@ -188,7 +188,7 @@ Route::group(['before' => 'csrf'], function () {
             Route::put('billing', 'BillingsController@update');
         });
 
-        Route::get('plans/choose', ['before' => 'not-subscribed', function() {
+        Route::get('plans/choose', ['before' => 'not-subscribed', 'as' => 'choose-plan', function() {
             return View::make('subscriptions.pick')->with('title', 'Welcome to Sailr | Choose a plan');
         }]);
 
