@@ -37,11 +37,22 @@ class UsersController extends \BaseController
             $input['bio'] = e($input['bio']);
         }
         $user = User::create($input);
+        $user_id = $user->id;
+        Queue::push(function($job) use ($user_id){
+            $user = User::find($user_id);
+            ProfileImg::setDefaultProfileImages($user);
+
+            $job->delete();
+
+        });
+
+        //ProfileImg::setDefaultProfileImages($user);
 
         //We don't want to see the just created user's following / followers!
 
         Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
-        ProfileImg::setDefaultProfileImages($user);
+
+
 
         Event::fire('user.create', $user);
 
