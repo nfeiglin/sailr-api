@@ -55,13 +55,14 @@ class EventHandler {
 
     public function onNotificationIndexView($userID) {
 
-        /* Set all the users notifications to viewed */
+        /* Set all the users notifications to viewed
         $wheres = ['user_id' => ['$in' => [$userID]], 'viewed' => ['$exists' => false]];
         $changeTo = ['$set' => ['viewed' => true]];
         $options = ['multi' => true];
         $sailrDB = \DB::connection('mongodb');
         $notificationsCollection = $sailrDB->selectCollection('notifications');
         $notificationsCollection->update($wheres, $changeTo, $options);
+        */
     }
 
     public function onLoggingEvent($level, $message, $context) {
