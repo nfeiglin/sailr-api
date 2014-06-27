@@ -148,8 +148,28 @@ class IpnEventHandler {
     public function handleIpnError($eventObject) {
 
         $errorShortReason = $eventObject->errorShortReason;
+
+        $langRetrivealString = "ipn.seller.error.$errorShortReason";
+
+        if (!\Lang::has($langRetrivealString)) {
+            $langRetrivealString = 'ipn.seller.error.default';
+        }
+
+        $this->messageSellerError($eventObject, $langRetrivealString);
+
         $langRetrivealString = "ipn.buyer.error.$errorShortReason";
+
+        if (!\Lang::has($langRetrivealString)) {
+            $langRetrivealString = 'ipn.buyer.error.default';
+        }
+
+        $this->messageBuyerError($eventObject, $langRetrivealString);
+
+
+
+
     }
+
     protected function messageSellerError($eventObject, $langRetrievalString) {
         $errorMessage = \Lang::get($langRetrievalString);
         $eventArray = (array)$eventObject;
@@ -196,6 +216,63 @@ class IpnEventHandler {
 
             });
 
+
+            $job->delete();
+        });
+
+    }
+
+    protected function messageBuyerError($eventObject, $langRetrievalString) {
+        $errorMessage = \Lang::get($langRetrievalString);
+        $eventArray = (array) $eventObject;
+
+        \Queue::push(function($job) use ($eventArray, $errorMessage) {
+
+            $user = \User::findOrFail($eventArray['buyerID']);
+            $seller = \User::findOrFail($eventArray['sellerID']);
+            $product = \Item::findOrFail($eventArray['itemID']);
+
+
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+
+            $ipn = PaypalWebhook::make($ipnModel);
+
+            $checkout = \Checkout::where('txn_id', '=', $ipn->getTransactionIdentifier())->firstOrFail();
+
+            $data = ['user' => $user,
+                'seller' => $seller,
+                'product' => $product,
+                'ipn' => $ipn,
+                'checkout' => $checkout,
+                'errorReason' => $errorMessage,
+                'isPartial' => 1
+            ];
+
+
+            $view = \View::make('emails.purchase.error.buyer', $data)->render();
+
+
+            $notificationData = [
+                'short_text' => "Issue buying " . \Str::limit($product->title, 40),
+                'long_html' => $view,
+                'type' => 'purchase.error.pending',
+                'user_id' => $user->id,
+                'data' => ['product' => $product->toArray(), 'checkout' => $checkout->toArray()],
+            ];
+
+            //dd($notificationData);
+
+            \Notification::create($notificationData);
+
+            $sendToEmail = $user->email;
+
+            $data['isPartial'] = 0;
+
+            \Mail::send('emails.purchase.error.buyer', $data, function($message) use ($sendToEmail) {
+                $message->to($sendToEmail);
+                $message->subject("There's been an issue with your purchase");
+
+            });
 
             $job->delete();
         });
@@ -293,4 +370,4 @@ class IpnEventHandler {
         });
 
     }
-} 
+}

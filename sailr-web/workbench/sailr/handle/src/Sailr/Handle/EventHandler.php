@@ -6,7 +6,8 @@ class EventHandler {
 
     public function subscribe(\Illuminate\Events\Dispatcher $events) {
         $events->listen('ipn.success.completed', 'Sailr\Handle\IpnEventHandler@onPaymentSuccess');
-        $events->listen('ipn.fail.pending', 'Sailr\Handle\IpnEventHandle@onTransactionPending');
+        $events->listen('ipn.fail.pending', 'Sailr\Handle\IpnEventHandler@onTransactionPending');
+        $events->listen('ipn.fail.*', 'Sailr\Handle\IpnEventHandler@handleIpnError');
         $events->listen('user.create', 'Sailr\Handle\EventHandler@onUserCreate');
         $events->listen('relationship.create', 'Sailr\Handle\EventHandler@onRelationshipCreate');
         $events->listen('notification.index', 'Sailr\Handle\EventHandler@onNotificationIndexView');
