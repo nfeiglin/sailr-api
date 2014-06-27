@@ -86,7 +86,7 @@ View::composer('*', function ($view) {
 
     if (Auth::check()) {
         if (!array_key_exists('unread_notifications_count', $view->getData())) {
-            $count = Notification::where('user_id', '=', Auth::user()->id)->where('viewed', 'exists', 0)->count();
+            $count = Notification::where('user_id', '=', Auth::user()->id)->where('viewed', '=', false)->count();
             $view->with('unread_notifications_count', $count);
         }
 
