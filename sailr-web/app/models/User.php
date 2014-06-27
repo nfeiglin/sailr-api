@@ -37,6 +37,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
     //protected $appends = ['counts'];
 
     public static $rules = array(
+        'terms_of_service' => 'accepted',
         'name' => 'required|min:2|max:99',
         'email' => 'required|email|max:99|unique:users,email',
         'username' => 'required|alpha_dash|max:99|unique:users,username',

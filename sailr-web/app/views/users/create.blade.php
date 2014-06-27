@@ -13,11 +13,13 @@
     <p class="form-signin message h5 well well-sm">Welcome, we're glad to have you with us.</p>
     @endif
 
-    <input type="text" class="form-control" value="{{{ Input::old('name') }}}" placeholder="Name" name="name" required="required" autofocus>
+    <input type="text" class="form-control" value="{{{ Input::old('name') }}}" placeholder="Name" name="name" required="required" autofocus="autofocus">
     <input type="email" class="form-control" value="{{{ Input::old('email') }}}" placeholder="Email" name="email" required="required">
     <input type="text" class="form-control" value="{{{ Input::old('username') }}}" placeholder="Username" name="username" required="required">
+
     <input type="password" class="form-control" placeholder="Password" name="password" required="required">
 
-    <button class="btn btn-lg btn-turq btn-block btn-big" type="submit">Sign up</button>
+    <p class="help-block">Agree to terms and conditions. <input type="checkbox" class="form-control form-horizontal" name="terms_of_service" value="1"> </p>
+    <input class="btn btn-lg btn-turq btn-block btn-big" type="submit" value="Sign up">
 </form>
 @stop
