@@ -15,6 +15,7 @@
 
 <div class="form-signin panel wide" data-ng-controller="editController">
     <div class="form-signin-heading h2" id="title-heading" data-ng-model="item.title" contenteditable="true"></div>
+    <p class="help-block">You can change the name of the product by clicking on the title above..</p>
 
     <div class="row file-drop ease-in-out" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
