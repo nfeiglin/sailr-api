@@ -29,6 +29,26 @@ class NotificationsController extends \BaseController {
 	public function show($id)
 	{
 		$notification = Notification::where('_id', '=', (string)$id)->where('user_id','=', Auth::user()->id)->firstOrFail();
+        //$notification->viewed = true;
+        $update = Notification::find($id)->update(['viewed' => true]);
+        //dd($notification->toArray());
+
+        //$notification->save();
+
+        /*
+        //Notification::where('_id', '=', (string)$id)->where('user_id','=', Auth::user()->id)->update(['viewed' => true]);
+        $wheres = ['user_id' => ['$in' => [Auth::user()->id]], '_id' => ['$in' => [$id]]];
+        $changeTo = ['$set' => ['viewed' => true]];
+        $options = ['multi' => false];
+        $sailrDB = \DB::connection('mongodb');
+        $notificationsCollection = $sailrDB->selectCollection('notifications');
+
+        $notificationsCollection->update($wheres, $changeTo, $options);
+*/
+        //Notification::findOrFail($id)->update()
+       // $notification->viewed = 1;
+        //$notification->save();
+
         return View::make('notifications.show')
             ->with('title', $notification->short_text)
             ->with('notifications', $notification->toJSON());
