@@ -14,7 +14,6 @@
 @section('content')
 
 <div class="form-signin panel wide" data-ng-controller="editController">
-    <button class="btn btn-block btn-info" ng-click="buttonPressed()"></button>
     <div class="form-signin-heading h2" id="title-heading" data-ng-model="item.title" contenteditable="true"></div>
 
     <div class="row file-drop ease-in-out" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover">
