@@ -34,7 +34,7 @@
                     <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
                     <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
                 </a>
-                <p class="help-block">Photos will be automagically cropped and scaled to a square. Square photos of at least 612px horizontally are encouraged. Maximum size 7MB.</p>
+                <p class="help-block">Photos will be cropped and scaled to a square. Square photos (JPG, PNG etc.) of at least 612px horizontally are encouraged. Maximum size 7MB.</p>
             </div>
 
         </div>
