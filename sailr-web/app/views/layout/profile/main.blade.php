@@ -18,12 +18,12 @@
     <div class="row">
         <div class="col-sm-4 center-block">
             <p class="h6">Following</p>
-            <p>{{ $no_of_following }}</p>
+            <a href="{{ URL::action('UsersController@following', $user['username']) }}">{{ $no_of_following }}</a>
         </div>
 
         <div class="col-sm-4 center-block">
-            <p class="h6">Following</p>
-            <p>{{ $no_of_followers }}</p>
+            <p class="h6">Followers</p>
+            <a href="{{ URL::action('UsersController@followers', $user['username']) }}">{{ $no_of_followers }}</a>
         </div>
     </div>
     @if($you_follow != true && Auth::check() && !$is_self)
