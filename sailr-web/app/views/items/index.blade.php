@@ -22,6 +22,7 @@
                 <form class='form-horizontal' data-ng-submit="formSubmit()" name="itemForm">
                 <input type="hidden" value="{{ Session::token() }}" name="_token">
                 <div class="product-list panel-body">
+                    <p class="col-xs-12 col-lg-12 col-md-12 col-sm-12 text-warning h6">Ensure that your Sailr account email is the same as your PayPal account email address to get paid when you sell.</p>
                     <div class="col-xs-5 col-lg-8 col-md-8 col-sm-7">
                         <input type="text" class="form-control" placeholder="Item name" name="title" data-ng-model="title" ng-maxlength="255" required="required">
                     </div>
