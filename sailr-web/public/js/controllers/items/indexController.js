@@ -26,7 +26,16 @@ app.controller('indexController', ['$scope', '$http', function($scope, $http){
                 console.log('the data to be sent is ' + JSON.stringify(data));
                 $scope.responseData = data;
                 console.log($scope.responseData);
-                window.location = $scope.responseData.redirect_url;
+
+                if (data.message) {
+                    $scope.posting = false;
+                    humane.log(data.message);
+                }
+
+                if (data.redirect_url) {
+                    window.location = $scope.responseData.redirect_url;
+                }
+
                 $scope.posting = false;
             })
 
