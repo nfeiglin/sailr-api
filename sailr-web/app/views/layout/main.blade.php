@@ -66,6 +66,7 @@
         @yield('full-width-bottom', '')
     </div>
 
+    @include('parts.footer')
     <link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/themes/original.min.css">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
