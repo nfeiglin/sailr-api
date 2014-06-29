@@ -72,6 +72,29 @@ app.directive('focusMe', function($timeout, $parse) {
     };
 });
 
+app.directive('sailrFooter', ['$document', function($document) {
+    function link(scope, element, attrs) {
+        var hasVScroll = document.body.scrollHeight > document.body.clientHeight;
+
+
+        if (!hasVScroll) {
+            element.css({
+                position: 'relative'
+            });
+        }
+
+        else {
+            element.css({
+                position: 'absolute'
+            });
+        }
+
+    }
+
+    return {
+        link: link
+    }
+}]);
 
 app.factory('StripeFactory', function($q, $rootScope) {
    var service = {};
