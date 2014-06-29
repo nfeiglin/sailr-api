@@ -134,6 +134,17 @@ if (Auth::check()) {
     });
 }
 
+Route::group(['prefix' => 'legal'], function() {
+    Route::get('terms', ['as' => 'termsOfService', function() {
+       return View::make('legal.termsOfService');
+    }]);
+
+    Route::get('privacy-policy', ['as' => 'privacyPolicy', function() {
+        return View::make('legal.privacyPolicy');
+    }]);
+
+});
+
 Route::get('/s/{query}', 'SearchesController@show');
 Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
 Route::post('payment/stripe/webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
