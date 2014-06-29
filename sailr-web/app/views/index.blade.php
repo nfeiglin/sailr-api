@@ -7,13 +7,15 @@
 @section('full-width-top')
 <div id="headerwrap">
     <div class="container">
-        <div class="col-lg-8">
-            <h1>A big tag line that explains everything goes here...</h1>
-            <p class="subtitle">With a subtitle possibly with a <a href="#">link.</a> </p>
+        <div class="col-lg-8 col-xs-12 col-sm-12 text-white">
+            <h1>Make an online store in seconds</h1>
+            <h2 class="text-white">1. Create an account</h2>
+            <h2 class="text-white">2. Add products to your store</h2>
+            <h2 class="text-white">3. Get paid direct to your PayPal</h2>
         </div>
 
-        <div class="col-lg-4 btn-container">
-            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq cta-btn btn-big">Sign up!</a>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-sm-4 btn-container pull-left">
+            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq cta-btn btn-big text-center">Sign up!</a>
         </div>
 
     </div>
@@ -31,30 +33,33 @@
 <div class="container">
     <div class="row mt centered">
         <div class="col-lg-6 col-lg-offset-3">
-            <h1>Buy and sell online and on your smartphone with Sailr</h1>
-            <h3>The intersection of a social network and Ecommerce marketplace is launching soon.</h3>
+            <h1>Buy and sell online and with Sailr</h1>
+            <h3>The intersection of a social network and Ecommerce marketplace is here.</h3>
         </div>
     </div>
     <!-- /row -->
     <div class="row mt centered">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <span class="glyphicon glyphicon-tags" style="font-size: 80px;"></span>
-            <h4>1 - Sell simply</h4>
-            <p>Sell and manage sales with the ease you are used to with your favourite social networks. On iPhone or on our website</p>
+            <h4>1 - All you need, nothing else</h4>
+            <h5>Sell simply</h5>
+            <p>Sell with the ease and update your listing with our beautiful product listing editor. Uncluttered, all you need  </p>
         </div>
         <!--/col-lg-4 -->
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <span class="glyphicon glyphicon-user" style="font-size: 80px;"></span>
             <h4>2 - Follow creators and friends</h4>
-            <p>Follow your favourite brands, shops and creators to see the latest things they are selling in your stream. Follow your friends to see what they are buying and selling in your feed, too!</p>
+            <p>Follow your friends, favourite brands, shops, and creators. See the latest things they are selling in your feed. Grow your online shop through social engagement. </p>
         </div>
         <!--/col-lg-4 -->
-        <div class="col-lg-4">
-            <span class="glyphicon glyphicon-star" style="font-size: 80px;"></span>
-            <h4>3 - Reach for the stars</h4>
+       {{-- <div class="col-lg-4">
+            <span class="glyphicon glyphicon-shopping-cart" style="font-size: 80px;"></span>
+            <h4>3 - Better than your average shopping cart</h4>
             <p>While you reach for the stars with you Ecommerce business on Sailr, we give you a way to directly reach your customers as they follow you to see the latest items for sale in their stream.</p>
         </div>
         <!--/col-lg-4 -->
+
+        --}}
     </div>
     <!-- /row -->
 </div>
@@ -63,7 +68,7 @@
     <hr>
     <div class="row centered">
         <div class="col-lg-6 col-lg-offset-3">
-            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">Sign up!</a>
+            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">&#10141; Sign up</a>
         </div>
         <!--End mc_embed_signup-->
     </div>
@@ -133,6 +138,7 @@
 <hr>
 <p class="centered hidden">Based on BlackTie.co website - Attribution License 3.0 - 2013</p>
 <p class="centered">Prices subject to change. Contact founders@sailr.co with any questions, feedback or comments.</p>
+
 </div>
 <!-- /container -->
 
