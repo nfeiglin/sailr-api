@@ -1,5 +1,5 @@
 <?php
-
+use Sailr\Emporium\Merchant\Helpers\Objects\Stripe\Subscription as SubscriptionDataObject;
 class SubscriptionsController extends \BaseController {
 
 	/**
@@ -10,9 +10,19 @@ class SubscriptionsController extends \BaseController {
 	 */
 	public function index()
 	{
-		return View::make('settings.subscription')
+        $user = Auth::user();
+        $subscriptionObject = '{}';
+
+        $stripeSub = $user->subscription()->getStripeCustomer()->subscription;
+        if ($stripeSub) {
+            $subscriptionObject =  SubscriptionDataObject::make($stripeSub)->build()->toJson();
+        }
+
+
+        return View::make('settings.subscription')
             ->with('title', 'Settings / Subscription')
-            ->with('user', Auth::user())
+            ->with('user', $user->toJson())
+            ->with('subscription', $subscriptionObject)
             ;
 	}
 
