@@ -73,13 +73,8 @@ class UsersController extends \BaseController
         $resultsPerPage = 30;
 
         $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
-    //dd($user->id);
 
-        if (!$user->username) {
-            dd('shoddw');
-            return "Not found";
-        }
-        $items = Item::where('user_id', '=', $user->id)->with(['Photos', 'Comment' => function($x) {
+        $items = Item::where('user_id', '=', $user->id)->where('public', '=', 1)->with(['User', 'Photos', 'Comment' => function($x) {
                 $x->with('User');
             }]);
 
@@ -280,7 +275,7 @@ class UsersController extends \BaseController
 
         $arrayOne[(count($arrayOne) + 1)] = $user->id;
 
-        $items = Item::whereIn('user_id', $arrayOne)->with(array(
+        $items = Item::whereIn('user_id', $arrayOne)->where('public', '=', 1)->with(array(
 
             'Photos' => function ($y) {
                     $y->where('type', '=', 'full_res');
