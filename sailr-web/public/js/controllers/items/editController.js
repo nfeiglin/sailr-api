@@ -80,7 +80,7 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
 
         console.log('the data to be sent is ' + JSON.stringify(data));
 
-        $http.put(updateURL + '/toggle', JSON.stringify(data))
+        $http.put(updateURL  + '/toggle-visibility', JSON.stringify(data))
             .success(function (data, status, headers, config) {
                 $scope.item.public = data.public;
                 $scope.posting = false;
@@ -94,7 +94,18 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
             .error(function (data, status, headers, config) {
                 $scope.posting = false;
                 console.log(data);
-                humane.log(data.message);
+
+                if (data.message) {
+
+                    humane.log(data.message);
+                }
+
+                if (data.errors) {
+                    console.log('ERORROS ARE');
+                    console.log(data.errors);
+                    humane.log(data.errors[0]);
+                }
+
 
 
             });
@@ -258,8 +269,17 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
                 $scope.responseData = data;
                 console.log('The response data is: ');
                 console.log($scope.responseData);
-
                 humane.log('Photo deleted successfully');
+
+                if ($scope.item.public && data.message) {
+                    humane.log(data.message);
+                }
+
+                if (data.item) {
+
+                    $scope.item.public = data.item.public;
+                }
+
                 $scope.photos.splice($index, 1);
 
             })
