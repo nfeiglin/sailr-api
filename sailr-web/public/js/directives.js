@@ -1,5 +1,15 @@
 var app = angular.module('app', ['angularFileUpload', 'ngAnimate', 'ngSanitize']);
 
+app.controller('rootScopeDefinitionController', ['$rootScope', function ($rootScope) {
+    if (baseURL) {
+        $rootScope.baseURL = baseURL;
+    }
+
+    else {
+        $rootScope.baseURL = 'http://sailr.co';
+    }
+}]);
+
 app.directive('contenteditable', function () {
     return {
         restrict: 'A', // only activate on element attribute
