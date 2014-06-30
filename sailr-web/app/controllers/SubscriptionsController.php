@@ -29,7 +29,11 @@ class SubscriptionsController extends \BaseController {
         $creditCardToken = Input::get('stripeToken');
         $subscriptionID = 'awesome';
 
-        if ($user->subscribed()) {
+        /* FOR TESTING ONLY AS IT CALLS THE STRIPE API EVERY TIME */
+        $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
+        //$hasSubscription = $user->subscribed();
+
+        if ($hasSubscription) {
             $res = ['message' => 'You are already subscribed'];
             return Response::json($res, 400);
         }
@@ -96,8 +100,8 @@ class SubscriptionsController extends \BaseController {
 	{
 		$user = Auth::user();
 
-		if($user->isSubscribed()) {
-			$user->subscription->cancel();
+		if($user->subscribed()) {
+			$user->subscription()->cancel();
             $res = ['message' => 'Subscription canceled'];
             Event::fire('user.subscription.cancel');
 

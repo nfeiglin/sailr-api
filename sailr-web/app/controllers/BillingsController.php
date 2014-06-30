@@ -1,5 +1,5 @@
 <?php
-
+use Sailr\Emporium\Merchant\Helpers\Objects\Stripe\Subscription as SubscriptionDataObject;
 class BillingsController extends \BaseController {
 
 	/**
@@ -14,14 +14,34 @@ class BillingsController extends \BaseController {
 
         $invoices = $user->invoices();
 
-        $card = $user->subscription()->getStripeCustomer()->cards->all(['limit' => 1])['data'][0];
-        //dd($card);
+        $isSubscribed = $user->subscribed();
 
-        $cardType = $card->type;
-        $last4 = $card->last4;
+        $cu = $user->subscription()->getStripeCustomer();
+        if (!$isSubscribed) {
+            return Redirect::to('/')->withSuccess('You must be subscribed to access billing settings');
+        }
+
+
+        try {
+            $card = $cu->cards->all(['limit' => 1])['data'][0];
+        }
+
+        catch (Exception $e) {
+
+        }
+
+        if (isset($card)) {
+            $cardType = $card->type;
+            $last4 = $card->last4;
+        }
+
+
+
+        $subscription =  SubscriptionDataObject::make($cu->subscription)->build()->toJson();
+
         $title = 'Billing Settings';
 
-		return View::make('settings.billing', compact('cardType', 'last4', 'title', 'user', 'invoices'));
+		return View::make('settings.billing', compact('cardType', 'last4', 'title', 'user', 'invoices', 'renewDateString', 'subscription'));
 	}
 
 	/**
