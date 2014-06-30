@@ -44,7 +44,7 @@
 
                         </ul>
 
-                        <a href="#" class="btn btn-link">Continue &rarr;</a>
+                        <a href="{{ URL::to('') }}" class="btn btn-link">Continue &rarr;</a>
                     </div>
                 </div>
 
