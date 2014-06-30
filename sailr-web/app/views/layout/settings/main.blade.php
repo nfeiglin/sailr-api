@@ -12,16 +12,17 @@
     @endif
 
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
     <script src="{{ URL::asset('js/angular-file/angular-file-upload-shim.min.js') }}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.2.18/angular-animate.min.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular-sanitize.min.js"></script>
+
     <script src="{{ URL::asset('js/angular-file/angular-file-upload.min.js') }}"></script>
     <script src="{{ URL::asset('js/directives.js') }}"></script>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="{{-- URL::asset('css/bootstrap.css') --}}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/custom.css') }}">
-    {{-- <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}"> --}}
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('slick/slick.css') }}">
 
     <script src="{{ URL::asset('js/controllers/feed/feedController.js') }}"></script>
