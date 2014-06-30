@@ -39,27 +39,27 @@
     </div>
     <!-- /row -->
     <div class="row mt centered">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <span class="glyphicon glyphicon-tags" style="font-size: 80px;"></span>
-            <h4>1 - All you need, nothing else</h4>
-            <h5>Sell simply</h5>
-            <p>Sell with the ease and update your listing with our beautiful product listing editor. Uncluttered, all you need  </p>
+            <h4>Sell simply</h4>
+            <p>Sell with ease and update your listings with our beautiful product listing editor.</p>
         </div>
         <!--/col-lg-4 -->
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <span class="glyphicon glyphicon-user" style="font-size: 80px;"></span>
-            <h4>2 - Follow creators and friends</h4>
+            <h4>Follow creators and friends</h4>
             <p>Follow your friends, favourite brands, shops, and creators. See the latest things they are selling in your feed. Grow your online shop through social engagement. </p>
         </div>
         <!--/col-lg-4 -->
-       {{-- <div class="col-lg-4">
-            <span class="glyphicon glyphicon-shopping-cart" style="font-size: 80px;"></span>
-            <h4>3 - Better than your average shopping cart</h4>
-            <p>While you reach for the stars with you Ecommerce business on Sailr, we give you a way to directly reach your customers as they follow you to see the latest items for sale in their stream.</p>
+
+       <div class="col-lg-4">
+            <span class="glyphicon glyphicon-leaf" style="font-size: 80px;"></span>
+            <h4>All you need, nothing else</h4>
+            <p>Sailr offers everything you need to quickly and easily sell. No unnecessary menus or options.</p>
         </div>
         <!--/col-lg-4 -->
 
-        --}}
+
     </div>
     <!-- /row -->
 </div>
@@ -70,7 +70,7 @@
         <div class="col-lg-6 col-lg-offset-3">
             <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">&#10141; Sign up</a>
         </div>
-        <!--End mc_embed_signup-->
+
     </div>
     <div class="col-lg-3"></div>
 </div>
@@ -81,8 +81,7 @@
 <div class="container" id="pricing">
     <div class="row mt centered">
         <div class="col-lg-6 col-lg-offset-3">
-            <h1>Our pricing. It's for everyone.</h1>
-            <h3>Only pay when things get serious.</h3>
+            <h1>Our pricing.</h1>
         </div>
     </div>
     <!-- /row -->
