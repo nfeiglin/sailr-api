@@ -5,9 +5,12 @@
 <script src="{{ URL::asset('js/controllers/billing/billingController.js') }}"></script>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script>
-    var cardType = '{{ $cardType or '' }}';
-    var last4 = '{{ $last4 or '' }}';
-    var usersName = '{{{ $user->name or ''}}}';
+
+   var cardType = '{{ $cardType or '' }}';
+   var last4 = '{{ $last4 or '' }}';
+   var usersName = '{{{ $user->name or ''}}}';
+   var subscription = {{ $subscription }};
+
     Stripe.setPublishableKey('{{ Config::get("stripe.sandbox.publishable") }}');
 </script>
 
@@ -18,7 +21,10 @@
 @section('content')
 <div class="billingSettings" ng-controller="billingController">
     <h2>Billing</h2>
-    <p>You can update your credit card and view your invoices here</p>
+    <p>You can update your credit card and view your invoices here.</p>
+    <p  ng-if="!subscription.cancel_at_period_end">Your subscription will automatically renew on <b>@{{ subscription.formatted_period_end }}.</b></p>
+    <p ng-if="subscription.cancel_at_period_end">Your subscription will end on <b>@{{ subscription.formatted_period_end }}.</b> Please <a ng-href="@{{ baseURL + '/support/contact' }}">contact us</a> if you would like to resume it.</p>
+
     <div class="panel col-md-8">
         <h3>Credit card</h3>
 
@@ -53,10 +59,15 @@
                                        class="form-control" maxlength="4" required="required" name="cvc">
                             </div>
                             <div class="col-sm-4 col-lg-4 col-md-4">
-                                <button type="submit" class="btn btn-block btn-purple form-control" ng-disabled="cardForm.$invalid" ng-if="!posting">
-                                    <span class="glyphicon glyphicon-credit-card"></span> Update card
-                                </button>
-                                <div class="dots" ng-if="posting">Updating...</div>
+                                <div ng-if="!posting" id="ifBlock1">
+                                    <button type="submit" class="btn btn-block btn-purple form-control" ng-disabled="cardForm.$invalid">
+                                        <span class="glyphicon glyphicon-credit-card"></span> Update card
+                                    </button>
+                                </div>
+                                <div class="ifBlock2" ng-if="posting">
+                                    <div class="dots">Updating...</div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -72,7 +83,7 @@
             <tbody>
             <tr class="well">
                 <td>
-                    <div class="card-preview" ng.model="card.last4">
+                    <div class="card-preview">
                         &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; @{{ card.last4 }}
                     </div>
                 </td>
@@ -80,13 +91,14 @@
                     <div class="card-type" ng-model="card.type">@{{ card.type }}</div>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-purple" ng-click="showUpdateCard = !showUpdateCard;"><span class="glyphicon glyphicon-credit-card"></span> Edit card</a>
+                    <a href="" class="btn btn-sm btn-purple" data-ng-click="toggleShowingForm()"><span class="glyphicon glyphicon-credit-card"></span> Edit card</a>
                 </td>
             </tr>
             </tbody>
         </table>
 
         <h3>Invoices</h3>
+
         @if(count($invoices) < 1)
         <p>Your invoices will show up here upon <a href="{{ URL::action('SubscriptionsController@index') }}">subscribing</a> to a paid</p>
         @else

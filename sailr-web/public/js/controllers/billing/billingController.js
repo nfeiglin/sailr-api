@@ -1,9 +1,12 @@
-var stripWhiteSpace = function (string) {
-    string = string.replace(/\s/g, "");
-    return string;
-};
+/*
+ var stripWhiteSpace = function (string) {
+ string = string.replace(/\s/g, "");
+ return string;
+ };
+ */
 
-app.controller('billingController', ['$scope', '$http', function ($scope, $http) {
+app.controller('billingController', ['$scope', '$http', 'HelperFactory', 'StripeFactory', function ($scope, $http, HelperFactory, StripeFactory) {
+
     $scope.showUpdateCard = false;
     $scope.baseURL = baseURL;
     $scope.card = {};
@@ -13,41 +16,31 @@ app.controller('billingController', ['$scope', '$http', function ($scope, $http)
     $scope.card.last4 = last4;
     $scope.card.type = cardType;
 
+    $scope.subscription = subscription;
+
     $scope.updateCard = function () {
+        $scope.posting = true;
 
-        var expiryArray = stripWhiteSpace($scope.card.expiry).split('/');
+        var stripeCard = HelperFactory.createStripeCardObjectFromFormattedInput($scope.card);
 
-        $scope.card.stripeData = {
-            number: stripWhiteSpace($scope.card.number),
-            cvc: stripWhiteSpace($scope.card.cvc),
-            exp_month: expiryArray[0],
-            exp_year: expiryArray[1]
-        };
-
-        /* If there is a cardholder name, add it to the request to be sent to Stripe */
-        if ($scope.card.name.length > 1) {
-            $scope.card.stripeData.name = $scope.card.name;
-        }
-
-
-        Stripe.card.createToken($scope.card.stripeData, stripeResponseHandler);
+        var StripePromise = StripeFactory.createToken(stripeCard);
+        StripePromise.then(function (response) {
+            console.log(response);
+            console.log('SUCCESS!');
+            //console.log('TOKEN:::: ' + JSON.stringify(StripeFactory.getToken()));
+            console.log(StripeFactory.getToken());
+            $scope.token = StripeFactory.getToken();
+            $scope.token.id = StripeFactory.getToken().id;
+            $scope.submitUpdate();
 
 
-        function stripeResponseHandler(status, response) {
+        }, function (response) {
             $scope.posting = false;
-            if (response.error) {
+            console.log('Stripe card fail::::');
+            console.log(response);
+            humane.log(StripeFactory.getErrors().message);
 
-                humane.log(response.error.message);
-
-            } else {
-                $scope.posting = true;
-                // token contains id, last4, and card type
-                $scope.token = response;
-                $scope.submitUpdate();
-
-            }
-        }
-
+        });
 
     };
 
@@ -64,8 +57,10 @@ app.controller('billingController', ['$scope', '$http', function ($scope, $http)
                 $scope.posting = false;
                 humane.log(data.message);
 
+
                 $scope.card.last4 = $scope.token.card.last4;
                 $scope.card.type = $scope.token.card.type;
+
 
                 if ($scope.showUpdateCard) {
                     $scope.showUpdateCard = false;
@@ -85,6 +80,10 @@ app.controller('billingController', ['$scope', '$http', function ($scope, $http)
             });
 
     };
+
+    $scope.toggleShowingForm = function () {
+        $scope.showUpdateCard = !$scope.showUpdateCard;
+    }
 
 
 }]);
