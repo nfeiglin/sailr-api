@@ -154,7 +154,6 @@ Route::group(['before' => 'csrf'], function () {
         return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
     });
 
-    Route::get('buy/{id}/create', 'BuyController@create');
 
     Route::get('/@{username}', function ($username) {
         return Redirect::to(action('UsersController@show', $username));
@@ -163,10 +162,9 @@ Route::group(['before' => 'csrf'], function () {
     Route::get('{username}/following', 'UsersController@following');
     Route::get('{username}/followers', 'UsersController@followers');
 
-    Route::get('item/show/{id}', 'BuyController@create');
-    Route::resource('buy', 'BuyController', ['only' => ['create', 'store', 'show']]);
+    Route::resource('purchase', 'BuyController', ['only' => ['store', 'show']]);
 
-    Route::resource('items', 'ItemsController', ['only' => ['create', 'store', 'show', 'edit', 'update']]);
+    Route::resource('products', 'ItemsController', ['only' => ['create', 'store', 'show', 'edit', 'update']]);
 
     Route::group(['before' => 'guest'], function () {
         Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
