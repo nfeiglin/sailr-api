@@ -36,7 +36,8 @@ class Subscription implements DataObjectInterface, JsonableInterface, ArrayableI
             'current_period_start' => $stripeSubscription->current_period_start,
             'current_period_end' => $stripeSubscription->current_period_end,
             'formatted_period_start' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start)->toFormattedDateString(),
-            'formatted_period_end' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end)->toFormattedDateString()
+            'formatted_period_end' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end)->toFormattedDateString(),
+            'cancel_at_period_end' => $stripeSubscription->cancel_at_period_end,
         ];
 
         return $this;
