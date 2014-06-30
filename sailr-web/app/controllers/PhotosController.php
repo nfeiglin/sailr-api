@@ -107,9 +107,31 @@ class PhotosController extends \BaseController
      */
     public function destroy($item_id)
     {
-        $photos = Photo::where('item_id', '=', $item_id)->where('user_id', '=', Auth::user()->id)->where('set_id', '=', (string) Input::get('set_id'))->delete();
+        //Validate that there is at least one image
 
-        return Response::make(null,204);
+        $itemChanged = false;
+
+        $photos = Photo::where('item_id', '=', $item_id)->where('user_id', '=', Auth::user()->id)->where('set_id', '=', (string) Input::get('set_id'))->delete();
+        $numberOfPhotos = Photo::where('item_id', '=', $item_id)->count();
+
+        if (!$numberOfPhotos > 0) {
+            $item = Item::findOrFail($item_id);
+            $item->public = 0;
+            $item->save();
+
+            $itemChanged = true;
+        }
+
+        if ($itemChanged) {
+            return Response::json(['item' => $item,
+                'number_of_photos' => $numberOfPhotos,
+                'message' => 'Product unpublished due to no photos. Please add a photo and republish'], 200
+            );
+        } else {
+            return Response::make(null,204);
+        }
+
+
 
     }
 
