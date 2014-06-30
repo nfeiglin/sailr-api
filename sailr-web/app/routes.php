@@ -1,7 +1,7 @@
 <?php
 use Intervention\Image\Facades;
 
-    Route::post('buy/{id}', 'BuyController@store', ['before' => 'auth']);
+    Route::post('purchase/{id}', 'BuyController@store', ['before' => 'auth']);
     //Testing
 /*
 |--------------------------------------------------------------------------
@@ -193,12 +193,14 @@ Route::group(['before' => 'csrf'], function () {
             Route::get('account', 'SettingsController@getAccount');
             Route::put('account', 'SettingsController@putAccount');
             Route::resource('subscription', 'SubscriptionsController', ['only' => ['index', 'destroy', 'store']]);
-            Route::resource('billing', 'BillingsController');
-            Route::put('billing', 'BillingsController@update');
+            Route::post('subscription/delete', 'SubscriptionsController@destroy');
+            //Route::delete('subscription/delete', 'SubscriptionsController@destroy');
+
             Route::group(['before' => ['subscribed']], function() {
                 Route::resource('billing', 'BillingsController');
                 Route::put('billing', 'BillingsController@update');
             });
+
         });
 
         Route::get('plans/choose', ['before' => 'not-subscribed', 'as' => 'choose-plan', function() {
@@ -214,8 +216,8 @@ Route::group(['before' => 'csrf'], function () {
         Route::get('items/create', 'ItemsController@create');
         Route::get('dashboard/products', 'ItemsController@index');
 
-        Route::put('items/{id}/toggle', 'ItemsController@toggleVisibility');
-        Route::post('items/{id}/toggle', 'ItemsController@toggleVisibility');
+        Route::put('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
+        Route::post('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
         Route::resource('me/notifications', 'NotificationsController');
         Route::get('me/notification/{id}', 'NotificationsController@show');
     });
