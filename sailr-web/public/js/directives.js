@@ -218,14 +218,13 @@ app.factory('SubscriptionFactory', function($q, $rootScope, $http) {
     service.cancelSubscription = function() {
 
         var configObject = {
-          params: {
               _token: csrfToken
-          }
+              //_method: 'delete'
         };
 
         var defered = $q.defer();
 
-        $http.delete(service.subscriptionURL, configObject)
+        $http.post(service.subscriptionURL + '/delete', configObject)
             .success(function (data, status) {
                 defered.resolve(data);
             })
