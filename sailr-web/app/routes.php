@@ -197,6 +197,10 @@ Route::group(['before' => 'csrf'], function () {
             Route::resource('subscription', 'SubscriptionsController', ['only' => ['index', 'destroy', 'store']]);
             Route::resource('billing', 'BillingsController');
             Route::put('billing', 'BillingsController@update');
+            Route::group(['before' => ['subscribed']], function() {
+                Route::resource('billing', 'BillingsController');
+                Route::put('billing', 'BillingsController@update');
+            });
         });
 
         Route::get('plans/choose', ['before' => 'not-subscribed', 'as' => 'choose-plan', function() {
