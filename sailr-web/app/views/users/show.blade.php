@@ -7,7 +7,7 @@
 
     <div class="thumbnail">
         <div class="caption">
-            <a href="{{ action('BuyController@create', $item['id']) }}"><h3> {{{ $item['title'] }}} </h3></a>
+            <a href="{{ action('BuyController@create', [$item['user']['username'], $item['id']]) }}"><h3> {{{ $item['title'] }}} </h3></a>
         </div>
 
         <div class="img-gallery">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="caption">
-            <a href="{{ action('BuyController@create', $item['id']) }}" class="btn btn-primary btn-lg btn-block h3"
+            <a href="{{ action('BuyController@create', [$item['user']['username'], $item['id']]) }}" class="btn btn-primary btn-lg btn-block h3"
                role="button">Buy now for {{$item['currency']}}{{$item['price']}}</a>
         </div>
 

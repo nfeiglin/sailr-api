@@ -176,7 +176,7 @@ Route::group(['before' => 'csrf'], function () {
     Route::controller('password', 'RemindersController');
 
 
-    Route::get('/item/{id}', 'BuyController@create');
+    Route::get('/{username}/product/{id}', 'BuyController@create');
 
 
     Route::group(['before' => ['auth']], function () {

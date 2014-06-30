@@ -13,7 +13,7 @@
 
 				<div class="thumbnail">
 					<div class="caption">
-        				<a href="{{ action('BuyController@create', $item['id']) }}"><h3>{{{ $item['title'] }}}</h3></a>
+        				<a href="{{ action('BuyController@create', [$item['user']['username'], $item['id']]) }}"><h3>{{{ $item['title'] }}}</h3></a>
         			</div>
 
         			<div class="img-gallery">

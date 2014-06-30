@@ -33,7 +33,7 @@
                                             <tr>
                                                 <td>
                                                     <h1>Oops. There's been an issue with a sale.</h1>
-                                                    <p class="lead">Hi {{ $user->name or 'NAME' }}, <a href="{{ URL::action('UsersController@show', $buyer->username) }}">{{{ $buyer->name }}} (<span>@</span>{{{ $buyer->username }}})</a> just tried to purchase <a href="{{{ URL::action('BuyController@create', $product->id) }}}">{{{ product->title or 'PRODUCT TITLE' }}}</a> but an issue with PayPal occurred.</p>
+                                                    <p class="lead">Hi {{ $user->name or 'NAME' }}, <a href="{{ URL::action('UsersController@show', $buyer->username) }}">{{{ $buyer->name }}} (<span>@</span>{{{ $buyer->username }}})</a> just tried to purchase <a href="{{{ URL::action('BuyController@create', [$user->username, $product->id]) }}}">{{{ product->title or 'PRODUCT TITLE' }}}</a> but an issue with PayPal occurred.</p>
                                                 </td>
 
                                                 <td class="expander"></td>

@@ -33,7 +33,7 @@
                                             <tr>
                                                 <td>
                                                     <h1>Oops... {{ $user->name or 'NAME' }}</h1>
-                                                    <p class="lead">You've tried to purchase <a href="{{ URL::action('BuyController@create', $product->id) }} @else 'LINK TO PRODUCT' @endif"> {{ $product->title or 'PRODUCT TITLE' }}</a> but we're afraid there have been some issues.</p>
+                                                    <p class="lead">You've tried to purchase <a href="{{ URL::action('BuyController@create', [$seller->username, $product->id]) }} @else 'LINK TO PRODUCT' @endif"> {{ $product->title or 'PRODUCT TITLE' }}</a> but we're afraid there have been some issues.</p>
                                                     <p class="panel">
                                                     <h2>Error details</h2>
                                                         {{ $errorReason or 'THE REASON OF THE ERROR GOES HERE' }}

@@ -33,7 +33,7 @@
                                             <tr>
                                                 <td>
                                                     <h1>Congratulations {{ $user->name or 'NAME' }}</h1>
-                                                    <p class="lead">You've purchased <a href="@if(isset($product)) {{ URL::action('BuyController@create', $product->id) }} @else 'LINK TO PRODUCT' @endif"> {{ $product->title or 'PRODUCT TITLE' }}</a></p>
+                                                    <p class="lead">You've purchased <a href="@if(isset($product)) {{ URL::action('BuyController@create', [$seller->username, $product->id]) }} @else 'LINK TO PRODUCT' @endif"> {{ $product->title or 'PRODUCT TITLE' }}</a></p>
                                                     <p>If you have any questions, please contact the seller <b>{{{ $seller->name or 'SELLER NAME' }}}</b> at <a href="mailto:{{ $seller->email or 'SELLER EMAIL'}}">{{ $seller->email or 'SELLER@EMAIL'}}</a></p>
                                                 </td>
                                                 <td class="expander"></td>

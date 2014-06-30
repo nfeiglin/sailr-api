@@ -37,11 +37,12 @@ class BuyController extends \BaseController
 
     /**
      * Show the form for creating a new resource.
-     * GET /buy/{id}/create
+     * GET /{username}/product/{id}
+     * @param string $username
      * @param  int $id
      * @return Response
      */
-    public function create($id)
+    public function create($username, $id)
     {
 
         $item = Item::where('id', '=', $id)->with([
@@ -53,6 +54,7 @@ class BuyController extends \BaseController
                             }
                     ]);
                     $y->select(['id', 'username', 'name']);
+                $y->select(['id', 'username', 'name']);
                 },
 
             'Photos' => function ($y) {
@@ -61,6 +63,18 @@ class BuyController extends \BaseController
 
                 },
         ])->firstOrFail();
+
+        if ($item->public != 1) {
+            return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. Please try again later');
+        }
+
+        $item->user->profile_img = ProfileImg::where('user_id', '=', $item->user->id)->where('type', '=', 'small')->first(['url']);
+
+        if ($item->user->username != $username) {
+            $exception = new \Illuminate\Database\Eloquent\ModelNotFoundException;
+            $exception->setModel('ITEM Username does not match item');
+            throw $exception;
+        }
 
         //$domesticShippingPrice = $item->shipping->type->Domestic->price;
         //$internationalShippingPrice = $item->shipping->type->International->price;
@@ -232,7 +246,7 @@ class BuyController extends \BaseController
         $paypalItem->Name = str_limit($item->title, 124);
         $paypalItem->Quantity = 1;
         $paypalItem->Number = $item->id;
-        $paypalItem->ItemURL = action('BuyController@create', $item->id);
+        $paypalItem->ItemURL = URL::action('BuyController@create', [$item->user->username, $item->id]);
         $paypalItem->ItemCategory = 'Physical';
 
         $paymentDetails1->PaymentDetailsItem = $paypalItem;
