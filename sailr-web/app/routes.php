@@ -134,6 +134,10 @@ if (Auth::check()) {
     });
 }
 
+Route::get('support/contact', ['as' => 'contact', function() {
+    return View::make('support.contact')->with('title', "We're here for you");
+}]);
+
 Route::group(['prefix' => 'legal'], function() {
     Route::get('terms', ['as' => 'termsOfService', function() {
        return View::make('legal.termsOfService');
