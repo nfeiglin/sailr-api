@@ -5,6 +5,12 @@
 @stop
 
 @section('body')
+
+@if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif
+@if(Session::has('success'))<div class="alert alert-success">{{ Session::get('success') }}</div> @endif
+@if(Session::has('error'))<div class="alert alert-warning">{{ Session::get('error') }}</div> @endif
+@if(Session::has('fail'))<div class="alert alert-danger">{{ Session::get('fail') }}</div> @endif
+
 <div class="content" ng-controller="chooseController">
     <div class="row">
         <div class="fat-bar">
