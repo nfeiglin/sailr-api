@@ -47,13 +47,6 @@ class BuyController extends \BaseController
 
         $item = Item::where('id', '=', $id)->with([
             'User' => function ($y) {
-                    $y->with([
-                        'ProfileImg' => function ($z) {
-                                $z->where('type', '=', 'small');
-                                $z->first();
-                            }
-                    ]);
-                    $y->select(['id', 'username', 'name']);
                 $y->select(['id', 'username', 'name']);
                 },
 
@@ -78,17 +71,21 @@ class BuyController extends \BaseController
 
         //$domesticShippingPrice = $item->shipping->type->Domestic->price;
         //$internationalShippingPrice = $item->shipping->type->International->price;
-        $profileImg = false;
+
+
+        $profileImg = [0 => array('url' => 'http://sailr.web/img/default-sm.jpg')];
         if (Auth::check()) {
-            $profileImg = ProfileImg::where('user_id', '=', Auth::user()->id)->where('type', '=', 'small')->get(['url'])->toArray();
+            $profileImg = ProfileImg::where('user_id', '=', Auth::user()->id)->where('type', '=', 'small')->first(['url'])->toArray();
 
         }
-        $profileImg = [0 => array('url' => 'http://sailr.web/img/default-sm.jpg')];
+
+
+        //return Response::json($item);
 
         return View::make('buy.create')
-            ->with('title', 'Buying: ' . $item->title)
+            ->with('title', $item->title)
             ->with('item', $item->toArray())
-            ->with('profileURL', $profileImg[0]['url']);
+            ->with('profileURL', $profileImg['url']); //The current user's profile picture
 
     }
 
@@ -115,6 +112,10 @@ class BuyController extends \BaseController
 
                 }
         ])->firstOrFail();
+
+        if ($item->public != 1) {
+            return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. Please try again later');
+        }
 
         $itemArray = $item->toArray();
 
@@ -402,6 +403,16 @@ class BuyController extends \BaseController
             return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
         }
 
+        if ($item->public != 1) {
+            return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. You have not been charged and the transaction has not been processed');
+        }
+
+
+        if ($item->user_id == Auth::user()->id) {
+            return Redirect::back()->withMessage("You can't buy your own item. You have not been charged and the transaction has not been processed'");
+        }
+
+
 
         $paypalService = new PayPalAPIInterfaceServiceService($config);
         $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($paypalToken);
@@ -452,7 +463,7 @@ class BuyController extends \BaseController
         $ipnUrl = URL::action('ipn');
 
         if ($checkout->user_id != Auth::user()->id) {
-            return Redirect::to('/')->with('fail', 'Sorry, you can only get Paypal transaction details for your own account. This transaction has not been processed and no money has been charged');
+            return Redirect::to('/')->with('fail', 'Sorry, you can only get PayPal transaction details for your own account. This transaction has not been processed and no money has been charged');
         }
 
 
@@ -510,6 +521,16 @@ class BuyController extends \BaseController
         if ($item->initial_units < 1) {
             return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
         }
+
+        if ($item->public != 1) {
+            return Redirect::to('/')->withMessage('Sorry, the product has been made private by the seller. You have not been charged and the transaction has not been processed');
+        }
+
+
+        if ($item->user_id == Auth::user()->id) {
+            return Redirect::to('/')->withMessage("You can't buy your own item. You have not been charged and the transaction has not been processed'");
+        }
+
 
         $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
         //echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
