@@ -4,7 +4,6 @@
 		<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 well well-sm">
 			
 			@foreach($items as $item)
-			{{-- <pre> json_encode($item) </pre> --}}
 			<div class="item" id="{{ $item['id'] }}">
 				<div class="item-user panel panel-default">
 						<a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] or '' }}" class="item-user-img img-circle"></a>
