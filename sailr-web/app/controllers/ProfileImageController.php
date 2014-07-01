@@ -10,14 +10,29 @@ class ProfileImageController extends \BaseController
      */
     public function store()
     {
-        $files = Request::instance()->files->get('photos');
-        if(!Photo::validateImages($files)) {
-            return Redirect::back()->with('fail', 'Invalid image');
+        $files = Request::file('photos');
+        if(!is_array($files)) {
+            $files = [$files];
         }
+        //dd($files);
+        //$files = Input::file('photos');
+        //print_r($files);
+        //dd($files);
+
+        //Response::make('', 503);
+        //dd($files);
+        //Log::debug(print_r($files, 1));
+
+        if(!Photo::validateImages($files)) {
+            return Response::json(['message' => 'Invalid image'], 400);
+        }
+
+        ProfileImg::where('user_id', '=', Auth::user()->id)->delete();
 
         ProfileImg::resizeAndStoreUploadedImages($files, Auth::user());
 
-        return Redirect::back()->with('success', 'New profile image successfully added');
+        $imagesArray = ProfileImg::where('user_id', '=', Auth::user()->id)->get(['type', 'url'])->toArray();
+        return Response::json(['message'=> 'Successfully uploaded', 'profile_img' => $imagesArray]);
 
     }
 
