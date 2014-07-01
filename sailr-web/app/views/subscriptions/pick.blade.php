@@ -141,6 +141,7 @@
                         <button class="btn btn-lg btn-turq btn-md-long" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
                             Start Awesome ($12.99/month)
                         </button>
+                        <p class="small text-muted">The plan will auto-renew until canceled.</p>
                         <div class="dots" ng-if="posting">Subscribing...</div>
 
 
