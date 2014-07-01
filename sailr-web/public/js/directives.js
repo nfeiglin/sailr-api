@@ -306,3 +306,105 @@ app.factory('CommentsFactory', function ($q, $http) {
 
 });
 
+app.directive('sailrComments', function () {
+    return {
+        restrict: 'AE',
+        require: '^sailrProductId',
+        scope: {
+            sailrProductId: '@'
+        },
+        controller: ['$scope', '$http', 'CommentsFactory', function ($scope, $http, CommentsFactory) {
+
+            $scope.comments = [];
+            $scope.commentOpacity = 1.00;
+            $scope.webError = false;
+
+            $scope.newComment = {};
+            $scope.loggedInUser = loggedInUser;
+            $scope.item_id = 0;
+
+            $scope.getComments = function (product_id) {
+                //console.log('PRODUCT ID:: ' + product_id);
+                $scope.item_id = product_id;
+
+
+                var getCommentsPromise = CommentsFactory.getComments($scope.item_id);
+
+                getCommentsPromise.then(function (successResponse) {
+                        $scope.comments = successResponse.data;
+                    },
+                    function (failResponse) {
+                        console.log(failResponse);
+                        $scope.webError = true;
+                    });
+
+                };
+
+            $scope.postNewComment = function () {
+                var newCommentIndex = $scope.comments.unshift({
+                    item_id: $scope.item_id,
+                    comment: $scope.newComment.comment,
+                    created_at: new Date(),
+                    user: loggedInUser
+                });
+
+                var newCommentPromise = CommentsFactory.postNewComment($scope.newComment.comment, $scope.item_id);
+                console.log(CommentsFactory);
+                console.log(newCommentPromise);
+
+                newCommentPromise.then(function (successResponse) {
+                        console.log(successResponse);
+                        $scope.newComment.comment = '';
+                        //Set opacity to 1.00
+                    },
+                    function (failResponse) {
+                        console.log(failResponse);
+                        $scope.comments = $scope.comments.splice(1, newCommentIndex);
+                    });
+
+            }
+        }],
+
+        templateUrl: baseURL + '/js/templates/comments/master.html',
+        link: function (scope, iElement, iAttrs, ctrl) {
+            scope.getComments(iAttrs.sailrProductId);
+            scope.item_id = iAttrs.sailrProductId;
+        }
+    }
+});
+
+app.directive('sailrProductId', function () {
+    return {
+        controller: function ($scope) {}
+    }
+});
+
+app.directive('sailrComment', function () {
+    return {
+        restrict: 'AE',
+        scope: {
+            profileImageUrl: '@',
+            username: '@',
+            name: '@',
+            commentText: '@'
+        },
+        controller: ['$scope', function ($scope) {
+
+        }],
+
+        link: function (scope, iElement, iAttrs, ctrl) {
+            scope.username = iAttrs.username;
+            scope.name = iAttrs.name;
+            scope.profileImageUrl = iAttrs.profileImageUrl;
+            scope.commentText = iAttrs.commentText;
+            scope.baseURL = baseURL;
+
+        },
+
+        templateUrl: baseURL + '/js/templates/comments/comment-item.html'
+
+    }
+
+});
+
+
