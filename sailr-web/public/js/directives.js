@@ -60,32 +60,32 @@ app.directive('num-binding', function () {
     };
 });
 
-app.directive('focusMe', function($timeout, $parse) {
+app.directive('focusMe', function ($timeout, $parse) {
     return {
         //scope: true,   // optionally create a child scope
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             var model = $parse(attrs.focusMe);
-            scope.$watch(model, function(value) {
-                console.log('value=',value);
-                if(value === true) {
-                    $timeout(function() {
+            scope.$watch(model, function (value) {
+                console.log('value=', value);
+                if (value === true) {
+                    $timeout(function () {
                         element[0].focus();
                     });
                 }
             });
             /*
-            // to address @blesh's comment, set attribute value to 'false'
-            // on blur event:
-            element.bind('blur', function() {
-                console.log('blur');
-                scope.$apply(model.assign(scope, false));
-            });
-            */
+             // to address @blesh's comment, set attribute value to 'false'
+             // on blur event:
+             element.bind('blur', function() {
+             console.log('blur');
+             scope.$apply(model.assign(scope, false));
+             });
+             */
         }
     };
 });
 
-app.directive('sailrFooter', ['$document', function($document) {
+app.directive('sailrFooter', ['$document', function ($document) {
     function link(scope, element, attrs) {
         var hasVScroll = document.body.scrollHeight > document.body.clientHeight;
 
@@ -109,8 +109,6 @@ app.directive('sailrFooter', ['$document', function($document) {
     }
 }]);
 
-app.factory('StripeFactory', function($q, $rootScope) {
-   var service = {};
 app.directive('sailrOpactiy', function () {
 
     function link(scope, iElement, iAttrs) {
@@ -121,7 +119,6 @@ app.directive('sailrOpactiy', function () {
         });
     }
 
-    service.sayHello = function() {
     return {
         restrict: 'A',
         scope: {
@@ -130,18 +127,24 @@ app.directive('sailrOpactiy', function () {
         link: link
     }
 });
+
+
+app.factory('StripeFactory', function ($q, $rootScope) {
+    var service = {};
+
+    service.sayHello = function () {
         return 'HELLO FROM STRIPE FACTORY';
     };
 
-    service.setPublishableKey = function(key) {
+    service.setPublishableKey = function (key) {
         Stripe.setPublishableKey(key);
     };
 
 
-    service.createToken = function(cardData) {
+    service.createToken = function (cardData) {
         var defered = $q.defer();
 
-        Stripe.card.createToken(cardData, function(status, response) {
+        Stripe.card.createToken(cardData, function (status, response) {
 
             if (response.error) {
                 service.errors = response.error;
@@ -159,18 +162,18 @@ app.directive('sailrOpactiy', function () {
         return defered.promise;
     };
 
-    service.getToken = function() {
+    service.getToken = function () {
         return service.token;
     };
 
-    service.getErrors = function() {
+    service.getErrors = function () {
         return service.errors;
     };
 
     return service;
 });
 
-app.factory('HelperFactory', function($http) {
+app.factory('HelperFactory', function ($http) {
     var service = {};
 
     service.stripWhiteSpace = function (string) {
@@ -178,7 +181,7 @@ app.factory('HelperFactory', function($http) {
         return string;
     };
 
-    service.createStripeCardObjectFromFormattedInput = function(inputObject) {
+    service.createStripeCardObjectFromFormattedInput = function (inputObject) {
 
         var returnCard = {};
         var expiryArray = service.stripWhiteSpace(inputObject.expiry).split('/');
@@ -205,7 +208,7 @@ app.factory('HelperFactory', function($http) {
 });
 
 
-app.factory('SubscriptionFactory', function($q, $rootScope, $http) {
+app.factory('SubscriptionFactory', function ($q, $rootScope, $http) {
 
     var service = {};
     service.subscriptionURL = baseURL + '/settings/subscription';
@@ -245,11 +248,11 @@ app.factory('SubscriptionFactory', function($q, $rootScope, $http) {
         return defered.promise;
     };
 
-    service.cancelSubscription = function() {
+    service.cancelSubscription = function () {
 
         var configObject = {
-              _token: csrfToken
-              //_method: 'delete'
+            _token: csrfToken
+            //_method: 'delete'
         };
 
         var defered = $q.defer();
