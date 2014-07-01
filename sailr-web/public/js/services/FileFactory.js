@@ -19,47 +19,86 @@ app.factory('FileFactory', function($q, $http, $timeout, $upload) {
             return new Blob([new Uint8Array(array)], {type: 'image/png'});
 
     };
+    
     service.uploadFile = function($files, postName, uploadUrl, data) {
-
-        console.log($files);
-        //$files: an array of files selected, each file has name, size, and type.
-
+    //$files: an array of files selected, each file has name, size, and type.
+        for (var i = 0; i < $files.length; i++) {
             if ($files.length > 1) {
                 humane.log('Please only one photo at a time.. We are only new here.');
-                return false;
+                break;
             }
-            service.file = $files[0];
-
-            if (window.FileReader && service.file.type.indexOf('image') > -1) {
+            var file = $files[i];
+            if (window.FileReader && file.type.indexOf('image') > -1) {
                 var fileReader = new FileReader();
-                fileReader.readAsDataURL(service.file);
+                fileReader.readAsDataURL($files[i]);
+
                 var tooBig = false;
-                if (service.file.size > 7340032) {
+                if (file.size > 7340032) {
                     tooBig = true;
                     console.log('File too large.');
                     humane.log('File is too large. Please try compressing it first.');
                     return;
                 }
+
+
                 console.log('not too big');
-                var loadFile = function(fileReader, index) {
-                    fileReader.onload = function(e) {
-                        $timeout(function() {
+                var loadFile = function (fileReader, index) {
+                    fileReader.onload = function (e) {
+                        $timeout(function () {
+                            //service.showCropBox(e);
+                            service.dataUrls[index] = e.target.result;
                             console.log(e.target.result);
-                            dataURIString = e.target.result;
-
-                            service.base64String = e.target.result;
-                            service.tempFiles.push({
-                                dataUrl: e.target.result
-                            });
-
-                            return service.doUpload(postName, uploadUrl, data);
-
-
+                            service.photos.push({url: e.target.result});
+                            service.tempURL = e.target.result;
                         });
                     }
-                }(fileReader, 0);
+                }(fileReader, i);
+
+
             }
 
+
+            console.log(file);
+
+
+            humane.log('Uploading...');
+            service.uploading = true;
+
+            service.upload = $upload.upload({
+                url: baseURL + '/photo/upload/' + itemModel.id, //upload.php script, node.js route, or servlet url
+                // method: 'POST' or 'PUT',
+                // headers: {'header-key': 'header-value'},
+                // withCredentials: true,
+                data: {_token: csrfToken},
+                file: file,
+                fileFormDateName: 'photo'
+                // or list of files: $files for html5 only
+                /* set the file formData name ('Content-Desposition'). Default is 'file' */
+                //fileFormDataName: myFile, //or a list of names for multiple files (html5).
+                /* customize how data is added to formData. See #40#issuecomment-28612000 for sample code */
+                //formDataAppender: function(formData, key, val){}
+            }).progress(function (evt) {
+                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+            }).success(function (data, status, headers, config) {
+                //service.photos[service.photos.length -1].set_id = data.set_id;
+                //service.photos[service.photos.length -1].url = data.url;
+                // file isuploaded successfully
+                humane.log('Photo successfully uploaded!');
+                console.log(data);
+                console.log(status);
+                console.log(headers);
+                service.uploading = false;
+            })
+                .error(function (data, status, headers, config) {
+                    //service.photos = service.photos.slice(service.photos.length -1, 1);
+                    humane.log('Upload failed. ' + data);
+                    console.log(data);
+                    console.log(status);
+                    console.log(headers);
+                    service.uploading = false;
+                });
+
+        }
 
     };
 
