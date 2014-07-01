@@ -14,7 +14,7 @@ class CommentsController extends \BaseController
         $validator = Validator::make($input, Comment::$rules);
 
         if ($validator->fails()) {
-            return Redirect::back()->with('message', 'Oh no! There is an issue with your comment.')->withErrors($validator);
+            return Response::json($validator->getMessageBag()->toArray(), 400);
         }
 
 
@@ -27,7 +27,7 @@ class CommentsController extends \BaseController
 
         Event::fire('comment.store', $comment);
 
-        return Redirect::back()->with('success', 'Woo! Comment posted successfully!');
+        return Response::json($comment->toArray(), 201);
     }
 
     /**
