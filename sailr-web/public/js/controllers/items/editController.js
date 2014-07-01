@@ -156,7 +156,7 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
                     var loadFile = function (fileReader, index) {
                         fileReader.onload = function (e) {
                             $timeout(function () {
-                                $scope.showCropBox(e);
+                                //$scope.showCropBox(e);
                                 $scope.dataUrls[index] = e.target.result;
                                 console.log(e.target.result);
                                 $scope.photos.push({url: e.target.result});
