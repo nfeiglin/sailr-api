@@ -118,6 +118,10 @@ View::composer('users.create', function($view){
     $view->with('purpleBG', true);
 });
 
+View::composer('users.show', function($view){
+    $view->with('purpleBG', true);
+});
+
 View::composer('password.remind', function($view){
     $view->with('purpleBG', true);
 });
