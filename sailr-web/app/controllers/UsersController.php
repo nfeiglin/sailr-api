@@ -74,9 +74,11 @@ class UsersController extends \BaseController
 
         $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
 
-        $items = Item::where('user_id', '=', $user->id)->where('public', '=', 1)->with(['User', 'Photos', 'Comment' => function($x) {
-                $x->with('User');
-            }]);
+        $items = Item::where('user_id', '=', $user->id)->where('public', '=', 1)->with(['User', 'Photos' => function($y) {
+          $y->where('type', '=', 'full_res');
+          $y->select(['url', 'id', 'item_id']);
+        }]);
+
 
         $paginator = $items->paginate($resultsPerPage);
         $items = $items->get();
