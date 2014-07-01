@@ -101,6 +101,10 @@ class ItemsController extends BaseController
             unset($input['created_at']);
         }
 
+        if (isset($input['public'])) {
+            unset($input['public']);
+        }
+
         if (isset($input['description'])) {
             $input['description'] = Holystone::sanitize($input['description']);
         }
