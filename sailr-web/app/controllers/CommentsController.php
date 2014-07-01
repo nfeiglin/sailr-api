@@ -58,7 +58,7 @@ class CommentsController extends \BaseController
      * @return Response
      */
     public function item_comments($username, $id) {
-        $comments = Comment::where('item_id', '=', $id)->with([
+        $comments = Comment::where('item_id', '=', $id)->orderBy('created_at', 'dsc')->with([
             'User' => function($u) {
               $u->select(['id', 'name', 'username']);
               $u->with(['ProfileImg' => function($p) {
