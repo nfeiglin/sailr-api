@@ -10,11 +10,14 @@
 
 		<div class="form-signin wide panel">
 			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price'] }}</small></h2>
-            <button class="btn btn-primary btn-lg btn-turq btn-big btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
-            <p class="ships_to lead">Ships to {{ CountryHelpers::getCountryNameFromISOCode($item['ships_to']) }}</p>
-				<div class="row">
 
-</div>
+            <div class="item-user panel panel-default" id="buy-user">
+                <a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
+                <a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-turq btn-big btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
+            <p class="ships_to">Ships to {{ CountryHelpers::getCountryNameFromISOCode($item['ships_to']) }}</p>
 
 			<div class="item buy-page" id="{{ $item['id'] }}">
 
@@ -25,10 +28,6 @@
       						</div>
       					@endforeach
       				</div>
-                <div class="item-user panel panel-default" id="buy-user">
-                    <a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
-                    <a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
-                </div>
 
                 <div class="caption autolink-text">
                    {{ $item['description'] or '' }}
@@ -43,11 +42,10 @@
 
     		</div>
 
-            <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
-</div>
+            <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
             @if(Auth::check())
 
-            <div class="modal fade" id="myModal">
+            <div class="modal fade" id="buyModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -61,7 +59,7 @@
                             <div class="row">
                             <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 form-group">
                                 <div class="col-lg-8 col-sm-8 col-md-8">
-                                    <img src="{{ $profileURL or '' }}" class="img-responsive img-circle pull-left">
+                                    <img ng-src="@{{ loggedInUser.profile_img[0].url }}" class="img-responsive img-circle pull-left">
                                     <div class="buyer-info">
                                         <p class="h5">{{{ Auth::user()->name }}}</p>
                                         <p class="h5">{{{ Auth::user()->email }}}</p>
