@@ -111,8 +111,25 @@ app.directive('sailrFooter', ['$document', function($document) {
 
 app.factory('StripeFactory', function($q, $rootScope) {
    var service = {};
+app.directive('sailrOpactiy', function () {
+
+    function link(scope, iElement, iAttrs) {
+
+        scope.sailrOpacity = iAttrs.sailrOpacity;
+        iElement.css({
+            opacity: scope.sailrOpacity
+        });
+    }
 
     service.sayHello = function() {
+    return {
+        restrict: 'A',
+        scope: {
+            sailrOpacity: '@'
+        },
+        link: link
+    }
+});
         return 'HELLO FROM STRIPE FACTORY';
     };
 
