@@ -11,6 +11,13 @@ class CommentsController extends \BaseController
     public function store()
     {
         $input = Input::all();
+
+        $item = Item::where('id', '=', Input::get('item_id'))->firstOrFail(['id', 'public']);
+
+        if ($item->public != 1) {
+            //throw new \Sailr\Emporium\Merchant\Exceptions\ProductNotPublicException;
+            return Response::json([], 403);
+        }
         $validator = Validator::make($input, Comment::$rules);
 
         if ($validator->fails()) {
@@ -58,6 +65,7 @@ class CommentsController extends \BaseController
      * @return Response
      */
     public function item_comments($username, $id) {
+
         $comments = Comment::where('item_id', '=', $id)->orderBy('created_at', 'dsc')->with([
             'User' => function($u) {
               $u->select(['id', 'name', 'username']);
