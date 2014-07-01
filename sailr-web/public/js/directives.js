@@ -250,3 +250,59 @@ app.factory('SubscriptionFactory', function($q, $rootScope, $http) {
     return service;
 
 });
+
+app.factory('CommentsFactory', function ($q, $http) {
+
+    var service = {};
+
+    service.sayHello = function () {
+        console.log('Hello from CommentsFactory');
+        return 'Hello from CommentFactory';
+    };
+
+    service.postNewComment = function (commentText, productID) {
+        console.log('Add new comment function called');
+        var postObject = {
+            _token: csrfToken,
+            comment: commentText,
+            item_id: productID
+        };
+
+        var defered = $q.defer();
+
+        console.log('BASE URL:: ' + baseURL);
+        console.log(postObject);
+
+        $http.post(baseURL + '/comments', postObject)
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+            .error(function (data, status) {
+                defered.reject(data);
+            });
+
+        return defered.promise;
+
+    };
+
+    service.getComments = function (productID) {
+        var defered = $q.defer();
+
+        $http.get(baseURL + '/username/product/' + productID + '/' + 'comments')
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+            .error(function (data, status) {
+                defered.reject(data);
+            });
+
+        return defered.promise;
+
+    };
+
+
+    return service;
+
+
+});
+
