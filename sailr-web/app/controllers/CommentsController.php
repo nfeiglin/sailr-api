@@ -53,11 +53,20 @@ class CommentsController extends \BaseController
     /**
      * Display comments for the specified item.
      *
+     * @param string $username
      * @param int $id
      * @return Response
      */
-    public function item_comments($id) {
-        $comments = Comment::where('item_id', '=', $id)->with('User')->get();
+    public function item_comments($username, $id) {
+        $comments = Comment::where('item_id', '=', $id)->with([
+            'User' => function($u) {
+              $u->select(['id', 'name', 'username']);
+              $u->with(['ProfileImg' => function($p) {
+                  $p->where('type', '=', 'small');
+
+              }]);
+            },
+        ])->get();
 
         $res = array(
             'meta' => array(

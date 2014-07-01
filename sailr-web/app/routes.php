@@ -215,6 +215,8 @@ Route::group(['before' => 'csrf'], function () {
 
         Route::delete('relationship', 'RelationshipsController@destroy');
         Route::resource('relationship', 'RelationshipsController');
+
+        Route::get('/{username}/product/{id}/comments', 'CommentsController@item_comments');
         Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
 
         Route::get('items/create', 'ItemsController@create');
