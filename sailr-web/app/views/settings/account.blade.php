@@ -1,13 +1,41 @@
 @extends('layout.settings.main')
+
+@section('head')
+<script>
+    var profileImageURL = '{{ $profileImageURL or 'PROFILE IMAGE URL' }}';
+</script>
+@stop
+
+
 @section('content')
-    <div class="">
+    <div class="" ng-controller="updateController">
         {{ Form::model($user, ['action' => 'SettingsController@putAccount', 'method' => 'PUT', 'class' => '', 'validate' => 'validate' ]) }}
         <h2>Account settings</h2>
-        //TODO ADD PROFILE PHOTO UPLOAD HERE
+        <div class="row">
+            <div class="col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="col-lg-6 col-lg-offset-3 col-sm-6 col-sm-offset-3 col-xs-12 col-md-6 col-md-offset-3">
+                    <div class="thumbnail">
+                        <img ng-src="@{{ profileURL }}" src="{{ $profileImageURL }}" class="img-circle img-responsive img-thumbnail">
+                        <div class="caption">
+                            <h4>@{{ user.name }}</h4>
+                        </div>
+                        <a href="#" class="btn btn-lg btn-primary btn-block" onclick="openFileBrowser()">
+                            <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
+                            <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
 
         <div class="form-group">
             {{ Form::label('Name') }}
-            {{ Form::text('name',null, ['class' => 'form-control']) }}
+            {{ Form::text('name',null, ['class' => 'form-control', 'ng-model' => 'user.name']) }}
         </div>
 
         <div class="form-group">

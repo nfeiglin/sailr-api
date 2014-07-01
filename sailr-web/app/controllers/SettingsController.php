@@ -21,7 +21,13 @@ class SettingsController extends \BaseController {
 	 */
 	public function getAccount()
 	{
-        return View::make('settings.account')->with('user', Auth::user())->with('title', 'Account Settings');
+        $profileImageURL = ProfileImg::where('user_id','=', Auth::user()->id)->where('type', '=', 'small')->first(['url'])->url;
+
+
+        return View::make('settings.account')
+            ->with('user', Auth::user())
+            ->with('title', 'Account Settings')
+            ->with('profileImageURL', $profileImageURL);
 	}
 
 	/**
