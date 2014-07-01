@@ -20,6 +20,7 @@
     <script>
         var csrfToken = '{{ Session::token() }}';
         var baseURL = '{{ URL::to('/') }}';
+        var loggedInUser = {{ $loggedInUser or 'false' }};
     </script>
     @yield('head', '')
 </head>

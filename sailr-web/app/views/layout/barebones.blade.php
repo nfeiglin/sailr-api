@@ -27,6 +27,7 @@
     <script>
         var csrfToken = '{{ Session::token() }}';
         var baseURL = '{{ URL::to('/') }}';
+        var loggedInUser = {{ $loggedInUser or 'false' }};
     </script>
 
     <script src="{{ URL::asset('js/card/js/card.js') }}"></script>

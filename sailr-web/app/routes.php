@@ -98,6 +98,22 @@ View::composer('index', function($view){
     $view->with('purpleBG', false);
 });
 
+View::composer('*', function(Illuminate\View\View $view) {
+    /* Enclosing this in a try / catch because user may not be logged in! */
+    try {
+        $loggedInUser = User::where('id', '=', Auth::user()->id)->with(
+            ['ProfileImg' => function($p) {
+                $p->where('type', '=', 'small');
+            }])->firstOrFail(['id', 'name', 'username'])->toJson();
+    }
+
+    catch (Exception $e) {
+        $loggedInUser = 'false';
+    }
+
+   $view->with('loggedInUser', $loggedInUser);
+});
+
 View::composer('users.create', function($view){
     $view->with('purpleBG', true);
 });
