@@ -1,6 +1,6 @@
 var app = angular.module('app', ['angularFileUpload', 'ngAnimate', 'ngSanitize']);
 
-app.controller('rootScopeDefinitionController', ['$rootScope', function ($rootScope) {
+app.run(function ($rootScope) {
     if (baseURL) {
         $rootScope.baseURL = baseURL;
     }
@@ -8,7 +8,10 @@ app.controller('rootScopeDefinitionController', ['$rootScope', function ($rootSc
     else {
         $rootScope.baseURL = 'http://sailr.co';
     }
-}]);
+
+    $rootScope.loggedInUser = loggedInUser;
+});
+
 
 app.directive('contenteditable', function () {
     return {
