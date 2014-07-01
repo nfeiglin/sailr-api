@@ -28,25 +28,9 @@
       				</div>
 
     			</div>
-        				<form action="{{ action('CommentsController@store') }}" method="post" class="">
-        					{{ Form::token() }}
-        					<input type="hidden" name="item_id" value="{{ $item['id'] }}">
-        					<input type="text" name="comment" placeholder="Write a comment..." class="panel panel-default form-control h6">
-        				</form>
 
-        				@foreach($item['comment'] as $comment)
-	        				<div class="panel panel-default item-user comment">
-	        					<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"><img src="{{ $comment['user']['profile_img'][0]['url'] }}" class="profile-img img-circle"></a>
-								<a href="{{{ action('UsersController@show', $comment['user']['username']) }}}"class="h6 text-primary">{{ '@' . $comment['user']['username'] }}</a>
-								<span class="h6 autolink-text">{{{ $comment['comment'] }}}</span>
-
-								@if($comment['user_id'] == Auth::user()->id)
-								{{ Form::open(['action' => array('CommentsController@destroy', $comment['id']), 'method' => 'delete']) }}
-								    <button value="submit" class="glyphicon glyphicon-trash btn btn-danger btn-sm del-btn"></button>
-								{{Form::close()}}
-								@endif
-	        				</div>
-        				@endforeach
+                <sailr-comments sailr-product-id="{{ $item['id'] }}">
+                </sailr-comments>
 
     		</div>
 			@endforeach
