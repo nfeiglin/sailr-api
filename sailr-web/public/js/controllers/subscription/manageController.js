@@ -1,4 +1,4 @@
-app.controller('manageController', ['$scope', '$http', '$q', 'SubscriptionFactory', '$rootScope', function ($scope, $http, $q, SubscriptionFactory, $rootScope) {
+app.controller('manageController', ['$scope', '$http', '$q', 'SubscriptionFactory', '$rootScope', function ($scope, $http, $q, SubscriptionFactory) {
 //Code goes here
     $scope.posting = false;
     $scope.subscription = subscription;
