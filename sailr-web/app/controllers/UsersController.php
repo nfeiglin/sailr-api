@@ -85,7 +85,7 @@ class UsersController extends \BaseController
         $items = $items->toArray();
 
 
-        $userArray = $user->toArray();
+
 
         $isSelf = false;
         $follow_you = false;
@@ -112,6 +112,9 @@ class UsersController extends \BaseController
         if ($follow_you && $you_follow) {
             $mutual = true;
         }
+
+        $userArray = $user->toArray();
+
         return View::make('users.show')
         ->with('title', $user['username'])
         ->with('user', $userArray)
