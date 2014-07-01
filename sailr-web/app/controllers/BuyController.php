@@ -69,23 +69,12 @@ class BuyController extends \BaseController
             throw $exception;
         }
 
-        //$domesticShippingPrice = $item->shipping->type->Domestic->price;
-        //$internationalShippingPrice = $item->shipping->type->International->price;
 
-
-        $profileImg = [0 => array('url' => 'http://sailr.web/img/default-sm.jpg')];
-        if (Auth::check()) {
-            $profileImg = ProfileImg::where('user_id', '=', Auth::user()->id)->where('type', '=', 'small')->first(['url'])->toArray();
-
-        }
-
-
-        //return Response::json($item);
 
         return View::make('buy.create')
             ->with('title', $item->title)
-            ->with('item', $item->toArray())
-            ->with('profileURL', $profileImg['url']); //The current user's profile picture
+            ->with('item', $item->toArray());
+            //->with('profileURL', $profileImg[0]['url']); //The current user's profile picture
 
     }
 
