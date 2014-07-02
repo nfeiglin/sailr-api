@@ -148,6 +148,10 @@ Route::get('/i/info', function () {
 
 if (Auth::check()) {
     Route::get('/', 'UsersController@self_feed');
+
+    Route::get('/i/homepage', function () {
+        return View::make('index');
+    });
 } else {
     Route::get('/', function () {
         return View::make('index');
