@@ -53,6 +53,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
         'bio' => 'sometimes|max:240'
     );
 
+    protected static $stripePublishableKey = '';
+    public static function setStripePublishableKey($key) {
+        self::$stripePublishableKey = $key;
+    }
+
+    public static function getStripePublishableKey() {
+        return self::$stripePublishableKey;
+    }
+
     public function getCountsAttribute() {
         $following = Relationship::where('user_id', '=', $this->getAuthIdentifier())->count();
         $followers = Relationship::where('follows_user_id', '=', $this->getAuthIdentifier())->count();

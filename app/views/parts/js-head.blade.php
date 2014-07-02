@@ -14,7 +14,7 @@
 <script src="{{ URL::asset('js/controllers/feed/feedController.js') }}"></script>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script>
-    Stripe.setPublishableKey('{{ Config::get("stripe.sandbox.publishable") }}');
+    Stripe.setPublishableKey('{{ User::getStripePublishableKey() }}');
 </script>
 <script src="{{ URL::asset('js/card/js/card.js') }}"></script>
 
