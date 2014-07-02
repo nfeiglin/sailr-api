@@ -1,17 +1,12 @@
 @extends('layout.settings.main')
 @section('head')
-<link rel="stylesheet" href="{{ URL::asset('js/card/css/card.css') }}">
-<script src="{{ URL::asset('js/card/js/card.js') }}"></script>
 <script src="{{ URL::asset('js/controllers/billing/billingController.js') }}"></script>
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script>
 
    var cardType = '{{ $cardType or '' }}';
    var last4 = '{{ $last4 or '' }}';
    var usersName = '{{{ $user->name or ''}}}';
    var subscription = {{ $subscription }};
-
-    Stripe.setPublishableKey('{{ Config::get("stripe.sandbox.publishable") }}');
 </script>
 
 
