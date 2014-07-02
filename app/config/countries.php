@@ -1,7 +1,6 @@
 <?php
 return array
 (
-    'EW' => 'Anywhere ∞',
     'AF' => 'Afghanistan',
     'AX' => 'Aland Islands',
     'AL' => 'Albania',
