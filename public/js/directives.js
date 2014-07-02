@@ -85,26 +85,42 @@ app.directive('focusMe', function ($timeout, $parse) {
     };
 });
 
-app.directive('sailrFooter', ['$document', function ($document) {
+app.directive('sailrFooter', ['$document', '$window', function ($document, $window) {
     function link(scope, element, attrs) {
-        var hasVScroll = document.body.scrollHeight > document.body.clientHeight;
 
+        var positionFooter = function() {
+            var hasVScroll = document.body.scrollHeight > $window.innerHeight;
+            //console.log(element.style.height);
 
-        if (!hasVScroll) {
-            element.css({
-                position: 'relative'
-            });
-        }
+            var newTop = $window.document.body.scrollHeight;// + element.style.height;
+            var stringNewHeight = newTop + 'px';
+            if (hasVScroll) {
+                element.css({
+                    position: 'relative',
+                    top: '100%'
+                });
+            }
 
-        else {
-            element.css({
-                position: 'absolute'
-            });
-        }
+            else {
+                element.css({
+                    position: 'absolute',
+                    top: stringNewHeight
+                });
+            }
+        };
+
+        positionFooter();
+
+        scope.$watch($window.innerHeight, function(newValue, oldValue) {
+            positionFooter();
+
+        });
+
 
     }
 
     return {
+        scope: false,
         link: link
     }
 }]);
