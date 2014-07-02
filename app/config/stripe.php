@@ -1,13 +1,13 @@
 <?php
 return array(
     'sandbox' => [
-        'secret' => 'sk_test_YUXd8nrTP4vfKlWFV9gjGuwp',
-        'publishable' => 'pk_test_3MAoCjKdsEySE1vefGyLxrJQ'
+        'secret' => getenv('STRIPE_SANDBOX_SECRET'),
+        'publishable' => getenv('STRIPE_SANDBOX_PUBLISHABLE'),
     ],
 
     'live' => [
-        'secret' => '',
-        'publishable' => ''
+        'secret' => getenv('STRIPE_LIVE_SECRET'),
+        'publishable' => getenv('STRIPE_LIVE_PUBLISHABLE'),
     ]
 
 );

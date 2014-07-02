@@ -54,10 +54,10 @@ return array(
 
         'mysql' => array(
             'driver' => 'mysql',
-            'host' => 'localhost',
-            'database' => 'sailr',
-            'username' => 'sailr',
-            'password' => 'password',
+            'host' => getenv('MYSQL_DB_HOST'),
+            'database' => getenv('MYSQL_DB_NAME'),
+            'username' => getenv('MYSQL_DB_USERNAME'),
+            'password' => getenv('MYSQL_DB_PASSWORD'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -85,11 +85,11 @@ return array(
 
         'mongodb' => array(
             'driver'   => 'mongodb',
-            'host'     => 'localhost',
-            'port'     => 27017,
-            'username' => 'sailr',
-            'password' => 'password',
-            'database' => 'sailr'
+            'host'     => getenv('MONGO_DB_HOST'),
+            'port'     => getenv('MONGO_DB_PORT'),
+            'username' => getenv('MONGO_DB_USERNAME'),
+            'password' => getenv('MONGO_DB_PASSWORD'),
+            'database' => getenv('MONGO_DB_NAME')
         ),
 
     ),
