@@ -9,8 +9,9 @@
         @endif
     @endforeach
 
-    <a href="{{ URL::action('UsersController@show', $user['username'] ) }}" class="h2"> {{{ $user['name'] }}}</a>
-    <a href="{{ URL::action('UsersController@show', $user['username'] ) }}" class="h4">{{{ $user['username'] }}}</a>
+    <a href="{{ URL::action('UsersController@show', $user['username'] ) }}"><h1 class="h2">{{{ $user['name'] }}}</h1></a>
+    <a href="{{ URL::action('UsersController@show', $user['username'] ) }}"> <h2 class="h4">{{{ '@' . $user['username'] }}}</h2></a>
+
 
     @if(Auth::check() && $is_self)
     <a href="{{ URL::action('SettingsController@getAccount') }}" class="btn btn-md btn-default pull-right">My settings</a>
