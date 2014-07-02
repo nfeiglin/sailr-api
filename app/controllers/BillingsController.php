@@ -31,7 +31,7 @@ class BillingsController extends \BaseController {
         }
 
         if (isset($card)) {
-            $cardType = $card->type;
+            $cardType = $card->brand;
             $last4 = $card->last4;
         }
 
