@@ -234,13 +234,19 @@ app.factory('SubscriptionFactory', function ($q, $rootScope, $http) {
         return 'HELLO FROM STRIPE FACTORY';
     };
 
-    service.createSubscription = function (planID, stripeToken) {
+    service.createSubscription = function (planID, stripeToken, couponCode) {
 
         var data = {
             _token: csrfToken,
             stripeToken: stripeToken,
             plan: 'awesome'
         };
+
+        if(typeof couponCode !== 'undefined') {
+            if(couponCode.length > 0) {
+                data.coupon = couponCode;
+            }
+        }
 
         var defered = $q.defer();
 
