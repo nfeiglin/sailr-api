@@ -11,3 +11,4 @@ scope_settings.xml
 .idea/workspace.xml
 sailr-web/.idea/sailr-web.iml
 sailr-web/.idea/workspace.xml
+.env.local.php
