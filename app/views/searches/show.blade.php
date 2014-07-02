@@ -36,7 +36,7 @@
         <p class="lead text-white" ng-if="results.items.length < 1">Sorry, no products match your search</p>
         <div class="col-md-4 col-lg-3 col-sm-4 col-xs-6" ng-repeat="item in results.items">
             <div class="thumbnail">
-                <a ng-href="@{{ baseURL + '/item/' + item.id }}"><h3>@{{ item.title }}</h3>
+                <a ng-href="@{{ baseURL + '/' + item.user.username + '/product/' + item.id }}"><h3>@{{ item.title }}</h3>
                     <img class="img-responsive" ng-src="@{{ item.photos[0].url }}">
                     <button class="btn btn-md btn-block btn-primary">@{{ item.currency }}@{{ item.price }}</button>
                 </a>
