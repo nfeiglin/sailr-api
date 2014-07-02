@@ -709,3 +709,11 @@ input.success {
 .container {
     min-height: 100%;
 }
+
+.icon-bar {
+    background: #ffffff;
+}
+
+.navbar-toggle {
+    background: #1abc9c;
+}
