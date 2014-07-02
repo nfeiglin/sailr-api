@@ -19,9 +19,14 @@
 
     <input type="password" class="form-control" placeholder="Password" name="password" required="required">
 
-    <p class="help-block">Agree to terms and conditions. <input type="checkbox" class="form-control form-horizontal" name="terms_of_service" value="1"> </p>
+
+        <div class="form-control-static small">
+            Agree to our <a href="{{ URL::action('termsOfService') }}">terms of service</a> and <a href="{{ URL::action('privacyPolicy') }}">privacy policy</a>
+        </div>
+        <input type="checkbox" class="form-control" name="terms_of_service" value="1">
     <input class="btn btn-lg btn-turq btn-block btn-big" type="submit" value="Sign up">
 </form>
+    </div>
 
 
 
