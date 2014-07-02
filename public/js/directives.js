@@ -459,9 +459,7 @@ app.directive('sailrEntityLink', function() {
        scope: false,
        link: function(scope, iElement, iAttrs) {
            scope.$watch(iAttrs.sailrEntityLink, function(newValue, oldValue) {
-
                var tempHTML = iElement.html();
-               console.log(tempHTML);
                iElement.html(twttr.txt.autoLink(tempHTML));
            });
 
