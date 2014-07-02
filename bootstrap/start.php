@@ -26,9 +26,11 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('your-machine-name'),
+	'local' => array('homestead'),
+    'production' => array('sailr-a')
 
 ));
+
 
 
 
@@ -64,8 +66,20 @@ require $framework.'/Illuminate/Foundation/start.php';
 /*
  * Register the Stripe key
  */
+if (App::environment('local'))
+{
+    User::setStripeKey(Config::get('stripe.sandbox.secret'));
+    User::setStripePublishableKey(Config::get('stripe.sandbox.publishable'));
+}
 
-User::setStripeKey(Config::get('stripe.sandbox.secret'));
+if (App::environment('production'))
+{
+    User::setStripeKey(Config::get('stripe.live.secret'));
+    User::setStripePublishableKey(Config::get('stripe.live.publishable'));
+
+}
+
+
 
 /*
 |--------------------------------------------------------------------------
