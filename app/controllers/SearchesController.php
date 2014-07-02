@@ -27,7 +27,7 @@ class SearchesController extends \BaseController {
             }
         ])->get(['id', 'name', 'username', 'bio'])->toArray();
 
-        $itemResults = Item::whereLike('title', $newQuery)->orWhereLike('description', $newQuery)->where('public', '=', 0)->with([
+        $itemResults = Item::where('public', '=', 1)->whereLike('title', $newQuery)->orWhereLike('description', $newQuery)->with([
             'Photos' => function($q) {
                 $q->where('type', '=', 'thumbnail');
                 //$q->first();
@@ -38,9 +38,16 @@ class SearchesController extends \BaseController {
                 //$u->first();
                 $u->select(['id', 'name', 'username']);
             }
-        ])->get(['id', 'user_id', 'title', 'currency', 'price'])->toArray();
+        ])->get(['id', 'user_id', 'title', 'currency', 'price', 'public'])->toArray();
 
+        $index = 0;
+       foreach($itemResults as $item) {
+           if($item['public'] == 0) {
+               unset($itemResults[$index]);
+           }
 
+           $index++;
+       }
 
         $res = json_encode(['users' => $userResults, 'items' => $itemResults]);
 
