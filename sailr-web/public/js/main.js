@@ -9,19 +9,6 @@ $(document).ready(function(){
 
     });
     
-/* Link the hashtags and usernames */
-    var textsToLink = $('.autolink-text');
-    textsToLink.each(function(index, object){
-        var tempHTML = $(this).html();
-        console.log('TEMP HTML::::   ');
-        console.log(tempHTML);
-
-        $(this).html(twttr.txt.autoLink(tempHTML));
-
-    });
-/* ==== */
-
-
 
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.

@@ -430,4 +430,20 @@ app.directive('sailrComment', function () {
 
 });
 
+app.directive('sailrEntityLink', function() {
+   return {
+      priority: -1,
+      restrict: 'AE',
+       scope: false,
+       link: function(scope, iElement, iAttrs) {
+           scope.$watch(iAttrs.sailrEntityLink, function(newValue, oldValue) {
+
+               var tempHTML = iElement.html();
+               console.log(tempHTML);
+               iElement.html(twttr.txt.autoLink(tempHTML));
+           });
+
+       }
+   }
+});
 

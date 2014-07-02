@@ -49,7 +49,7 @@
     <a class="btn btn-lg btn-primary btn-block" href="#loginModal" data-toggle="modal" data-target="#loginModal" title="Please log in to follow">Follow {{{ $user['username'] }}}</a>
     @endif
 
-    @if($user['bio']) <p class="well autolink-text">{{{ $user['bio'] }}}</p> @endif
+    @if($user['bio']) <p class="well" sailr-entity-link>{{{ $user['bio'] }}}</p> @endif
 
     @yield('below')
 

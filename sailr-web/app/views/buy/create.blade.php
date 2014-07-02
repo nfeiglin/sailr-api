@@ -29,7 +29,7 @@
       					@endforeach
       				</div>
 
-                <div class="caption autolink-text">
+                <div class="caption" sailr-entity-link>
                    {{ $item['description'] or '' }}
                 </div>
 
