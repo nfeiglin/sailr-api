@@ -9,7 +9,6 @@
 
 @section('content')
     <div class="" ng-controller="updateController">
-        {{ Form::model($user, ['action' => 'SettingsController@putAccount', 'method' => 'PUT', 'class' => '', 'validate' => 'validate' ]) }}
         <h2>Account settings</h2>
         <div class="row">
             <div class="col-xs-12 col-lg-12 col-md-12 col-sm-12">
@@ -17,12 +16,22 @@
                     <div class="thumbnail">
                         <img ng-src="@{{ profileURL }}" src="{{ $profileImageURL }}" class="img-circle img-responsive img-thumbnail">
                         <div class="caption">
-                            <h4>@{{ user.name }}</h4>
+                            <h3 class="text-center">@{{ user.name }}</h3>
                         </div>
-                        <a href="#" class="btn btn-lg btn-primary btn-block" onclick="openFileBrowser()">
-                            <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
-                            <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
+                        <a href="#" class="btn btn-md btn-default" onclick="openFileBrowser()" id="fileButton">
+                            @{{ fileButtonText }}
                         </a>
+
+                        <form name="photos" ng-submit="photos.$valid" method="post" action="{{ URL::action('ProfileImageController@store') }}" id="imageForm" enctype="multipart/form-data">
+                            <input type="file" accept="image/*" id="addFiles" name="photos" ng-required="required" required="required" class="form-control">
+                            {{ Form::token() }}
+                            <div ng-if="showSubmit">
+                                <button type="submit" class="btn btn-block btn-turq" ng-disabled="photos.$invalid">Submit</button>
+                                <p class="help-block">Press submit to update your profile photo</p>
+                            </div>
+
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -32,7 +41,7 @@
 
 
 
-
+        {{ Form::model($user, ['action' => 'SettingsController@putAccount', 'method' => 'PUT', 'class' => '', 'validate' => 'validate' ]) }}
         <div class="form-group">
             {{ Form::label('Name') }}
             {{ Form::text('name',null, ['class' => 'form-control', 'ng-model' => 'user.name']) }}

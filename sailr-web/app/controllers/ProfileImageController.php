@@ -10,10 +10,19 @@ class ProfileImageController extends \BaseController
      */
     public function store()
     {
-        $files = Request::file('photos');
+
+
+        $files = Input::file('photos');
+        if (!$files) {
+            return Redirect::back()->with('fail', 'Please select a new image');
+        }
+        //dd($files);
+
         if(!is_array($files)) {
             $files = [$files];
         }
+
+        //dd($files);
         //dd($files);
         //$files = Input::file('photos');
         //print_r($files);
@@ -24,7 +33,15 @@ class ProfileImageController extends \BaseController
         //Log::debug(print_r($files, 1));
 
         if(!Photo::validateImages($files)) {
-            return Response::json(['message' => 'Invalid image'], 400);
+            $data = ['message' => 'Invalid image'];
+            if (Request::ajax()) {
+                return Response::json(['message' => 'Invalid image'], 400);
+            }
+
+            else {
+                return Redirect::back()->with('fail', 'Invalid photo');
+            }
+
         }
 
         ProfileImg::where('user_id', '=', Auth::user()->id)->delete();
@@ -32,7 +49,14 @@ class ProfileImageController extends \BaseController
         ProfileImg::resizeAndStoreUploadedImages($files, Auth::user());
 
         $imagesArray = ProfileImg::where('user_id', '=', Auth::user()->id)->get(['type', 'url'])->toArray();
-        return Response::json(['message'=> 'Successfully uploaded', 'profile_img' => $imagesArray]);
+
+        if (Request::ajax()) {
+            return Response::json(['message'=> 'Successfully uploaded', 'profile_img' => $imagesArray]);
+
+        }
+        else {
+            return Redirect::back()->with('success', 'New profile photo set');
+        }
 
     }
 
