@@ -19,6 +19,30 @@ app.factory('FileFactory', function($q, $http, $timeout, $upload) {
             return new Blob([new Uint8Array(array)], {type: 'image/png'});
 
     };
+
+    service.getDataUrlFromFile = function($theFile) {
+
+        var dataUrl;
+
+            var file = $theFile[0];
+            if (window.FileReader && file.type.indexOf('image') > -1) {
+                var fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+
+                var loadFile = function (fileReader, index) {
+                    fileReader.onload = function (e) {
+                        $timeout(function () {
+                            dataUrl = e.target.result;
+                            return dataUrl;
+                        });
+                    }
+                }(fileReader);
+
+
+            }
+
+
+    };
     
     service.uploadFile = function($files, postName, uploadUrl, data) {
     //$files: an array of files selected, each file has name, size, and type.
