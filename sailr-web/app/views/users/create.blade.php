@@ -22,4 +22,10 @@
     <p class="help-block">Agree to terms and conditions. <input type="checkbox" class="form-control form-horizontal" name="terms_of_service" value="1"> </p>
     <input class="btn btn-lg btn-turq btn-block btn-big" type="submit" value="Sign up">
 </form>
+
+
+
+<div class="clearfix" style="margin-bottom: 65px">
+
+</div>
 @stop
