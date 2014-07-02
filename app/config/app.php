@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'url' => 'http://sailr.web',
+    'url' => 'http://sailr.co',
 
     /*
     |--------------------------------------------------------------------------
@@ -114,7 +114,6 @@ return array(
         'Sailr\Validator\ValidatorServiceProvider',
         'Sailr\Handle\HandleServiceProvider',
         'Sailr\Vip\VipServiceProvider',
-        'Sailr\Emporium\EmporiumServiceProvider',
         'LogicalGrape\PayPalIpnLaravel\PayPalIpnServiceProvider',
         'Laravel\Cashier\CashierServiceProvider',
 
