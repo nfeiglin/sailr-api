@@ -12,7 +12,7 @@
 			<h2>{{{ $item['title'] }}} <small class="text-danger">{{ $item['currency']}}{{$item['price'] }}</small></h2>
 
             <div class="item-user panel panel-default" id="buy-user">
-                <a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img'][0]['url'] }}" class="item-user-img img-circle"></a>
+                <a href="{{ action('UsersController@show', $item['user']['username']) }}"><img src="{{ $item['user']['profile_img']['url'] }}" class="item-user-img img-circle" width="64vw" height="64vw"></a>
                 <a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
             </div>
 
