@@ -493,37 +493,37 @@ input[type="file"] {
 
 
 .btn-turq {
-    background-color: #1abc9c;
+    background: #1abc9c;
     border-color: #1ac6a6;
     color: #ffffff;
 }
 
 .btn-turq:hover {
-    background-color: #1ac6a6;
+    background: #1ac6a6;
     border-color: #1ac6a6;
     color: #ffffff;
 }
 
 .btn-turq:active {
-    background-color: #1ac6a6;
+    background: #1ac6a6;
     border-color: #1ac6a6;
     color: #ffffff;
 }
 
 .btn-turq:hover:active {
-    background-color: #1ac6a6;
+    background: #1ac6a6;
     border-color: #1ac6a6;
     color: #ffffff;
 }
 
 .btn-emerald {
-    background-color: #2ecc71;
+    background: #2ecc71;
     border-color: #2ed77c;
     color: #ffffff;
 }
 
 .btn-emerald:hover {
-    background-color: #2edd81;
+    background: #2edd81;
     border-color: #2ed77c;
     color: #ffffff;
 }
