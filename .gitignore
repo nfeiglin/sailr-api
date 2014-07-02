@@ -1,3 +1,13 @@
 public/img
 _ide_helper.php
 vendor
+scope_settings.xml
+.idea/.name
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/sailr-web.iml
+.idea/vcs.xml
+.idea/workspace.xml
+sailr-web/.idea/sailr-web.iml
+sailr-web/.idea/workspace.xml
