@@ -38,7 +38,7 @@
         <div ng-if="!posting">
             <div ng-if="!subscription.cancel_at_period_end">
                 <p class="text-muted small pull-right">
-                    If you no longer need flexibility and prefer to be limited, you can <a href="#" class="" ng-click="cancelSubscription()">cancel subscription</a>
+                   <a href="#" class="btn btn-default btn-sm" ng-click="cancelSubscription()">cancel subscription</a>
                 </p>
             </div>
 
