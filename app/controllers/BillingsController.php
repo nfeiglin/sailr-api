@@ -16,12 +16,11 @@ class BillingsController extends \BaseController {
 
         $isSubscribed = $user->subscribed();
 
-        $cu = $user->subscription()->getStripeCustomer();
         if (!$isSubscribed) {
             return Redirect::to('/')->withSuccess('You must be subscribed to access billing settings');
         }
 
-
+        $cu = $user->subscription()->getStripeCustomer();
         try {
             $card = $cu->cards->all(['limit' => 1])['data'][0];
         }
