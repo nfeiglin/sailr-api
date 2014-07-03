@@ -33,7 +33,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
      */
     public $hidden = array('password', 'created_at', 'updated_at', 'deleted_at', 'email', 'remember_token', 'stripe_id', 'stripe_subscription', 'last4', 'trial_ends_at');
 
-    public $guarded = array('id', 'created_at', 'updated_at');
+    public $guarded = array('id', 'created_at', 'updated_at', 'terms_of_service', 'deleted_at', 'remember_token', 'stripe_id', 'stripe_subscription', 'last4', 'trial_ends_at');
     //protected $appends = ['counts'];
 
     public static $rules = array(
