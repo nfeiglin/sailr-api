@@ -42,7 +42,6 @@
 
     		</div>
 
-            <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
             <button class="btn btn-turq btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
             <hr>
 
@@ -65,8 +64,8 @@
                             <div class="row">
                             <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 form-group">
                                 <div class="col-lg-8 col-sm-8 col-md-8">
-                                    <img ng-src="@{{ loggedInUser.profile_img[0].url }}" class="img-responsive img-circle pull-left">
                                     <div class="buyer-info">
+                                        <img ng-src="@{{ loggedInUser.profile_img[0].url }}" class="img-responsive img-circle pull-left" width="50wv">
                                         <p class="h5">{{{ Auth::user()->name }}}</p>
                                         <p class="h5">{{{ Auth::user()->email }}}</p>
 
