@@ -13,11 +13,10 @@ class SubscriptionsController extends \BaseController {
         $user = Auth::user();
         $subscriptionObject = '{}';
 
-        $stripeSub = $user->subscription()->getStripeCustomer()->subscription;
-        if ($stripeSub) {
+        if ($user->subscribed()) {
+            $stripeSub = $user->subscription()->getStripeCustomer()->subscription;
             $subscriptionObject =  SubscriptionDataObject::make($stripeSub)->build()->toJson();
         }
-
 
         return View::make('settings.subscription')
             ->with('title', 'Settings / Subscription')
@@ -39,9 +38,8 @@ class SubscriptionsController extends \BaseController {
         $creditCardToken = Input::get('stripeToken');
         $subscriptionID = 'awesome';
 
-        /* FOR TESTING ONLY AS IT CALLS THE STRIPE API EVERY TIME */
-        $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
-        //$hasSubscription = $user->subscribed();
+
+        $hasSubscription = $user->subscribed();
 
         if ($hasSubscription) {
             $res = ['message' => 'You are already subscribed'];
