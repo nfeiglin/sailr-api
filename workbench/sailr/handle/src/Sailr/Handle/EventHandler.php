@@ -39,7 +39,7 @@ class EventHandler {
             $relationship->setHidden(array_merge($relationship->getHidden(), ['updated_at', 'created_at']));
 
             \Notification::create([
-                'short_text' => 'Followed by ' . $follower->username,
+                'short_text' => 'Followed by @' . $follower->username,
                 'type' => 'user.follow',
                 'user_id' => $relationship->follows_user_id,
                 'data' => ['relationship' => $relationship->toArray()],
@@ -49,7 +49,7 @@ class EventHandler {
         });
 
         \Mail::queue('emails.relationship.newFollower', $data, function($message) use ($follower, $following) {
-            $message->to($following->email)->subject($follower->name . ' (' . $follower->username . ') ' . 'is now following you on Sailr');
+            $message->to($following->email)->subject("$follower->name (@$follower->username) is now following you on Sailr");
         });
     }
 
