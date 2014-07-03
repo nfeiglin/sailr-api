@@ -5,7 +5,7 @@ return [
             'count' => [
                 'product' => [
                     'create' => [
-                        'db' => \DB::table('items'),
+                        'db' => DB::table('items'),
                         'max' => 999999999999999
                     ]
                 ]
@@ -17,7 +17,7 @@ return [
             'count' => [
                 'product' => [
                     'create' => [
-                        'db' => \DB::table('items'),
+                        'db' => DB::table('items'),
                         'max' => 4
                     ]
                 ]

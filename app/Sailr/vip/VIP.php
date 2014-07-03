@@ -23,7 +23,7 @@ class VIP
     public function canPerformAction($actionName, \User $user)
     {
 
-        $this->config = \Config::get('vip::config.plans');
+        $this->config = \Config::get('vip.plans');
         $this->user = $user;
 
         if (!$this->user->subscribed()) {
@@ -33,6 +33,8 @@ class VIP
             $this->planId = $this->user->subscription()->planId();
         }
 
+
+        //dd($this->buildArrayGetString($this->planId, $actionName));
 
         $rulesArray = array_get($this->config, $this->buildArrayGetString($this->planId, $actionName));
 
@@ -57,7 +59,7 @@ class VIP
         if ($count == 0) {
             return true;
         }
-        return $count >= $maximumAmount;
+        return !$count >= $maximumAmount;
 
     }
 
