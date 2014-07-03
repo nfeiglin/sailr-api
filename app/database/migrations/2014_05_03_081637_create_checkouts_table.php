@@ -17,8 +17,10 @@ class CreateCheckoutsTable extends Migration {
 			$table->increments('id');
 			$table->unsignedInteger('item_id');
 			$table->unsignedInteger('user_id');
+            $table->string('payerID')->nullable();
 			$table->string('token', 30)->nullable();
 			$table->string('ack', 30)->nullable();
+            $table->string('txn_id')->nullable();
 			$table->boolean('completed');
 			$table->timestamps();
             $table->softDeletes();

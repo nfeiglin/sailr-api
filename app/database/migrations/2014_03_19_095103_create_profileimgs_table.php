@@ -16,8 +16,10 @@ class CreateProfileimgsTable extends Migration
         Schema::create('profileimgs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->string('type', 50);
             $table->string('url');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
