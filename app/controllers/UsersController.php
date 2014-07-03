@@ -50,8 +50,8 @@ class UsersController extends \BaseController
 
         //We don't want to see the just created user's following / followers!
 
-        Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
-
+        //Auth::attempt(array('email' => $input['email'], 'password' => $input['password']), true, true);
+        Auth::login($user);
 
 
         Event::fire('user.create', $user);
