@@ -54,6 +54,9 @@ class VIP
 
         $count = $query->where('user_id', '=', $this->user->getAuthIdentifier())->whereBetween('created_at', [$todayLess30Days, $today])->count();
 
+        if ($count == 0) {
+            return true;
+        }
         return $count >= $maximumAmount;
 
     }
