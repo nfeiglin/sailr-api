@@ -30,7 +30,7 @@
 		],
 
         "psr-4": {
-            "Sailr\\": "App/Sailr"
+            "Sailr\\": "app/Sailr"
         }
 	},
 	"scripts": {
