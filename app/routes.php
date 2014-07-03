@@ -128,7 +128,7 @@ Route::group(['before' => 'csrf'], function () {
 
     Route::resource('purchase', 'BuyController', ['only' => ['store', 'show']]);
 
-    Route::resource('products', 'ItemsController', ['only' => ['create', 'store', 'show', 'edit', 'update']]);
+    Route::resource('products', 'ItemsController', ['only' => ['store', 'show', 'edit', 'update']]);
 
     Route::group(['before' => 'guest'], function () {
         Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
@@ -179,7 +179,6 @@ Route::group(['before' => 'csrf'], function () {
         Route::get('/{username}/product/{id}/comments', 'CommentsController@item_comments');
         Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
 
-        Route::get('items/create', 'ItemsController@create');
         Route::get('dashboard/products', 'ItemsController@index');
 
         Route::put('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');

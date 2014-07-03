@@ -26,7 +26,7 @@ class ItemsController extends BaseController
      */
     public function create()
     {
-        return View::make('items.create')->with('title', 'Add a product');
+        //
     }
 
     /**
