@@ -21,11 +21,11 @@ app.controller('indexController', ['$scope', '$http', function($scope, $http){
         $scope.formData = {_token: csrfToken, title: $scope.title, currency: $scope.currency, price: $scope.price};
         console.log($scope.formData);
 
-        $http.post('/items', JSON.stringify($scope.formData))
+        $http.post('/products', JSON.stringify($scope.formData))
             .success(function (data, status, headers, config) {
-                console.log('the data to be sent is ' + JSON.stringify(data));
+                //console.log('the data to be sent is ' + JSON.stringify(data));
                 $scope.responseData = data;
-                console.log($scope.responseData);
+                //console.log($scope.responseData);
 
                 if (data.message) {
                     $scope.posting = false;
