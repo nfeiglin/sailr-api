@@ -117,7 +117,7 @@ Route::filter('not-subscribed', function() {
     }
 
     else {
-        $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
+        $hasSubscription = Auth::user()->subscribed();
     }
 
     if ($hasSubscription) {
