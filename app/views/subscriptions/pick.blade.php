@@ -138,6 +138,16 @@
                             </div>
                         </div>
 
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <div class="form-group">
+                                <a class="small text-muted" ng-click="toggleCouponShow()">Have a coupon code?</a>
+                                <div class="couponCode" ng-if="showCoupon">
+                                    <input type="text" class="form-control" placeholder="Coupon code..." ng-model="couponCode">
+                                </div>
+                            </div>
+                        </div>
+
+
                         <button class="btn btn-lg btn-turq btn-md-long" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
                             Start Awesome ($12.99/month)
                         </button>

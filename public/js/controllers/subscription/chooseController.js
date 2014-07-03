@@ -3,9 +3,15 @@ app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'H
     $scope.showingCreditForm = false;
     $scope.showCardForm = false;
     $scope.posting = false;
+    $scope.showCoupon = false;
+    $scope.couponCode = '';
+
     //$scope.successSubscribe = false;
     $scope.card = {};
 
+    $scope.toggleCouponShow = function() {
+      $scope.showCoupon = !$scope.showCoupon;
+    };
     $scope.subscribeToPlan = function(planID) {
         console.log('PLAN ID::: ' + planID);
 
@@ -20,7 +26,14 @@ app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'H
             console.log(response);
             console.log(StripeFactory.getToken());
 
-            var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id);
+            if ($scope.couponCode.length > 0) {
+                var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id, $scope.couponCode);
+            }
+
+            else {
+                var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id);
+            }
+
 
             createSubscriptionPromise.then(function(responseObject) {
 
