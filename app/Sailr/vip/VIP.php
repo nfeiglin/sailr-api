@@ -33,9 +33,6 @@ class VIP
             $this->planId = $this->user->subscription()->planId();
         }
 
-
-        //dd($this->buildArrayGetString($this->planId, $actionName));
-
         $rulesArray = array_get($this->config, $this->buildArrayGetString($this->planId, $actionName));
 
         /* Support for closures and pure variables.. */
