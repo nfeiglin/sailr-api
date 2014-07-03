@@ -81,22 +81,6 @@ View::composer('password.reset', function($view){
     $view->with('purpleBG', true);
 });
 
-Route::get('i/info', function () {
-    //VIP::canPerformAction('product.create', User::findOrFail(11)
-
-    $user = Auth::user();
-    //dd($user);
-
-    if ($user->canPerformActionOnPlan('product.create')) {
-        return 'YESSS';
-    }
-
-    else {
-        return 'NO!!';
-    }
-    //phpinfo();
-});
-
 
 if (Auth::check()) {
     Route::get('/', 'UsersController@self_feed');
