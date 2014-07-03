@@ -27,55 +27,6 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
-Route::get('views/{zero}/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}', function($zero, $one = null, $two = null, $three = null, $four = null, $five = null, $six = null){
-    $args = func_get_args();
-    $string = '';
-    foreach($args as $key => $value) {
-        $string = $string . '.' . $value;
-    }
-
-    $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail(7);
-
-    $ipn = new \Sailr\Emporium\Merchant\Webhooks\PaypalWebhook($ipnModel);
-
-    return View::make($string)->with('title', 'title')->with('ipn', $ipn);//->with('isPartial', 0);
-
-});
-
-Route::get('events/{zero}/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}', function($zero, $one = null, $two = null, $three = null, $four = null, $five = null, $six = null){
-    $args = func_get_args();
-    $string = '';
-    foreach($args as $key => $value) {
-
-        if ($key == 0) {
-            $string = $value;
-        } else {
-            $string = "$string.$value";
-        }
-
-    }
-
-    $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail(7);
-
-
-    $eventArray = array(
-        'buyerID' => 11,
-        'sellerID' => 12,
-        'itemID' => 9,
-        'ipn' => $ipnModel,
-    );
-
-    $eventArray = (object) $eventArray;
-
-    //dd($eventArray);
-
-    Event::fire($string, $eventArray);
-
-    echo $string;
-    echo '<br>FIRED';
-});
-
-
 
 
 View::composer('*', function ($view) {
@@ -130,10 +81,11 @@ View::composer('password.reset', function($view){
     $view->with('purpleBG', true);
 });
 
-Route::get('/i/info', function () {
+Route::get('i/info', function () {
     //VIP::canPerformAction('product.create', User::findOrFail(11)
 
-    $user = User::findOrFail(11);
+    $user = Auth::user();
+    //dd($user);
 
     if ($user->canPerformActionOnPlan('product.create')) {
         return 'YESSS';
