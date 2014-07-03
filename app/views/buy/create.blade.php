@@ -116,7 +116,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button value="submit" class="btn btn-lg btn-block paypal-btn pull-right" id="checkout-btn">Checkout with Paypal</button>
+                            <button value="submit" class="btn btn-lg paypal-btn pull-right" id="checkout-btn">Checkout with Paypal</button>
                             {{ Form::close() }}
                         </div>
                     </div><!-- /.modal-content -->
