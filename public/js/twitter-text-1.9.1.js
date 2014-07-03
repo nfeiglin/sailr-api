@@ -10,9 +10,9 @@
  *    http://www.apache.org/licenses/LICENSE-2.0
  */
 var sailrUrls = {
-    hashtagBase: 'http://homestead.app:8000/s/%23',
-    cashtagBase: 'http://homestead.app:8000/s/%24',
-    usernameBase: 'http://homestead.app:8000/'
+    hashtagBase: 'http://sailr.co/s/%23',
+    cashtagBase: 'http://sailr.co/s/%24',
+    usernameBase: 'http://sailr.co/'
 
 };
 
