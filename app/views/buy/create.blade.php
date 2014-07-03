@@ -43,6 +43,7 @@
     		</div>
 
             <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
+            <button class="btn btn-turq btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
             <hr>
 
             <sailr-comments sailr-product-id="{{ $item['id'] }}"></sailr-comments>
