@@ -112,24 +112,29 @@ Route::filter('csrf', function () {
 
 Route::filter('not-subscribed', function() {
 
-    /* FOR TESTING ONLY AS IT CALLS THE STRIPE API EVERY TIME */
-    $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
+    if (App::environment('production', 'staging')) {
+        $hasSubscription = Auth::user()->subscribed();
+    }
 
-    /* This is better for production --> */
-    //$hasSubscription = Auth::user()->subscribed();
+    else {
+        $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
+    }
 
     if ($hasSubscription) {
         return Redirect::action('SubscriptionsController@index')->with('success', 'You are already subscribed');
     }
+
 });
 
 Route::filter('subscribed', function() {
 
-    /* FOR TESTING ONLY AS IT CALLS THE STRIPE API EVERY TIME */
-    $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
+    if (App::environment('production', 'staging')) {
+        $hasSubscription = Auth::user()->subscribed();
+    }
 
-    /* This is better for production --> */
-    //$hasSubscription = Auth::user()->subscribed();
+    else {
+        $hasSubscription = Auth::user()->subscription()->getStripeCustomer()->subscription;
+    }
 
     if ($hasSubscription != true) {
         return Redirect::action('choose-plan')->with('message', 'You must subscribe to access that page.');
