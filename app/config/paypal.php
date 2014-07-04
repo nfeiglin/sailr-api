@@ -10,7 +10,7 @@ return array(
     ),
 
     'live' => array(
-        'mode' => 'LIVE',
+        'mode' => 'live',
         'acct1.UserName' => getenv('PAYPAL_LIVE_USERNAME'),
         'acct1.Password' => getenv('PAYPAL_LIVE_PASSWORD'),
         'acct1.Signature' => getenv('PAYPAL_LIVE_SIGNATURE'),
