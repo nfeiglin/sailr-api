@@ -1,7 +1,7 @@
 @extends('layout.simple')
 
 @section('content')
-<form class="form-signin panel" role="form" action="{{URL::action('RemindersController@postRemind')}}" method="post" validate="validate">
+<form class="form-signin panel" role="form" action="{{URL::action('RemindersController@postReset')}}" method="post" validate="validate">
     {{ Form::token() }}
     <input type="hidden" name="token" value="{{{ $token }}}">
     <a href="{{url('')}}"><img src="/images/logo-500.png" class="img-responsive"></a>
