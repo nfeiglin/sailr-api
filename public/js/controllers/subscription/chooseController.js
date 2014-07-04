@@ -26,7 +26,8 @@ app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'H
             console.log(response);
             console.log(StripeFactory.getToken());
 
-            if ($scope.couponCode.length > 0) {
+            if ($scope.couponCode) {
+
                 var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id, $scope.couponCode);
             }
 
@@ -55,7 +56,7 @@ app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'H
 
                 console.log('Subscription fail::   --');
                 console.log(responseObject);
-                humane.log(responseObject.message);
+                humane.log(responseObject.data.message);
 
             });
 
