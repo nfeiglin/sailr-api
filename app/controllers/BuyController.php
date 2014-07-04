@@ -57,7 +57,7 @@ class BuyController extends \BaseController
                 },
         ])->firstOrFail();
 
-        if ($item->public != 1) {
+        if (!$item->public) {
             return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. Please try again later');
         }
 
@@ -102,7 +102,7 @@ class BuyController extends \BaseController
                 }
         ])->firstOrFail();
 
-        if ($item->public != 1) {
+        if (!$item->public) {
             return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. Please try again later');
         }
 
@@ -392,7 +392,9 @@ class BuyController extends \BaseController
             return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
         }
 
-        if ($item->public != 1) {
+
+
+        if (!$item->public) {
             return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. You have not been charged and the transaction has not been processed');
         }
 
@@ -511,7 +513,8 @@ class BuyController extends \BaseController
             return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
         }
 
-        if ($item->public != 1) {
+
+        if (!$item->public) {
             return Redirect::to('/')->withMessage('Sorry, the product has been made private by the seller. You have not been charged and the transaction has not been processed');
         }
 
