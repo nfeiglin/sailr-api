@@ -78,14 +78,14 @@
                             <li>No Sailr fees</li>
                         </ul>
 
-                        <div class="row" id="cardFormContainer" ng-show="showCardForm" ng-animate="'animate'">
+                        <div class="row ng-cloak" id="cardFormContainer" ng-show="showCardForm" ng-animate="'animate'">
                             <div class="row hidden-xs" style="margin-bottom: 25px;">
                                 <div class="hide-name">
                                     <div class="card-wrapper"></div>
                                 </div>
 
                             </div>
-                            <div class="row">
+                            <div class="row  ng-cloak">
                                 <div class="updateCard col-sm-12 col-lg-12 col-md-12 col-xs-12">
                                     <div class="row">
                                         <form id="cardForm" name="cardForm" ng-submit="subscribeToPlan('awesome')" novalidate="novalidate">
@@ -138,21 +138,21 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-6 col-sm-offset-3">
+                        <div class="col-sm-6 col-sm-offset-3  ng-cloak">
                             <div class="form-group">
                                 <a class="small text-muted" ng-click="toggleCouponShow()">Have a coupon code?</a>
-                                <div class="couponCode" ng-if="showCoupon">
-                                    <input type="text" class="form-control" placeholder="Coupon code..." ng-model="couponCode">
+                                <div class="couponCode" ng-show="showCoupon">
+                                    <input type="text" ng-model="couponCode" class="form-control" placeholder="Coupon code...">
                                 </div>
                             </div>
                         </div>
 
 
-                        <button class="btn btn-lg btn-turq btn-md-long" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
+                        <button class="btn btn-lg btn-turq btn-md-long ng-cloak" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
                             Start Awesome ($12.99/month)
                         </button>
-                        <p class="small text-muted">The plan will auto-renew until canceled.</p>
-                        <div class="dots" ng-if="posting">Subscribing...</div>
+                        <p class="small text-muted ng-cloak">The plan will auto-renew until canceled.</p>
+                        <div class="dots ng-cloak" ng-if="posting">Subscribing...</div>
 
 
                     </div>
