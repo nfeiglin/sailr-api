@@ -3,8 +3,10 @@ namespace Sailr\Validators\Exceptions;
 
 class ValidatorException extends \Exception {
 
-    public function ___construct() {
-
+    public static function make(\Validator $validator) {
+        $validatorException = new static;
+        $validatorException->setValidator($validator);
+        return $validatorException;
     }
 
     protected $validator;
