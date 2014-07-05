@@ -20,16 +20,19 @@ class IocBindsServiceProvider extends ServiceProvider {
             return new PurchaseValidator;
         });
 
+        $this->app->bindShared('Sailr\Validators\PurchaseValidator', function($app) {
+            return $this->app->make('PurchaseValidator');
+        });
+
+
         $this->app['merchant'] = $this->app->share(function($app) {
-           return new Merchant;
+           return new Merchant($this->app->make('PurchaseValidator'));
         });
 
-        $this->app->bind('Sailr\Validators\PurchaseValidator', function($app) {
-           return new PurchaseValidator;
-        });
 
-        $this->app->bind('Sailr\Emporium\Merchant\Merchant', function($app) {
-            return new Merchant;
+
+        $this->app->bindShared('Sailr\Emporium\Merchant\Merchant', function($app) {
+            return $this->app->make('merchant');
         });
 
        /* $this->app->bind('\BuyController', function($app) {
