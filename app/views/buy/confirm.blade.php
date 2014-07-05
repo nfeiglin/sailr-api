@@ -14,7 +14,7 @@
 
             <div class="purchase-item well">
 
-                <img draggable="false" src=" {{ $item['photos'][0]['url'] }}" class="confirm-item-thumbnail" alt="Item image">
+                <img draggable="false" src=" {{ $item['photos'][0]['url'] or 'NO PHOTO URL SET' }}" class="confirm-item-thumbnail" alt="Item image">
                 {{{ $item['title'] }}}
             </div>
         <h3>Shipping details</h3>
