@@ -4,8 +4,9 @@ namespace Sailr\Emporium\Merchant\Webhooks;
 
 
 use \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder;
+use Sailr\Emporium\Merchant\Entity\AddressEntityInterface;
 
-class PaypalWebhook implements WebhookObjectInterface {
+class PaypalWebhook implements WebhookObjectInterface, AddressEntityInterface {
 
     /** A webhook object implementation for appeasing the views: 'Sailr\Emporium\Webhooks\PaypalWebhook'
      * @property \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder $ipn
@@ -43,6 +44,11 @@ class PaypalWebhook implements WebhookObjectInterface {
     public function getAddress1() {
         return $this->ipn->address_street;
     }
+
+    public function getAddress2() {
+        return '';
+    }
+
     public function getCity() {
         return $this->ipn->address_city;
     }

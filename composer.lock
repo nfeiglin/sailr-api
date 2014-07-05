@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0bdd17068f4867e65806ec8c8b3a4f20",
+    "hash": "c4f94bff15d15f352a002f2f85ce783f",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -385,12 +385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "57186d5c6a02ca23aebc4655b6b89de5fb8808e0"
+                "reference": "5eb36c7a643d5e44f0eee4ca39e56088527ce146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/57186d5c6a02ca23aebc4655b6b89de5fb8808e0",
-                "reference": "57186d5c6a02ca23aebc4655b6b89de5fb8808e0",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/5eb36c7a643d5e44f0eee4ca39e56088527ce146",
+                "reference": "5eb36c7a643d5e44f0eee4ca39e56088527ce146",
                 "shasum": ""
             },
             "require": {
@@ -451,7 +451,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-06-26 18:52:01"
+            "time": "2014-06-30 14:48:03"
         },
         {
             "name": "doctrine/inflector",
@@ -793,16 +793,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.0.4",
+            "version": "2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "edd507dacfacab7fcfcee6c5fcfad3335d0ec85f"
+                "reference": "fc0c20277260f09aa0bd172d66d8b39957c50078"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/edd507dacfacab7fcfcee6c5fcfad3335d0ec85f",
-                "reference": "edd507dacfacab7fcfcee6c5fcfad3335d0ec85f",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/fc0c20277260f09aa0bd172d66d8b39957c50078",
+                "reference": "fc0c20277260f09aa0bd172d66d8b39957c50078",
                 "shasum": ""
             },
             "require": {
@@ -847,7 +847,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2014-06-16 09:52:34"
+            "time": "2014-06-30 15:30:03"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1053,16 +1053,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v4.2.5",
+            "version": "v4.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "30088567a133fadf14b708dcc4001d6c639b8c59"
+                "reference": "2e73cd58ee42919166a51897b965e1135b85048c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/30088567a133fadf14b708dcc4001d6c639b8c59",
-                "reference": "30088567a133fadf14b708dcc4001d6c639b8c59",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2e73cd58ee42919166a51897b965e1135b85048c",
+                "reference": "2e73cd58ee42919166a51897b965e1135b85048c",
                 "shasum": ""
             },
             "require": {
@@ -1166,7 +1166,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2014-06-26 17:33:59"
+            "time": "2014-06-29 00:16:51"
         },
         {
             "name": "logicalgrape/paypal-ipn-laravel",
