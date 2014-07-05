@@ -11,7 +11,7 @@ class BaseAddressEntity {
     public static function make($data) {
         $object = new static;
         $object->data = $data;
-        return $data;
+        return $object;
     }
 
 
