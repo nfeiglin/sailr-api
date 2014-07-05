@@ -4,7 +4,7 @@
 namespace Sailr\Emporium\Merchant\Entity;
 
 
-class PayPalAddressEntity extends BaseAddressEntity implements AddressEntityInterface {
+class PayPalAddressEntity extends BaseAddressEntity implements AddressEntityInterface, SettableAddressEntityInterface {
 
 
     public function getShipToName() {
@@ -25,7 +25,7 @@ class PayPalAddressEntity extends BaseAddressEntity implements AddressEntityInte
         return $this->data->CityName;
     }
     public function getState() {
-        return $this->data>StateOrProvince;
+        return $this->data->StateOrProvince;
     }
     public function getCountry() {
         return $this->data->CountryName;
@@ -35,6 +35,31 @@ class PayPalAddressEntity extends BaseAddressEntity implements AddressEntityInte
     }
     public function getZipCode() {
         return $this->data->PostalCode;
+    }
+
+    public function setShipToName($name) {
+        return $this->data->Name = $name;
+    }
+    public function setAddress1($address) {
+        $this->data->Street1 = $address;
+    }
+    public function setAddress2($address) {
+        $this->data->Street2 = $address;
+    }
+    public function setCity($city) {
+        $this->data->CityName = $city;
+    }
+    public function setState($state) {
+        $this->data->StateOrProvince = $state;
+    }
+    public function setCountry($countryName) {
+        $this->data->CountryName = $countryName;
+    }
+    public function setCountryCode($iso2DigitCountryCode) {
+        $this->data->Country = $iso2DigitCountryCode;
+    }
+    public function setZipCode($zipCode) {
+       $this->data->PostalCode = $zipCode;
     }
 
 } 
