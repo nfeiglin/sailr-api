@@ -72,6 +72,9 @@ return array(
     "UsernameOrUnique" => "The requested :attribute is already taken",
     "currency" => "This currency is unsupported",
     "countryCode" => "The :attribute is unsupported",
+    "public_product" => "The product has been unpublished by the seller",
+    "in_stock" => "The product is no longer in stock",
+    "has_user_relationship" => "No user exists for the item",
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

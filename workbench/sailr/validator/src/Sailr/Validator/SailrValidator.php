@@ -3,8 +3,41 @@
 namespace Sailr\Validator;
 use Illuminate\Validation\Validator as Validator;
 use Illuminate\Validation\Factory;
+use Illuminate\Support\Facades\Auth;
+
 
 class SailrValidator extends Validator {
+
+    public function validatePublicProduct($attribute, $value, $parameters) {
+        $merchant = \App::make('merchant');
+        return $merchant->isProductPublic($value);
+
+
+    }
+
+    public function validateInStock($attribute, $value, $parameters) {
+        return $value->initial_units >= 1;
+    }
+
+    public function validateNotSellersProduct($attr, $value, $params) {
+        if (Auth::check()) {
+            if ($value->user_id == Auth::user()->getAuthIdentifier()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function validateHasUserRelationship($attribute, $value, $parameters) {
+        if (!strlen($value->user->email) > 0) {
+
+            throw new \Exception("The user relationship has not been included on the item model ");
+        }
+
+        else {
+            return true;
+        }
+    }
 
     public function validateCurrency($attribute, $value, $parameters) {
 
