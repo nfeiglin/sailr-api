@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Validator;
-//use Illuminate\Validation\Factory;
+
 
 class ValidatorServiceProvider extends ServiceProvider {
 
