@@ -18,12 +18,12 @@
                 {{{ $item['title'] }}}
             </div>
         <h3>Shipping details</h3>
-           <p>{{{ $address->Name }}}</p>
-            <p>{{{ $address->Street1 }}}</p>
-            <p>{{{ $address->Street2 or '' }}}</p>
-            <p>{{{ $address->CityName }}}, {{{ $address->StateOrProvince }}}</p>
-            <p>{{{ $address->CountryName }}}</p>
-            <p>{{{ $address->PostalCode }}}</p>
+            <p>{{{ $address->getShipToName() }}}</p>
+            <p>{{{ $address->getAddress1() }}}</p>
+            <p>{{{ $address->getAddress2() }}}</p>
+            <p>{{{ $address->getCity() }}}, {{{ $address->getState() }}}</p>
+            <p>{{{ $address->getCountry() }}}</p>
+            <p>{{{ $address->getZipCode() }}}</p>
 
         <h3>Payment details</h3>
         <p>Item price: {{ $payment[0]->ItemTotal->currencyID }}{{ $payment[0]->ItemTotal->value }}</p>
