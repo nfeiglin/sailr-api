@@ -1,25 +1,5 @@
 <?php
 
-use PayPal\EBLBaseComponents\SetExpressCheckoutRequestDetailsType;
-use PayPal\CoreComponentTypes\BasicAmountType;
-use PayPal\EBLBaseComponents\AddressType;
-use PayPal\EBLBaseComponents\SellerDetailsType;
-use PayPal\EBLBaseComponents\PaymentDetailsItemType;
-use \PayPal\EBLBaseComponents\PaymentDetailsType;
-use \PayPal\EBLBaseComponents\PaymentInfoType;
-use \PayPal\PayPalAPI\SetExpressCheckoutReq;
-use \PayPal\PayPalAPI\SetExpressCheckoutRequestType;
-use \PayPal\PayPalAPI\SetExpressCheckoutResponseType;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
-use \PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
-use \PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
-use \PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
-use \PayPal\EBLBaseComponents\DoExpressCheckoutPaymentResponseDetailsType;
-use PayPal\Core\PPAPIService;
-use PayPal\Service\PayPalAPIInterfaceServiceService;
-use PayPal\PayPalAPI\DoExpressCheckoutPaymentResponseType;
 use Sailr\Validators\PurchaseValidator;
 use Sailr\Emporium\Merchant\Merchant;
 
@@ -34,18 +14,21 @@ class BuyController extends \BaseController
     public function __construct(PurchaseValidator $validator, Merchant $merchant) {
 
         $this->validator = $validator;
-        $this->merchant = $merchant->apiMode('sandbox')->config(Config::get("paypal.$this->merchant->apiMode"));
+        $this->merchant = $merchant;
 
+        if (App::environment('local', 'testing', 'debug')) {
+            $apiMode = 'sandbox';
+        }
+
+        else {
+            $apiMode = 'live';
+        }
+        $this->merchant
+            ->config(Config::get("paypal.$apiMode"))
+            ->apiMode($apiMode)
+            ->webhookUrl(URL::action('ipn'));
     }
 
-    public static $rules = [
-        'country' => 'required|countryCode',
-        'street_number' => 'required',
-        'street_name' => 'required',
-        'city' => 'required',
-        'state' => 'required',
-        'zipcode' => 'required'
-    ];
 
     /**
      * Show the form for creating a new resource.
@@ -107,7 +90,7 @@ class BuyController extends \BaseController
         $item = Item::where('id', '=', $id)->with('User')->firstOrFail();
 
         if ($item->user_id == $buyerObject->id) {
-            return Redirect::back()->withMessage("You can't buy your own item");
+            return Redirect::back()->withMessage("You can't buy your own product");
         }
 
         $validateInput = $input;
@@ -127,15 +110,22 @@ class BuyController extends \BaseController
         }
 
 
+        $addressEntity = \Sailr\Emporium\Merchant\Entity\PayPalAddressEntity::make(new stdClass());
+        $addressEntity->setAddress1($input['street_number'] . ' ' . $input['street_name']);
+        $addressEntity->setCity($input['city']);
+        $addressEntity->setState($input['state']);
+        $addressEntity->setCountryCode($input['country']);
+        $addressEntity->setZipCode($input['zipcode']);
+
         try {
             $displayName = "@" . htmlentities($item->user->username) . " on Sailr";
 
            return Redirect::to(
                $this->merchant
                 ->product($item)
-                ->withBuyer($buyerObject)
+                ->buyer($buyerObject)
                 ->withSellerDisplayName($displayName)
-                ->withInitialInput($input)
+                ->withAddress($addressEntity)
                 ->setupPurchase()
                ->getRedirectUrl()
            );
@@ -178,6 +168,7 @@ class BuyController extends \BaseController
         try {
             $merchant = $this->merchant
                 ->product($item)
+                ->buyer(Auth::user())
                 ->withCheckout($checkout)
                 ->withPayerId(Input::get('PayerID'))
                 ->withPaypalToken(Input::get('token'))
@@ -200,7 +191,7 @@ class BuyController extends \BaseController
 
         return View::make('buy.confirm')
             ->with('title', 'Confirm purchase')
-            ->with('item', $merchant->product())
+            ->with('item', $merchant->product()->toArray())
             ->with('address', $merchant->address())
             ->with('payment', $merchant->getPaymentDetails())
             ->with('id', $id)
@@ -209,7 +200,38 @@ class BuyController extends \BaseController
 
     public function doConfirm($id)
     {
-        //TODO Refactor the equvielent method in merchant
+
+        $checkout = Checkout::findOrFail($id);
+
+        try {
+            $redirectEntity = $this->merchant
+                ->buyer(Auth::user())
+                ->withCheckout($checkout)
+                ->doPurchaseProduct()
+                ->redirectEntity();
+
+            Redirect::to('/')->with($redirectEntity->type, $redirectEntity->message);
+
+        }
+
+        catch (\Sailr\Validators\Exceptions\ValidatorException $e) {
+            return Redirect::to('/')->withErrors($e->getValidator());
+        }
+
+        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalSessionExpiredException $e) {
+            Redirect::to('/')->with('fail', 'Sorry, this PayPal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
+        }
+
+        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException $e) {
+            return Redirect::to('/')->with('fail', 'Sorry, PayPal has encountered an error. This transaction has not been processed and you have not been charged');
+        }
+
+        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalResponseNotSuccessException $e) {
+            $redirectEntity = $this->merchant->redirectEntity();
+            Redirect::to('/')->with($redirectEntity->type, $redirectEntity->message);
+        }
+
+
     }
 
 

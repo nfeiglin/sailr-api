@@ -24,11 +24,16 @@ use PayPal\Service\PayPalAPIInterfaceServiceService;
 use PayPal\PayPalAPI\DoExpressCheckoutPaymentResponseType;
 use Sailr\Emporium\Merchant\Entity\PayPalAddressEntity;
 use Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException;
+use Sailr\Emporium\Merchant\Exceptions\PayPalResponseNotSuccessException;
 use Sailr\Emporium\Merchant\Exceptions\TokenDoesNotMatchLoggedInAccountException;
 use Sailr\Emporium\Merchant\Exceptions\PayPalSessionExpiredException;
+use Sailr\Entity\RedirectEntity;
 use Sailr\Validators\Exceptions\ValidatorException;
 use Sailr\Validators\PurchaseValidator;
 use Sailr\Emporium\Merchant\Entity\AddressEntityInterface;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\URL;
 
 class Merchant implements MerchantInterface {
     use MerchantGetterAndSetterTrait;
@@ -43,6 +48,9 @@ class Merchant implements MerchantInterface {
      * @var string $sellerDisplayName the title at the top of the PayPal payment page
      * @var AddressEntityInterface $address An address entity object of shipping address
      * @var \Checkout the checkout model for the transaction
+     * @var string $webhookUrl The webhook / IPN url
+     * @var PayPalAPIInterfaceServiceService $payPalService The PayPal service wrapper object
+     * @var \Sailr\Entity\RedirectEntity $redirectEntity The redirect entity rather than calling Redirect directly, the class has this object containing all the things to feed into a redirect request on the controller
      */
 
     protected $apiMode = '';
@@ -58,17 +66,16 @@ class Merchant implements MerchantInterface {
     protected $payerId;
     protected $paymentDetails;
     protected $checkout;
+    protected $webhookUrl;
+    protected $paypalService;
+    protected $returnUrl = '';
+    protected $cancelUrl = '';
+    protected $redirectEntity;
 
 
-    public function ___construct($apiMode = 'sandbox', $sellerName = 'Sailr', PurchaseValidator $validator = null) {
-        $this->apiMode = $apiMode;
-        $this->sellerDisplayName = $sellerName;
-
-        if (!isset($validator)) {
-            $this->validator =  new PurchaseValidator;
-
-        }
-
+    public function __construct(PurchaseValidator $validator) {
+        $this->validator = $validator;
+        $this->redirectEntity = new RedirectEntity;
     }
 
     public function isProductPublic(\Item $item) {
@@ -80,9 +87,11 @@ class Merchant implements MerchantInterface {
             return false;
         }
     }
+    protected function createPayPalApiServiceWrapper($config) {
+        $this->paypalService = new PayPalAPIInterfaceServiceService($config);
+    }
 
     public function setupPurchase($item = null, $buyerObject= null, $postInput = null) {
-        $input = $this->initialInput;
         $buyerObject = $this->buyer;
         $item = $this->getProduct();
 
@@ -103,25 +112,19 @@ class Merchant implements MerchantInterface {
 
         $config = $this->getConfig();
 
-        $baseURL = \URL::to('/');
-        $returnURL = $baseURL . '/buy/' . $checkout->id . '/confirm';
-        $cancelURL = $baseURL . '/buy/' . $checkout->id . '/cancel';
-
-        if ($config['mode'] == 'live') {
-            $returnURL = \URL::action('BuyController@showConfirm', $checkout->id);
-            $cancelURL = \URL::action('BuyController@cancel', $checkout->id);
-        }
+            $this->returnUrl(\URL::action('BuyController@showConfirm', $checkout->id));
+            $this->cancelUrl(\URL::action('BuyController@cancel', $checkout->id));
 
 
         $paymentAction = 'Sale';
-        $address1 = $input['street_number'] . ' ' . $input['street_name'];
+
 
         $sellerEmail = $item->user->email;
         $invoice_id = substr(sha1($checkout->id . microtime()), 0, 32);
 
         $setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
-        $setExpressCheckoutRequestDetails->ReturnURL = $returnURL;
-        $setExpressCheckoutRequestDetails->CancelURL = $cancelURL;
+        $setExpressCheckoutRequestDetails->ReturnURL = $this->returnUrl();
+        $setExpressCheckoutRequestDetails->CancelURL = $this->cancelUrl();
 
         $setExpressCheckoutRequestDetails->MaxAmount = new BasicAmountType($item->currency, $total);
 
@@ -186,15 +189,16 @@ class Merchant implements MerchantInterface {
         // required for parallel payments.
         $paymentDetails1->PaymentRequestID = sha1(microtime());
 
+        $address = $this->getAddress();
         $shipToAddress1 = new AddressType();
-        $shipToAddress1->Street1 = $address1;
-        $shipToAddress1->CityName = $input['city'];
-        $shipToAddress1->StateOrProvince = $input['state'];
-        $shipToAddress1->Country = $input['country'];
-        $shipToAddress1->PostalCode = $input['zipcode'];
+        $shipToAddress1->Street1 = $address->getAddress1();
+        $shipToAddress1->CityName = $address->getCity();
+        $shipToAddress1->StateOrProvince = $address->getState();
+        $shipToAddress1->Country = $address->getCountryCode();
+        $shipToAddress1->PostalCode = $address->getZipCode();
 
         // Your URL for receiving Instant Payment Notification (IPN) about this transaction. If you do not specify this value in the request, the notification URL from your Merchant Profile is used, if one exists.
-        $paymentDetails1->NotifyURL = \URL::action('ipn');
+        $paymentDetails1->NotifyURL = $this->webhookUrl();
 
         $paymentDetails1->ShipToAddress = $shipToAddress1;
 
@@ -217,10 +221,10 @@ class Merchant implements MerchantInterface {
         // Creating service wrapper object to make API call and loading
         // configuration file for your credentials and endpoint
 
-        $service = new PayPalAPIInterfaceServiceService($config);
 
 
-        $response = $service->SetExpressCheckout($setExpressCheckoutReq);
+
+        $response = $this->paypalService->SetExpressCheckout($setExpressCheckoutReq);
 
 
         if ($response->Ack == "Success") {
@@ -232,7 +236,6 @@ class Merchant implements MerchantInterface {
 
             if ($config['mode'] == 'live') {
                 $this->setRedirectUrl('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
-                return Redirect::to();
             } else {
                 $this->setRedirectUrl('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
             }
@@ -242,6 +245,7 @@ class Merchant implements MerchantInterface {
         // Access error values from error list using getter methods
         else {
             Log::error("API Error Message : " . $response->Errors[0]->LongMessage);
+            //dd($response->Errors[0]);
             throw new PayPalApiErrorException($response->Errors[0]->LongMessage);
         }
 
@@ -250,8 +254,7 @@ class Merchant implements MerchantInterface {
     }
 
     public function getConfirmationDetails() {
-        $config = $this->getConfig();
-        $input = Input::all();
+
         $paypalToken = $this->getPaypalToken();
 
         //Validate that the user is getting their own transaction not someone else's!
@@ -260,18 +263,11 @@ class Merchant implements MerchantInterface {
         $checkout->save();
 
 
-        if ($checkout->token != $paypalToken | $checkout->user_id != Auth::user()->id) {
+        if ($checkout->token != $paypalToken | $checkout->user_id != $this->getBuyer()->id) {
             throw new TokenDoesNotMatchLoggedInAccountException;
         }
 
-        $paypalService = new PayPalAPIInterfaceServiceService($config);
-        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($paypalToken);
-        $getExpressCheckoutDetailsRequest->Version = '104.0';
-
-        $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
-        $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
-
-        $getECResponse = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
+       $getECResponse = $this->getExpressCheckoutDetails($paypalToken);
 
         if ($getECResponse->Errors) {
 
@@ -283,9 +279,10 @@ class Merchant implements MerchantInterface {
         }
 
         $address = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Address;
-        $addressEntity = PayPalAddressEntity::make($address);
+
         $payment = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
 
+        $addressEntity = PayPalAddressEntity::make($address);
         $this->setAddress($addressEntity);
         $this->setPaymentDetails($payment);
 
@@ -293,35 +290,28 @@ class Merchant implements MerchantInterface {
 
     }
 
-    public function doPurchaseProduct() {
-        $config = Config::get('paypal.sandbox');
-        $checkout = Checkout::findOrFail($id);
+    protected function getExpressCheckoutDetails($paypalToken) {
 
-        //dd($checkout);
-        $input = Input::all();
-        $paypalToken = $checkout->token;
-
-        $ipnUrl = URL::action('ipn');
-
-        if ($checkout->user_id != Auth::user()->id) {
-            return Redirect::to('/')->with('fail', 'Sorry, you can only get PayPal transaction details for your own account. This transaction has not been processed and no money has been charged');
-        }
-
-
-        $paypalService = new PayPalAPIInterfaceServiceService($config);
         $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($paypalToken);
-        $getExpressCheckoutDetailsRequest->Version = '104.0';
+        $getExpressCheckoutDetailsRequest->Version = '115';
 
         $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
         $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
 
-        $getECResponse = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
+        return $this->paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
+    }
+
+    public function doPurchaseProduct() {
+        $config = $this->getConfig();
+        $checkout = $this->getCheckout();
+
+        $paypalToken = $checkout->token;
+
+        $ipnUrl = $this->webhookUrl();
 
 
-        ///dd($checkout->token);
 
-        //echo '<pre>' . print_r($getECResponse) . '</pre>';
-        //dd();
+        $getECResponse = $this->getExpressCheckoutDetails($paypalToken);
 
         if ($getECResponse->Errors) {
 
@@ -329,60 +319,58 @@ class Merchant implements MerchantInterface {
                 //Paypal token expired
 
                 Log::error('<pre>' . print_r($getECResponse) . '</pre>');
-                return Redirect::to('/')->with('fail', 'Sorry, this Paypal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
+                throw new PayPalSessionExpiredException;
             }
 
             Log::error('<pre>' . print_r($getECResponse) . '</pre>');
-            return Redirect::to('/')->with('fail', 'Sorry, Paypal has encountered an error. This transaction has not been processed and you have not been charged');
+            throw new PayPalApiErrorException;
         }
 
 
 
         $paymentDetails = $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
 
-        //$paymentDetails->PaymentAction = 'Sale';
-        //$paymentDetails->NotifyURL = $ipnUrl;
-
+        /*
+        $paymentDetails = new PaymentDetailsType();
+        $paymentDetails->PaymentAction = 'Sale';
+        $paymentDetails->NotifyURL = $this->webhookUrl();
+*/
         $DoECRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
         $DoECRequestDetails->PayerID = $checkout->payerID;
         $DoECRequestDetails->Token = $checkout->token;
 
+
         $DoECRequestDetails->PaymentDetails = $paymentDetails;
+
         $DoECRequest = new DoExpressCheckoutPaymentRequestType();
         $DoECRequest->DoExpressCheckoutPaymentRequestDetails = $DoECRequestDetails;
-        $DoECRequest->Version = '104.0';
+        $DoECRequest->Version = '115';
         $DoECReq = new DoExpressCheckoutPaymentReq();
         $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
 
         /* Right before the trasaction is commited and the user is charged we MUST verify there is sufficient stock of the item  */
 
-        $item = Item::where('id', '=', $checkout->item_id)->firstOrFail(['id', 'initial_units', 'public']);
+        $item = \Item::where('id', '=', $checkout->item_id)->firstOrFail(['id', 'initial_units', 'public']);
         //$boughtUnits = Checkout::where('item_id', '=', $item->id)->where('completed', '=', 1)->count();
-
-        if ($item->initial_units < 1) {
-            return Redirect::to('/')->with('fail', 'Sorry. This item is now out of stock. You have not been charged and the transaction has not been processed');
-        }
-
-
-        if (!$item->public) {
-            return Redirect::to('/')->withMessage('Sorry, the product has been made private by the seller. You have not been charged and the transaction has not been processed');
-        }
-
-
-        if ($item->user_id == Auth::user()->id) {
-            return Redirect::to('/')->withMessage("You can't buy your own item. You have not been charged and the transaction has not been processed'");
-        }
 
         $result = $this->validator->validate(['product' => $item], 'doPurchase');
 
         if (!$result) {
-            $ve = new ValidatorException;
-            $ve->setValidator($this->validator->getValidator());
-            throw $ve;
+            throw ValidatorException::make($this->validator->getValidator());
         }
 
 
-        $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
+
+        $DoECResponse = $this->paypalService->DoExpressCheckoutPayment($DoECReq);
+        dd($DoECResponse);
+
+        if ($DoECResponse->Ack != "Success") {
+
+            $this->redirectEntity()->with('message', 'We are afraid that the transaction has failed. Please try again.');
+            throw new PayPalResponseNotSuccessException;
+        }
+
+        dd($DoECResponse);
         //echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
 
         $paymentInfo = $DoECResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0];
@@ -392,15 +380,12 @@ class Merchant implements MerchantInterface {
             $checkout->completed = 1; //Even if the payment isn't actually taken, we can't reuse the tokens etc so we need to start again anyway.
             $checkout->save();
         }
-        if ($DoECResponse->Ack != "Success") {
 
-            return Redirect::to('/')->with('message', 'We are afraid that the transaction has failed. Please try again.');
-        }
 
         //echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
 
 
-        $buyerID = Auth::user()->id;
+        $buyerID = $this->getBuyer()->id;
         $sellerID = $item->user_id;
         $eventArray = [
             'buyer_user_id' => $buyerID,
@@ -414,25 +399,26 @@ class Merchant implements MerchantInterface {
                 Event::fire('purchase.completed', $eventArray);
                 $item->initial_units = intval($item->initial_units) - 1;
                 $item->save();
-                return Redirect::to('/')->with('success', 'Purchase successful! Check your emails and notifications shortly for a confirmation');
+                $this->redirectEntity->with('success', 'Purchase successful! Check your emails and notifications shortly for a confirmation');
 
                 break;
             case "Created":
                 $item->initial_units = intval($item->initial_units) - 1;
                 $item->save();
                 //A German ELV payment is made using Express Checkout.
+                $this->redirectEntity->with('success', 'ELV payment created! Check your emails and notifications shortly for a confirmation');
                 break;
             case "Denied":
                 //The payment was denied. This happens only if the payment was previously pending because of one of the reasons listed for the pending_reason variable or the Fraud_Management_Filters_x var
-                return Redirect::to('/')->with('message', 'The PayPal transaction was denied. Check your PayPal account for more info');
+                return $this->redirectEntity()->with('message', 'The PayPal transaction was denied. Check your PayPal account for more info');
                 break;
             case "Expired":
                 //They took too long!
-                return Redirect::to('/')->with('message', 'The PayPal transaction session has expired. No payment has been made. Please try again.');
+                return $this->redirectEntity()->with('message', 'The PayPal transaction session has expired. No payment has been made. Please try again.');
                 break;
             case "Failed":
                 //Bank acct issues
-                return Redirect::to('/')->with('message', 'The PayPal transaction failed. Check your PayPal account for more info');
+                return $this->redirectEntity()->with('message', 'The PayPal transaction failed. Check your PayPal account for more info');
                 break;
             case "Pending":
                 //Check the pending reason
@@ -441,7 +427,7 @@ class Merchant implements MerchantInterface {
 
                     //Event::fire('purchase.payment.pending.unilateral', $eventArray);
                     //echo '<pre>' . print_r($eventArray, 1) . '</pre>';
-                    return Redirect::to('/')->withMessage('There has been an issue with the payment. Check your emails and PayPal account for more information');
+                    return $this->redirectEntity()->withMessage('There has been an issue with the payment. Check your emails and PayPal account for more information');
                 }
 
                 else {
@@ -452,7 +438,9 @@ class Merchant implements MerchantInterface {
                 break;
         }
 
-        return Redirect::to('/')->with('message', 'We are afraid that the transaction may have failed. Please check your PayPal.');
+        return $this->redirectEntity()->with('message', 'We are afraid that the transaction may have failed. Please check your PayPal.');
+
+        return $this;
 
     }
 } 

@@ -3,6 +3,7 @@
 namespace Sailr\Emporium\Merchant;
 
 
+use PayPal\Service\PayPalAPIInterfaceServiceService;
 use Sailr\Emporium\Merchant\Entity\AddressEntityInterface;
 
 trait MerchantGetterAndSetterTrait {
@@ -21,7 +22,9 @@ trait MerchantGetterAndSetterTrait {
         return $this->apiMode;
     }
 
+
     public function setConfig($config) {
+        $this->createPayPalApiServiceWrapper($config);
         $this->config = $config;
     }
 
@@ -99,21 +102,18 @@ trait MerchantGetterAndSetterTrait {
         return $this->buyer;
     }
 
-    public function withBuyer($user) {
-        if (isset($this->buyer) && !isset($user)) {
+    public function buyer($user = null) {
+        if (isset($user)) {
+            $this->setBuyer($user);
             return $this;
         }
 
-        else if(isset($user)) {
-            $this->setBuyer($user);
+        else {
+            return $this->getBuyer();
         }
 
-        return $this;
-    }
 
-    public function withInitialInput($array) {
-        $this->initialInput = $array;
-        return $this;
+
     }
 
     public function withSellerDisplayName($displayName) {
@@ -130,6 +130,10 @@ trait MerchantGetterAndSetterTrait {
         $this->address = $address;
     }
 
+    /**
+     * @return AddressEntityInterface
+     *
+     */
     public function getAddress() {
         return $this->address;
     }
@@ -190,5 +194,51 @@ trait MerchantGetterAndSetterTrait {
     public function withCheckout(\Checkout $checkout) {
         $this->setCheckout($checkout);
         return $this;
+    }
+
+    public function webhookUrl($url = null) {
+        if(isset($url)) {
+            $this->webhookUrl = $url;
+            return $this;
+        }
+
+        else {
+            return $this->webhookUrl;
+        }
+    }
+
+    public function returnUrl($url = null) {
+        if (isset($url)) {
+            $this->returnUrl = $url;
+            return $this;
+        }
+
+        else {
+            return $this->returnUrl;
+        }
+    }
+
+    public function cancelUrl($url = null) {
+        if (isset($url)) {
+            $this->cancelUrl = $url;
+            return $this;
+        }
+
+        else {
+            return $this->cancelUrl;
+        }
+    }
+
+    public function redirectEntity(\Sailr\Entity\RedirectEntity $entity = null) {
+        if (isset($entity)) {
+            $this->redirectEntity = $entity;
+            return $this;
+        }
+
+        else {
+            return $this->redirectEntity;
+        }
+
+
     }
 } 
