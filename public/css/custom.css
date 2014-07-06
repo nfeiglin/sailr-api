@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-
 @media (min-width: 768px) {
     .row {
         margin-right: 0;
@@ -350,10 +349,6 @@ input.ng-valid.ng-dirty:focus {
     outline: 0px solid transparent;
 }
 
-
-[data-edit] {
-    /* font-size: 16px; */
-}
 
 .add-photos-gallery {
     max-width: 612px;
