@@ -35,10 +35,12 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
+            "composer dump-autoload -o",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],
 		"post-update-cmd": [
+            "composer dump-autoload -o",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],
