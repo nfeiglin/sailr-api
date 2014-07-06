@@ -89,7 +89,7 @@ app.directive('sailrFooter', ['$document', '$window', function ($document, $wind
     function link(scope, element, attrs) {
 
         var positionFooter = function() {
-            var hasVScroll = document.body.scrollHeight > $window.innerHeight;
+            var hasVScroll = document.body.scrollHeight | document.body.clientHeight > $window.innerHeight;
             //console.log(element.style.height);
 
             var newTop = $window.document.body.scrollHeight;// + element.style.height;
