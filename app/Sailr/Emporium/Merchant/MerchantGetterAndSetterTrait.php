@@ -3,7 +3,6 @@
 namespace Sailr\Emporium\Merchant;
 
 
-use PayPal\Service\PayPalAPIInterfaceServiceService;
 use Sailr\Emporium\Merchant\Entity\AddressEntityInterface;
 
 trait MerchantGetterAndSetterTrait {
