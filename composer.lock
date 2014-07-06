@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c4f94bff15d15f352a002f2f85ce783f",
+    "hash": "888d9f856042363765015f2f1067f0b3",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1596,22 +1596,24 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "0.3.6",
+            "version": "0.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "0ea31d9b65d49a8661e93bec19f44e989bd34c69"
+                "reference": "8b8c62f278e363b75ddcacaf5803710232fbd3e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/0ea31d9b65d49a8661e93bec19f44e989bd34c69",
-                "reference": "0ea31d9b65d49a8661e93bec19f44e989bd34c69",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/8b8c62f278e363b75ddcacaf5803710232fbd3e4",
+                "reference": "8b8c62f278e363b75ddcacaf5803710232fbd3e4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.0.0"
             },
             "require-dev": {
+                "phing/phing": "2.7.*",
+                "phpunit/phpunit": "4.0.*",
                 "squizlabs/php_codesniffer": "1.*"
             },
             "suggest": {
@@ -1687,7 +1689,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2014-02-28 16:05:05"
+            "time": "2014-07-05 16:36:21"
         },
         {
             "name": "predis/predis",
@@ -2734,12 +2736,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JeffreyWay/Laravel-4-Generators.git",
-                "reference": "53d2f84e6d75856c2ab72d49aeee9731de1a0af3"
+                "reference": "37e65c48d7900868e4a7da1ac396287dd7739c88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JeffreyWay/Laravel-4-Generators/zipball/53d2f84e6d75856c2ab72d49aeee9731de1a0af3",
-                "reference": "53d2f84e6d75856c2ab72d49aeee9731de1a0af3",
+                "url": "https://api.github.com/repos/JeffreyWay/Laravel-4-Generators/zipball/37e65c48d7900868e4a7da1ac396287dd7739c88",
+                "reference": "37e65c48d7900868e4a7da1ac396287dd7739c88",
                 "shasum": ""
             },
             "require": {
@@ -2774,7 +2776,7 @@
                 }
             ],
             "description": "Rapidly generate resources, migrations, models, and much more.",
-            "time": "2014-06-27 00:26:58"
+            "time": "2014-07-05 12:32:38"
         }
     ],
     "packages-dev": [
