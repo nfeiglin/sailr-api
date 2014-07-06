@@ -63,18 +63,35 @@
 
 
 
-        @foreach($items as $item)
-        <div class="product-list panel panel-body">
-            <div class="col-xs-9 col-lg-9 col-md-9 col-sm-9">
-                <a href="{{ URL::action('ItemsController@edit', $item['id']) }}">{{{ $item['title'] }}}</a>
-            </div>
+<div class="row">
+    <div class="product-list panel">
 
+        <div class="product-index-item panel-body" style="padding: 0">
+        </div>
+        <hr>
+
+        @foreach($items as $item)
+        <div class="product-index-item panel-body" style="padding: 0">
+            <div class="col-xs-9 col-lg-9 col-md-9 col-sm-9">
+                <a class="h4 text-primary" href="{{ URL::action('ItemsController@edit', $item['id']) }}">{{{ $item['title'] }}}</a>
+                @if($item['public'] == 1)
+                <div class="badge pull-right" style="background: dodgerblue">Published</div>
+                @else
+                <div class="badge pull-right">Unpublished</div>
+                @endif
+            </div>
             <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3">
                 {{ $item['currency'] }} {{ $item['price'] }}
             </div>
+
         </div>
-        <div class="divider"></div>
+        <hr>
         @endforeach
+    </div>
+</div>
+
+
+
     </div>
 </div>
 
