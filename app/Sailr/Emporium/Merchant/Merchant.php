@@ -82,11 +82,12 @@ class Merchant implements MerchantInterface {
             return false;
         }
     }
+
     protected function createPayPalApiServiceWrapper($config) {
         $this->paypalService = new PayPalAPIInterfaceServiceService($config);
     }
 
-    public function setupPurchase($item = null, $buyerObject= null, $postInput = null) {
+    public function setupPurchase() {
         $buyerObject = $this->buyer;
         $item = $this->getProduct();
 
@@ -357,18 +358,20 @@ class Merchant implements MerchantInterface {
 
 
         $DoECResponse = $this->paypalService->DoExpressCheckoutPayment($DoECReq);
-        dd($DoECResponse);
+        //dd($DoECResponse);
 
         if ($DoECResponse->Ack != "Success") {
+            Log::debug(print_r($DoECResponse, 1));
 
             $this->redirectEntity()->with('message', 'We are afraid that the transaction has failed. Please try again.');
             throw new PayPalResponseNotSuccessException;
         }
 
-        dd($DoECResponse);
+        //dd($DoECResponse);
         //echo '<pre>' . print_r($DoECResponse, 1) . '</pre>';
 
         $paymentInfo = $DoECResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0];
+        //dd($paymentInfo);
 
         if(isset($paymentInfo)) {
             $checkout->txn_id = $paymentInfo->TransactionID;
@@ -388,6 +391,8 @@ class Merchant implements MerchantInterface {
             'item_id' => $item->id,
             'payment_info' => $paymentInfo];
 
+
+
         switch($paymentInfo->PaymentStatus) {
             case "Completed":
                 //Good news! it worked...
@@ -405,15 +410,15 @@ class Merchant implements MerchantInterface {
                 break;
             case "Denied":
                 //The payment was denied. This happens only if the payment was previously pending because of one of the reasons listed for the pending_reason variable or the Fraud_Management_Filters_x var
-                return $this->redirectEntity()->with('message', 'The PayPal transaction was denied. Check your PayPal account for more info');
+                $this->redirectEntity()->with('message', 'The PayPal transaction was denied. Check your PayPal account for more info');
                 break;
             case "Expired":
                 //They took too long!
-                return $this->redirectEntity()->with('message', 'The PayPal transaction session has expired. No payment has been made. Please try again.');
+                $this->redirectEntity()->with('message', 'The PayPal transaction session has expired. No payment has been made. Please try again.');
                 break;
             case "Failed":
                 //Bank acct issues
-                return $this->redirectEntity()->with('message', 'The PayPal transaction failed. Check your PayPal account for more info');
+                $this->redirectEntity()->with('message', 'The PayPal transaction failed. Check your PayPal account for more info');
                 break;
             case "Pending":
                 //Check the pending reason
@@ -422,7 +427,7 @@ class Merchant implements MerchantInterface {
 
                     //Event::fire('purchase.payment.pending.unilateral', $eventArray);
                     //echo '<pre>' . print_r($eventArray, 1) . '</pre>';
-                    return $this->redirectEntity()->withMessage('There has been an issue with the payment. Check your emails and PayPal account for more information');
+                    $this->redirectEntity()->withMessage('There has been an issue with the payment. Check your emails and PayPal account for more information');
                 }
 
                 else {
@@ -431,9 +436,13 @@ class Merchant implements MerchantInterface {
                 }
                 //Go through the other pending reasons...
                 break;
+
+            default:
+                $this->redirectEntity()->with('message', 'We are afraid that the transaction may have failed. Please check your PayPal.');
+            break;
         }
 
-        return $this->redirectEntity()->with('message', 'We are afraid that the transaction may have failed. Please check your PayPal.');
+
 
         return $this;
 
