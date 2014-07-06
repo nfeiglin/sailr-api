@@ -75,6 +75,7 @@ return array(
     "public_product" => "The product has been unpublished by the seller",
     "in_stock" => "The product is no longer in stock",
     "has_user_relationship" => "No user exists for the item",
+    "not_sellers_product" => "You can't buy your own product",
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
