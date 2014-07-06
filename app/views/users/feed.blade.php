@@ -1,6 +1,5 @@
 @extends('layout.main')
 	@section('content')
-	{{-- <pre>{{print_r($items)}}</pre> --}}
 		<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 well well-sm">
 			
 			@foreach($items as $item)
