@@ -31,13 +31,14 @@ return array(
     'connections' => array(
 
         'sync' => array(
-            'driver' => 'sync',
+            'driver' => getenv('APP_QUEUE_DRIVER')
         ),
 
         'beanstalkd' => array(
             'driver' => 'beanstalkd',
             'host' => 'localhost',
             'queue' => 'default',
+            'ttr' => 60,
         ),
 
         'sqs' => array(
