@@ -292,13 +292,13 @@ class UsersController extends \BaseController
                     $q->with([
                             'ProfileImg' => function($z) {
                                 $z->where('type', '=', 'small');
-                                $z->first();
                             }
                         ]);
                     $q->select(['id', 'username', 'name']);
 
                 },
 
+            /*
             'Comment' => function($comment) {
                 $comment->select(['id', 'item_id', 'user_id', 'comment', 'created_at']);
                 $comment->orderBy('created_at', 'dsc');
@@ -314,8 +314,8 @@ class UsersController extends \BaseController
                 }
 
                 ]);
-}
-
+            }
+*/
         ))->orderBy('created_at', 'dsc');
 
         $nextPageNumber = 2;
