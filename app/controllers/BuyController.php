@@ -2,6 +2,12 @@
 
 use Sailr\Validators\PurchaseValidator;
 use Sailr\Emporium\Merchant\Merchant;
+use Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException;
+use Sailr\Emporium\Merchant\Entity\PayPalAddressEntity;
+use Sailr\Emporium\Merchant\Exceptions\PayPalSessionExpiredException;
+use Sailr\Emporium\Merchant\Exceptions\PayPalResponseNotSuccessException;
+use Sailr\Emporium\Merchant\Exceptions\TokenDoesNotMatchLoggedInAccountException;
+use Sailr\Validators\Exceptions\ValidatorException;
 
 class BuyController extends \BaseController
 {
@@ -16,13 +22,8 @@ class BuyController extends \BaseController
         $this->validator = $validator;
         $this->merchant = $merchant;
 
-        if (App::environment('local', 'testing', 'debug')) {
-            $apiMode = 'sandbox';
-        }
+        $apiMode = Str::lower(getenv('PAYPAL_API_MODE'));
 
-        else {
-            $apiMode = 'live';
-        }
         $this->merchant
             ->config(Config::get("paypal.$apiMode"))
             ->apiMode($apiMode)
@@ -40,8 +41,6 @@ class BuyController extends \BaseController
     public function create($username, $id)
     {
 
-
-
         $item = Item::where('id', '=', $id)->with([
             'User' => function ($y) {
                 $y->select(['id', 'username', 'name']);
@@ -56,7 +55,8 @@ class BuyController extends \BaseController
 
 
         if (!$item->public) {
-            return Redirect::back()->withMessage('Sorry, the product has been made private by the seller. Please try again later');
+
+            return Redirect::to('/')->withMessage('Sorry, the product has been made private by the seller. Please try again later');
         }
 
         $item->user->profile_img = ProfileImg::where('user_id', '=', $item->user->id)->where('type', '=', 'small')->first(['url']);
@@ -68,11 +68,9 @@ class BuyController extends \BaseController
         }
 
 
-
         return View::make('buy.create')
             ->with('title', $item->title)
             ->with('item', $item->toArray());
-            //->with('profileURL', $profileImg[0]['url']); //The current user's profile picture
 
     }
 
@@ -90,7 +88,7 @@ class BuyController extends \BaseController
         $item = Item::where('id', '=', $id)->with('User')->firstOrFail();
 
         if ($item->user_id == $buyerObject->id) {
-            return Redirect::back()->withMessage("You can't buy your own product");
+            return Redirect::to('/')->withMessage("You can't buy your own product");
         }
 
         $validateInput = $input;
@@ -99,18 +97,18 @@ class BuyController extends \BaseController
         $result = $this->validator->validate($validateInput, 'create');
 
         if (!$result) {
-            return Redirect::back()->with('message', 'Invalid input')->withInput($input)->withErrors($this->validator->getValidator());
+            return Redirect::to('/')->with('message', 'Invalid input')->withInput($input)->withErrors($this->validator->getValidator());
 
         }
 
         if ($input['country'] != $item->ships_to) {
             $messageBag = new \Illuminate\Support\MessageBag();
             $messageBag->add('country', 'The seller currently does not ship this item to ' . CountryHelpers::getCountryNameFromISOCode($input['country']));
-            return Redirect::back()->with('message', 'Sorry...')->withErrors($messageBag);
+            return Redirect::to('/')->with('message', 'Sorry...')->withErrors($messageBag);
         }
 
 
-        $addressEntity = \Sailr\Emporium\Merchant\Entity\PayPalAddressEntity::make(new stdClass());
+        $addressEntity = PayPalAddressEntity::make(new stdClass());
         $addressEntity->setAddress1($input['street_number'] . ' ' . $input['street_name']);
         $addressEntity->setCity($input['city']);
         $addressEntity->setState($input['state']);
@@ -130,7 +128,8 @@ class BuyController extends \BaseController
                ->getRedirectUrl()
            );
         }
-        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException $e) {
+        catch (PayPalApiErrorException $e) {
+
             return Redirect::to('/')->with('message', 'PayPal has encountered an error');
         }
 
@@ -139,7 +138,7 @@ class BuyController extends \BaseController
 
     public function showConfirm($id)
     {
-        //http://sailr.web/buy/53/confirm?token=EC-3CY03370AB277445T&PayerID=ZF5LCR3K9VJCU
+        //http://sailr.web/buy/53/confirm?token=EC-3CY03370AB277445T&PayerID=ZZZZZZZZZZ
 
         $checkout = Checkout::where('id', '=', $id)->where('completed', '=', 0)->firstOrFail();
         $item =  Item::where('id', '=', $checkout->item_id)->with([
@@ -175,15 +174,15 @@ class BuyController extends \BaseController
                 ->getConfirmationDetails();
         }
 
-        catch (\Sailr\Emporium\Merchant\Exceptions\TokenDoesNotMatchLoggedInAccountException $e) {
+        catch (TokenDoesNotMatchLoggedInAccountException $e) {
             return Redirect::to('/')->with('message', 'You can only confirm purchases for your own account. The transaction has been canceled and you have not been charged');
         }
 
-        catch(\Sailr\Emporium\Merchant\Exceptions\PayPalSessionExpiredException $e) {
+        catch(PayPalSessionExpiredException $e) {
             return Redirect::to('/')->with('message', 'Oops. The PayPal session has expired. The transaction has been canceled and you have not been charged. Please try purchasing product again.');
         }
 
-        catch(\Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException $e) {
+        catch(PayPalApiErrorException $e) {
             return Redirect::to('/')->with('message', 'PayPal has encountered an error. The transaction has been canceled and you have not been charged.');
         }
 
@@ -210,25 +209,25 @@ class BuyController extends \BaseController
                 ->doPurchaseProduct()
                 ->redirectEntity();
 
-            Redirect::to('/')->with($redirectEntity->type, $redirectEntity->message);
+           return Redirect::to('/')->with($redirectEntity->type, $redirectEntity->message);
 
         }
 
-        catch (\Sailr\Validators\Exceptions\ValidatorException $e) {
+        catch (ValidatorException $e) {
             return Redirect::to('/')->withErrors($e->getValidator());
         }
 
-        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalSessionExpiredException $e) {
-            Redirect::to('/')->with('fail', 'Sorry, this PayPal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
+        catch (PayPalSessionExpiredException $e) {
+            return Redirect::to('/')->with('fail', 'Sorry, this PayPal session has expired please try starting the purchase again. This transaction has not been processed and you have not been charged');
         }
 
-        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException $e) {
+        catch (PayPalApiErrorException $e) {
             return Redirect::to('/')->with('fail', 'Sorry, PayPal has encountered an error. This transaction has not been processed and you have not been charged');
         }
 
-        catch (\Sailr\Emporium\Merchant\Exceptions\PayPalResponseNotSuccessException $e) {
+        catch (PayPalResponseNotSuccessException $e) {
             $redirectEntity = $this->merchant->redirectEntity();
-            Redirect::to('/')->with($redirectEntity->type, $redirectEntity->message);
+            return Redirect::to('/')->with($redirectEntity->type, $redirectEntity->message);
         }
 
 
@@ -237,12 +236,10 @@ class BuyController extends \BaseController
 
     public function cancel($id)
     {
-        $input = Input::all();
-        $checkout = Checkout::where('token', '=', $input['token'])->where('user_id', '=', Auth::user()->id)->firstOrFail();
-
+        $checkout = Checkout::where('token', '=', Input::get('token'))->where('user_id', '=', Auth::user()->id)->firstOrFail();
         $checkout->delete();
+
         return Redirect::to('/')->with('message', Lang::get('transaction.cancel'));
-        //dd($input);
     }
 
 
