@@ -40,7 +40,7 @@
                     @if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif
                     @if(Session::has('success'))<div class="alert alert-success">{{ Session::get('success') }}</div> @endif
                     @if(Session::has('error'))<div class="alert alert-warning">{{ Session::get('error') }}</div> @endif
-                    @if($errors->first())<div class="alert alert-warning">@foreach($errors as $error)<li>{{ $error }}</li>@endforeach</div>@endif
+                    @if($errors->first())<div class="alert alert-warning">@foreach($errors->all('<li>:message</li>') as $error){{ $error }}@endforeach</div>@endif
                     @if(Session::has('fail'))<div class="alert alert-danger">{{ Session::get('fail') }}</div> @endif
                 
                     @yield('content')
