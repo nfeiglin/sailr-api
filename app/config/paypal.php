@@ -9,7 +9,7 @@ return array(
         'acct1.AppId' => getenv('PAYPAL_SANDBOX_APPID'),
     ),
 
-    'live' => array(
+    'production' => array(
         'mode' => 'live',
         'acct1.UserName' => getenv('PAYPAL_LIVE_USERNAME'),
         'acct1.Password' => getenv('PAYPAL_LIVE_PASSWORD'),
