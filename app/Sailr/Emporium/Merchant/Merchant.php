@@ -68,9 +68,9 @@ class Merchant implements MerchantInterface {
     protected $redirectEntity;
 
 
-    public function __construct(PurchaseValidator $validator) {
+    public function __construct(PurchaseValidator $validator, RedirectEntity $redirectEntity) {
         $this->validator = $validator;
-        $this->redirectEntity = new RedirectEntity;
+        $this->redirectEntity = $redirectEntity;
     }
 
     public function isProductPublic(\Item $item) {

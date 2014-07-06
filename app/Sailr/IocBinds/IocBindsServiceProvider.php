@@ -5,6 +5,7 @@ namespace Sailr\IocBinds;
 
 use Illuminate\Support\ServiceProvider;
 use Sailr\Emporium\Merchant\Merchant;
+use Sailr\Entity\RedirectEntity;
 use Sailr\Validators\PurchaseValidator;
 
 class IocBindsServiceProvider extends ServiceProvider {
@@ -20,13 +21,14 @@ class IocBindsServiceProvider extends ServiceProvider {
             return new PurchaseValidator;
         });
 
+
         $this->app->bindShared('Sailr\Validators\PurchaseValidator', function($app) {
             return $this->app->make('PurchaseValidator');
         });
 
 
         $this->app['merchant'] = $this->app->share(function($app) {
-           return new Merchant($this->app->make('PurchaseValidator'));
+           return new Merchant($this->app->make('PurchaseValidator'), new RedirectEntity);
         });
 
 
