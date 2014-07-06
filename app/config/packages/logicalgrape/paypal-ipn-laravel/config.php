@@ -12,7 +12,7 @@ return array(
     |
     | Supported: 'production', 'sandbox'
     */
-    'environment' => 'sandbox',
+    'environment' => getenv('PAYPAL_API_MODE'),
 
     /*
     |--------------------------------------------------------------------------
