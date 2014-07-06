@@ -1,27 +1,21 @@
-<?php
-namespace Sailr\Emporium\Merchant;
+<?php namespace Sailr\Emporium\Merchant;
 
-use PayPal\EBLBaseComponents\PayerInfoType;
+
 use PayPal\EBLBaseComponents\SetExpressCheckoutRequestDetailsType;
 use PayPal\CoreComponentTypes\BasicAmountType;
 use PayPal\EBLBaseComponents\AddressType;
 use PayPal\EBLBaseComponents\SellerDetailsType;
 use PayPal\EBLBaseComponents\PaymentDetailsItemType;
-use \PayPal\EBLBaseComponents\PaymentDetailsType;
-use \PayPal\EBLBaseComponents\PaymentInfoType;
-use \PayPal\PayPalAPI\SetExpressCheckoutReq;
-use \PayPal\PayPalAPI\SetExpressCheckoutRequestType;
-use \PayPal\PayPalAPI\SetExpressCheckoutResponseType;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
-use \PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
-use \PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
-use \PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
-use \PayPal\EBLBaseComponents\DoExpressCheckoutPaymentResponseDetailsType;
-use PayPal\Core\PPAPIService;
+use PayPal\EBLBaseComponents\PaymentDetailsType;
+use PayPal\PayPalAPI\SetExpressCheckoutReq;
+use PayPal\PayPalAPI\SetExpressCheckoutRequestType;
+use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
+use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
+use PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
+use PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
+use PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
-use PayPal\PayPalAPI\DoExpressCheckoutPaymentResponseType;
+
 use Sailr\Emporium\Merchant\Entity\PayPalAddressEntity;
 use Sailr\Emporium\Merchant\Exceptions\PayPalApiErrorException;
 use Sailr\Emporium\Merchant\Exceptions\PayPalResponseNotSuccessException;
@@ -31,6 +25,7 @@ use Sailr\Entity\RedirectEntity;
 use Sailr\Validators\Exceptions\ValidatorException;
 use Sailr\Validators\PurchaseValidator;
 use Sailr\Emporium\Merchant\Entity\AddressEntityInterface;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
