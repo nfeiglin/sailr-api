@@ -49,13 +49,7 @@
     </div>
 
     @include('parts.footer')
-    <link rel="stylesheet" href="http://css-spinners.com/css/spinners.css" type="text/css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/themes/original.min.css">
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{ URL::asset('slick/slick.min.js') }}"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/humane-js/3.0.6/humane.min.js"></script>
-    <script src="{{ URL::asset('js/lib/medium-editor.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('js/main.js') }}"></script>
+    @include('parts.js-bottom')
 </body>
 
 </html>
