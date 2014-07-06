@@ -30,6 +30,7 @@
         <div class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2 col-sm-12 col-xs-12">
             @if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif
             @if(Session::has('success'))<div class="alert alert-success">{{ Session::get('success') }}</div> @endif
+            @if($errors->first())<div class="alert alert-warning">@foreach($errors as $error)<li>{{ $error }}</li>@endforeach</div>@endif
             @if(Session::has('error'))<div class="alert alert-warning">{{ Session::get('error') }}</div> @endif
             @if(Session::has('fail'))<div class="alert alert-danger">{{ Session::get('fail') }}</div> @endif
 
