@@ -11,6 +11,7 @@ class RedirectEntity {
      * @var string $message The message
      * @var mixed $data Arbitrary data that can be held and accessed in the entity
      */
+
     public $url = '';
     public $type = 'message';
     public $message = '';
@@ -23,6 +24,7 @@ class RedirectEntity {
             $this->url = $url;
         }
     }
+
     public function getUrl() {
         if (!isset($this->url)) {
             return \URL::to('/');
