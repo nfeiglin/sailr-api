@@ -44,57 +44,59 @@
 
 
     {{-- THE MAIN DESCRIPTION --}}
+        <form name="updateForm">
+            {{-- item.description --}}
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <label for="currency">Currency</label>
+                    <select class="selectpicker form-control" name="currency" id="currency" data-live-search="true" data-ng-model="item.currency" ng-options="currencyCode as currencyName + ' (' + currencyCode + ')' for (currencyCode, currencyName) in currencies">
+                    </select>
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="price">Item price</label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon ease-in-out">@{{ item.currency }}</span>
+                        <input class="form-control" name="price" id="item-price" placeholder="0.00" type="number" step="any" ng-model="item.price" min="0" max="99999">
+                    </div>
+
+                </div>
 
 
-    {{-- item.description --}}
-    <div class="row form-group">
-        <div class="col-sm-6">
-            <label for="currency">Currency</label>
-            <select class="selectpicker form-control" name="currency" id="currency" data-live-search="true" data-ng-model="item.currency" ng-options="currencyCode as currencyName + ' (' + currencyCode + ')' for (currencyCode, currencyName) in currencies">
-            </select>
-        </div>
-
-        <div class="col-sm-6">
-            <label for="price">Item price</label>
-
-            <div class="input-group">
-                <span class="input-group-addon ease-in-out">@{{ item.currency }}</span>
-                <input class="form-control" name="price" id="item-price" placeholder="0.00" type="number" step="any" ng-model="item.price" min="0" max="99999">
             </div>
 
-        </div>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <label for="shipping-country">Where will you ship to?</label>
+                    <select required="required" class="form-control" name="ships_to" id="shipping-country" ng-model="item.ships_to" ng-options="code as name for (code, name) in countries">
+                    </select>
+                </div>
 
+                <div class="col-sm-6">
+                    <label for="shipping-price">Shipping price</label>
 
-    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon ease-in-out">@{{ item.currency }}</span>
+                        <input class="form-control" type="number" num-binding name="shipping-price" placeholder="0.00"
+                               id="shipping-price" step="any" data-ng-model="item.ship_price" min="0" max="999999">
+                    </div>
+                </div>
 
-    <div class="row form-group">
-        <div class="col-sm-6">
-            <label for="shipping-country">Where will you ship to?</label>
-            <select class="form-control" name="ships_to" id="shipping-country" ng-init="item.ships_to" ng-model="item.ships_to" ng-options="code as name for (code, name) in countries">
-            </select>
-        </div>
-
-        <div class="col-sm-6">
-            <label for="shipping-price">Shipping price</label>
-
-            <div class="input-group">
-                <span class="input-group-addon ease-in-out">@{{ item.currency }}</span>
-                <input class="form-control" type="number" num-binding name="shipping-price" placeholder="0.00"
-                       id="shipping-price" step="any" data-ng-model="item.ship_price" min="0" max="999999">
             </div>
-        </div>
 
-    </div>
-
-    <div class="row">
-        <div class="form-group">
-            <div class="col-sm-4">
-                <label for="initial_units">Quantity</label>
-                <input class="form-control" type="number" num-binding name="initial_units"
-                       data-ng-model="item.initial_units" placeholder="0" min="0" max="99999999">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <label for="initial_units">Quantity</label>
+                        <input class="form-control" type="number" num-binding name="initial_units"
+                               data-ng-model="item.initial_units" placeholder="0" min="0" max="99999999">
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        </form>
+
+
 
     <div class="row">
         <div class="form-group">
@@ -108,17 +110,17 @@
     <div class="row">
         <div class="form-group">
             <div class="btn-group">
-                <a data-ng-click="saveChanges()" class="btn btn-lg btn-primary" ng-if="!posting">Save changes</a>
+                <a data-ng-click="saveChanges()" class="btn btn-lg btn-primary ng-cloak" ng-if="!posting">Save changes</a>
 
-                <div ng-if="posting">
+                <div ng-if="posting" class="ng-cloak">
                     <div class="dots">
                         Loading...
                     </div>
                 </div>
 
             </div>
-            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-turq" ng-if="!item.public && !posting"><i class="glyphicon glyphicon-eye-open"></i> Publish</a>
-            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-default" ng-if="item.public && !posting"><i class="glyphicon glyphicon-eye-close"></i> Unpublish</a>
+            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-turq ng-cloak" ng-if="!item.public && !posting && updateForm.$valid && photos.length > 0"><i class="glyphicon glyphicon-eye-open"></i> Publish</a>
+            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-default ng-cloak" ng-if="item.public && !posting"><i class="glyphicon glyphicon-eye-close"></i> Unpublish</a>
         </div>
     </div>
 

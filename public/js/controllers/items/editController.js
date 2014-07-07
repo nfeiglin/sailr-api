@@ -24,6 +24,9 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
     $scope.currencies = currencies;
     $scope.item = {};
 
+    if (itemModel.ships_to.length < 1) {
+        itemModel.ships_to = undefined;
+    }
     $scope.item = itemModel;
     $scope.photos = [];
     $scope.dataUrls = [];
