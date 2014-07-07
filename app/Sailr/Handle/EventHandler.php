@@ -71,14 +71,14 @@ class EventHandler {
     public function onLoggingEvent($level, $message, $context) {
 
         $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
-        Config::set('mail.driver', 'mailgun');
-        Mail::queue('emails.admin.log', $data, function($message) use ($level) {
+        \Config::set('mail.driver', 'mailgun');
+        \Mail::queue('emails.admin.log', $data, function($message) use ($level) {
             $message->from(['tech@sailr.co' => 'Sailr Log-bot']);
             $message->to(\Config::get('admin.email'));
             $message->subject('A log from Sailr has been recorded. Level: ' . $level);
         });
 
-        Config::set('mail.driver', 'mandrill');
+        \Config::set('mail.driver', 'mandrill');
 
 
     }
