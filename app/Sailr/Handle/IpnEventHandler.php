@@ -5,6 +5,7 @@ use \Sailr\Emporium\Merchant\Webhooks\PaypalWebhook;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 class IpnEventHandler {
 
@@ -44,7 +45,7 @@ class IpnEventHandler {
     protected function messageSellerPending($eventObject, $langRetrivalString) {
         $errorMessage = \Lang::get($langRetrivalString);
 
-        \Queue::push(function($job) use ($eventObject, $errorMessage) {
+        Queue::push(function($job) use ($eventObject, $errorMessage) {
 
             $eventArray = (array) $eventObject;
 
@@ -96,14 +97,14 @@ class IpnEventHandler {
         $errorMessage = \Lang::get($langRetrievalString);
         $eventArray = (array) $eventObject;
 
-        \Queue::push(function($job) use ($eventArray, $errorMessage) {
+        Queue::push(function($job) use ($eventArray, $errorMessage) {
 
             $user = \User::findOrFail($eventArray['buyerID']);
             $seller = \User::findOrFail($eventArray['sellerID']);
             $product = \Item::findOrFail($eventArray['itemID']);
 
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
+            $ipnModel = \IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
@@ -178,7 +179,7 @@ class IpnEventHandler {
         $errorMessage = \Lang::get($langRetrievalString);
         $eventArray = (array)$eventObject;
 
-        \Queue::push(function($job) use ($eventArray, $errorMessage) {
+        Queue::push(function($job) use ($eventArray, $errorMessage) {
 
             $errorShortReason = $eventArray['errorShortReason'];
 
@@ -230,7 +231,7 @@ class IpnEventHandler {
         $errorMessage = \Lang::get($langRetrievalString);
         $eventArray = (array) $eventObject;
 
-        \Queue::push(function($job) use ($eventArray, $errorMessage) {
+        Queue::push(function($job) use ($eventArray, $errorMessage) {
 
             $user = \User::findOrFail($eventArray['buyerID']);
             $seller = \User::findOrFail($eventArray['sellerID']);
@@ -286,7 +287,7 @@ class IpnEventHandler {
 
     public function messageBuyerSuccess(array $eventArray) {
 
-        \Queue::push(function($job) use ($eventArray) {
+        Queue::push(function($job) use ($eventArray) {
 
             $user = \User::findOrFail($eventArray['buyerID']);
             $seller = \User::findOrFail($eventArray['sellerID']);
@@ -334,7 +335,7 @@ class IpnEventHandler {
 
     public function messageSellerSuccess(array $eventArray) {
 
-        \Queue::push(function($job) use ($eventArray) {
+        Queue::push(function($job) use ($eventArray) {
 
             $user = \User::findOrFail($eventArray['sellerID']);
             $buyer = \User::findOrFail($eventArray['buyerID']);
