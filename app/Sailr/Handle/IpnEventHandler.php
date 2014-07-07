@@ -2,6 +2,8 @@
 
 namespace Sailr\Handle;
 use \Sailr\Emporium\Merchant\Webhooks\PaypalWebhook;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Config;
 
 class IpnEventHandler {
 
