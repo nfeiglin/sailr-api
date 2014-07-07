@@ -2,6 +2,8 @@
 
 namespace Sailr\Handle;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Config;
 
 class EventHandler {
 
@@ -68,24 +70,15 @@ class EventHandler {
 
     public function onLoggingEvent($level, $message, $context) {
 
-        Queue::push(function($job) use ($level, $message, $context){
-
-            Config::set('mail.driver', 'mailgun');
-
-
-            $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
-
-            Mail::send('emails.admin.log', $data, function($message) use ($level) {
-                $message->from(['tech@sailr.co' => 'Sailr Log-bot']);
-                $message->to(\Config::get('admin.email'));
-                $message->subject('A log from Sailr has been recorded. Level: ' . $level);
-            });
-
-
-            Config::set('mail.driver', 'mandrill');
-
-            $job->delete();
+        $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
+        Config::set('mail.driver', 'mailgun');
+        Mail::queue('emails.admin.log', $data, function($message) use ($level) {
+            $message->from(['tech@sailr.co' => 'Sailr Log-bot']);
+            $message->to(\Config::get('admin.email'));
+            $message->subject('A log from Sailr has been recorded. Level: ' . $level);
         });
+
+        Config::set('mail.driver', 'mandrill');
 
 
     }
