@@ -10,7 +10,7 @@ class NotificationsController extends \BaseController {
 	 */
 	public function index()
 	{
-	    $notifications = Notification::where('user_id', '=', Auth::user()->id)->get(['_id', 'short_text', 'data']);
+	    $notifications = Notification::where('user_id', '=', Auth::user()->id)->orderBy('created_at', 'dsc')->get(['_id', 'short_text', 'data']);
         Event::fire('notification.index', Auth::user()->id);
 
         return View::make('notifications.index')
