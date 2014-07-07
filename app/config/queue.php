@@ -31,7 +31,7 @@ return array(
     'connections' => array(
 
         'sync' => array(
-            'driver' => getenv('APP_QUEUE_DRIVER')
+            'driver' => 'sync'
         ),
 
         'beanstalkd' => array(
