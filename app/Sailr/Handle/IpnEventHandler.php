@@ -4,6 +4,7 @@ namespace Sailr\Handle;
 use \Sailr\Emporium\Merchant\Webhooks\PaypalWebhook;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class IpnEventHandler {
 
@@ -16,7 +17,7 @@ class IpnEventHandler {
 
         $ipn = $eventArray['ipn'];
         \Log::debug('SENT TO onPaymentSuccess::: ' . print_r($eventArray, 1));
-        $eventArray['ipnID'] = $ipn->id;
+        $eventArray['ipn']->id = $ipn->id;
 
         $this->messageBuyerSuccess($eventArray);
         $this->messageSellerSuccess($eventArray);
@@ -32,7 +33,7 @@ class IpnEventHandler {
             $langBuyerString = 'ipn.buyer.pending.other';
         }
 
-        if (!\Lang::has($langSellerString)) {
+        if (!Lang::has($langSellerString)) {
             $langSellerString = 'ipn.seller.pending.other';
         }
 
@@ -51,7 +52,8 @@ class IpnEventHandler {
             $buyer = \User::findOrFail($eventArray['buyerID']);
             $product = \Item::findOrFail($eventArray['itemID']);
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+            Log::debug(print_r($eventArray, 1));
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
@@ -101,7 +103,7 @@ class IpnEventHandler {
             $product = \Item::findOrFail($eventArray['itemID']);
 
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
@@ -184,7 +186,7 @@ class IpnEventHandler {
             $buyer = \User::findOrFail($eventArray['buyerID']);
             $product = \Item::findOrFail($eventArray['itemID']);
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
@@ -235,7 +237,7 @@ class IpnEventHandler {
             $product = \Item::findOrFail($eventArray['itemID']);
 
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
@@ -291,7 +293,7 @@ class IpnEventHandler {
             $product = \Item::findOrFail($eventArray['itemID']);
 
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
@@ -338,7 +340,7 @@ class IpnEventHandler {
             $buyer = \User::findOrFail($eventArray['buyerID']);
             $product = \Item::findOrFail($eventArray['itemID']);
 
-            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipnID']);
+            $ipnModel = \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder::findOrFail($eventArray['ipn']->id);
 
             $ipn = PaypalWebhook::make($ipnModel);
 
