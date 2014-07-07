@@ -106,7 +106,7 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
                 if (data.errors) {
                     console.log('ERORROS ARE');
                     console.log(data.errors);
-                    humane.log(data.errors[0]);
+                    humane.log(data.errors);
                 }
 
 

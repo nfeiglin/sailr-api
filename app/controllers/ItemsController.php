@@ -138,21 +138,7 @@ class ItemsController extends BaseController
     public function toggleVisibility($id)
     {
         $item = Item::where('id', '=', $id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
-        $numberOfPhotos = Photo::where('item_id', '=', $id)->count();
         $errors = [];
-
-        if (!$numberOfPhotos > 0) {
-            $errors[] = 'Please add at least one photo before publishing';
-            $res = ['errors' => $errors];
-            return Response::json($res, 400);
-        }
-
-        $v = Validator::make($item->toArray(), Item::$publishRules);
-
-        if ($v->fails()) {
-            $res = ['errors' => $v->errors()];
-            return Response::json($res, 400);
-        }
 
 
         $message = '';
@@ -168,6 +154,21 @@ class ItemsController extends BaseController
             ];
 
         } else {
+            $numberOfPhotos = Photo::where('item_id', '=', $id)->count();
+            if (!$numberOfPhotos > 0) {
+                $error = 'Please add at least one photo before publishing';
+                $res = ['errors' => $error];
+                return Response::json($res, 400);
+            }
+
+            $v = Validator::make($item->toArray(), Item::$publishRules);
+
+            if ($v->fails()) {
+                $res = ['errors' => $v->errors()->first()];
+                return Response::json($res, 400);
+            }
+
+
             $item->public = 1;
             $item->save();
 
