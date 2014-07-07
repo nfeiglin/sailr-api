@@ -68,6 +68,7 @@ class EventHandler {
 
     public function onLoggingEvent($level, $message, $context) {
 
+        /*
         $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
         \Config::set('mail.driver', 'mailgun');
 
@@ -78,6 +79,7 @@ class EventHandler {
         });
 
         \Config::set('mail.driver', 'mandrill');
+        */
 
 
     }
