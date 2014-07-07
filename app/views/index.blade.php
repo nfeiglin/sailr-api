@@ -20,7 +20,6 @@
 
     </div>
 
-    {{-- <img class="img-responsive centered" src="http://sailr.co/img/Sailr-logo-500.png" alt="Sailr logo" style="margin-bottom: 35px;"> --}}
 
 </div>
 @stop
