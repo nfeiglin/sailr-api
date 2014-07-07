@@ -1,9 +1,7 @@
 <?php
 
 namespace Sailr\Handle;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Config;
+
 
 class EventHandler {
 
@@ -72,6 +70,7 @@ class EventHandler {
 
         $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
         \Config::set('mail.driver', 'mailgun');
+
         \Mail::queue('emails.admin.log', $data, function($message) use ($level) {
             $message->from(['tech@sailr.co' => 'Sailr Log-bot']);
             $message->to(\Config::get('admin.email'));
