@@ -25,6 +25,15 @@ class RedirectEntity {
         }
     }
 
+    public function withMessage($message, $url = null) {
+        
+        $this->type = 'message';
+        $this->message = $message;
+        if (isset($url)) {
+            $this->url = $url;
+        }
+    }
+
     public function getUrl() {
         if (!isset($this->url)) {
             return \URL::to('/');

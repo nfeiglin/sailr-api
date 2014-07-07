@@ -56,7 +56,7 @@ class BuyController extends \BaseController
 
         if (!$item->public) {
 
-            return Redirect::to('/')->withMessage('Sorry, the product has been made private by the seller. Please try again later');
+            return Redirect::to('/')->with('message','Sorry, the product has been made private by the seller. Please try again later');
         }
 
         $item->user->profile_img = ProfileImg::where('user_id', '=', $item->user->id)->where('type', '=', 'small')->first(['url']);
