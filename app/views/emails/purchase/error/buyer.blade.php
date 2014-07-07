@@ -100,7 +100,7 @@
                                                 <td class="last right-text-pad">
                                                     <h5>Payment</h5>
                                                     <p>As an error has occurred, the payment <b>may</b> not have been taken. Please check your PayPal account to confirm</p>
-                                                    <p>Product price: {{{ $ipn->getProductPrice() }} {{ $ipn->getCurrencyCode }}</p>
+                                                    <p>Product price: {{{ $ipn->getProductPrice() }} {{ $ipn->getCurrencyCode() }}</p>
                                                     <p>Shipping price: {{ $ipn->getShippingPrice() }} {{ $ipn->getCurrencyCode() }}</p>
                                                     <p><b>Total paid:</b> {{ $ipn->getGrossAmount() }} {{ $ipn->getCurrencyCode() }}</p>
                                                 </td>
