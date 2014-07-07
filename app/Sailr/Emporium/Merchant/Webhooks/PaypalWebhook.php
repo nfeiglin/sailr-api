@@ -5,6 +5,8 @@ namespace Sailr\Emporium\Merchant\Webhooks;
 
 use \LogicalGrape\PayPalIpnLaravel\Models\IpnOrder;
 use Sailr\Emporium\Merchant\Entity\AddressEntityInterface;
+use Item;
+use Checkout;
 
 class PaypalWebhook implements WebhookObjectInterface, AddressEntityInterface {
 
@@ -29,7 +31,8 @@ class PaypalWebhook implements WebhookObjectInterface, AddressEntityInterface {
     }
 
     public function getProduct() {
-        return \Checkout::where('txn_id', '=', $this->getTransactionIdentifier())->firstOrFail(['id', 'item_id'])->item();
+        $checkout = \Checkout::where('txn_id', '=', $this->getTransactionIdentifier())->firstOrFail(['id', 'item_id']);
+        return Item::findOrFail($checkout->item_id);
     }
 
     public function getTransactionIdentifier() {
