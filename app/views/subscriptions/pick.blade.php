@@ -42,7 +42,7 @@
                         <ul class="list-unstyled">
                             <li>Post up to 4 listings per month</li>
                             <li>Maximum sale&nbsp;price of&nbsp;$40 including shipping</li>
-                            <li>Buy and sell on iPhone and online</li>
+                            <li>Buy and sell on your computer and mobile devices</li>
                             <li>Get notified when you sell</li>
                             <li>Get paid straight to your PayPal account</li>
                             <li>Buy from other sellers</li>

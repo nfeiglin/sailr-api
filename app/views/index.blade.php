@@ -11,7 +11,7 @@
             <h1>Make an online store in seconds</h1>
             <h2 class="text-white">1. Create an account</h2>
             <h2 class="text-white">2. Add products to your store</h2>
-            <h2 class="text-white">3. Get paid direct to your PayPal</h2>
+            <h2 class="text-white">3. Get paid directly to your PayPal</h2>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-sm-4 btn-container pull-left">
@@ -92,7 +92,7 @@
             <ul class="list-unstyled">
                 <li>Post up to 4 listings per month</li>
                 <li>Maximum sale&nbsp;price of&nbsp;$40 including shipping</li>
-                <li>Buy and sell on iPhone and online</li>
+                <li>Buy and sell on your computer and mobile devices</li>
                 <li>Manage your sales</li>
                 <li>Get paid straight to your Paypal account</li>
                 <li>Buy from other sellers</li>
@@ -109,7 +109,7 @@
             <ul class="list-unstyled">
                 <li><strong>Unlimited</strong> listings per month</li>
                 <li><strong>Unlimited</strong> sale price</li>
-                <li>Buy and sell on iPhone and online</li>
+                <li>Buy and sell on your computer and mobile devices</li>
                 <li>Manage your sales</li>
                 <li>Customised header image on your page</li>
                 <li>Get paid straight to your Paypal account</li>
