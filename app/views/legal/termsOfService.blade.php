@@ -5,7 +5,7 @@
     <div class="panel-body">
         <h1>Terms of Service</h1>
 
-        <p>The following terms and conditions govern all use of the&nbsp;Sailr.co website and all content, services and products available at or through the website. The Website is owned and operated by Sailr. The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation,&nbsp;<a href="http://automattic.com/privacy/">Sailr&rsquo;s Privacy Policy</a>) and procedures that may be published from time to time on this Site by Sailr (collectively, the &ldquo;Agreement&rdquo;).</p>
+        <p>The following terms and conditions govern all use of the&nbsp;Sailr.co website and all content, services and products available at or through the website. The Website is owned and operated by Sailr. The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation,&nbsp;<a href="http://sailr.co/legal/privacy-policy/">Sailr&rsquo;s Privacy Policy</a>) and procedures that may be published from time to time on this Site by Sailr (collectively, the &ldquo;Agreement&rdquo;).</p>
 
         <p>Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by Sailr, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.</p>
 
@@ -49,7 +49,7 @@
 
         <p>By submitting Content to Sailr for inclusion on your Account, you grant Sailr a world-wide, royalty-free, and non-exclusive license to reproduce, modify, adapt and publish the Content for the purpose of displaying, distributing and promoting your account, your listings and Sailr. If you delete Content, Sailr will use reasonable efforts to remove it from the Website, but you acknowledge that caching or references to the Content may not be made immediately unavailable, however due to the nature of Sailr this data may still be available to Sailr administrators and purchasers of your products.</p>
 
-        <p>Without limiting any of those representations or warranties, Saile has the right (though not the obligation) to, in Sailr&rsquo;s sole discretion (i) refuse or remove any content or account that, in Sailr&rsquo;s reasonable opinion, violates any Sailr policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in Sailr&rsquo;s sole discretion. Sailr will have no obligation to provide a refund of any amounts previously paid.</p>
+        <p>Without limiting any of those representations or warranties, Sailr has the right (though not the obligation) to, in Sailr&rsquo;s sole discretion (i) refuse or remove any content or account that, in Sailr&rsquo;s reasonable opinion, violates any Sailr policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in Sailr&rsquo;s sole discretion. Sailr will have no obligation to provide a refund of any amounts previously paid.</p>
 
         <ol>
             <li>
@@ -108,7 +108,7 @@
                     </li>
                 </ul>
             </li>
-        </ol>
+
 
         <p>We welcome you to create an online store and sell goodd and services (&ldquo;products&rdquo;, &ldquo;items&rdquo;) on Sailr. In order to sell on Sailr Users must:</p>
 
@@ -191,7 +191,6 @@
             </li>
         </ul>
 
-        <ol>
             <li>
                 <p><strong>Purchases.</strong> Users may purchase products on Sailr. These products are the sole responsibility of the seller. Sailr simply offers a platform to allow for sales of products, however accepts no responsibility for the products and the conduct of others members of Sailr. Sailr in no way sells, provides, supplies, offers or endorses any of these items. Any disputes regarding the whereabouts, quality, warranty, condition, merchantability, resemblance to description (including images), fitness for purpose and function etc. and due remedies (including but not limited to refunds) must be carried out through the seller or any payment processing third-parties directly.</p>
             </li>
