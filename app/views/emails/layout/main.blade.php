@@ -5,7 +5,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width"/>
-        @include('emails.layout.css.ink')
+       {{--  @include('emails.layout.css.ink') --}}
     </head>
     <body>
 @endif
