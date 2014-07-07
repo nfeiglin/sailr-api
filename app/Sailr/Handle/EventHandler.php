@@ -1,6 +1,7 @@
 <?php
 
 namespace Sailr\Handle;
+use Illuminate\Support\Facades\Queue;
 
 class EventHandler {
 
@@ -67,21 +68,21 @@ class EventHandler {
 
     public function onLoggingEvent($level, $message, $context) {
 
-        \Queue::push(function($job) use ($level, $message, $context){
+        Queue::push(function($job) use ($level, $message, $context){
 
-            \Config::set('mail.driver', 'mailgun'); //Let's send these with Mailgun rathern than Mandrill to lessen the load
+            Config::set('mail.driver', 'mailgun');
 
 
             $data = ['level' => $level, 'logMessage' => $message, 'context' => $context];
 
-            \Mail::send('emails.admin.log', $data, function($message) use ($level) {
+            Mail::send('emails.admin.log', $data, function($message) use ($level) {
                 $message->from(['tech@sailr.co' => 'Sailr Log-bot']);
                 $message->to(\Config::get('admin.email'));
                 $message->subject('A log from Sailr has been recorded. Level: ' . $level);
             });
 
 
-            \Config::set('mail.driver', 'mandrill');
+            Config::set('mail.driver', 'mandrill');
 
             $job->delete();
         });
