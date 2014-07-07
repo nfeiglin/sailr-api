@@ -147,7 +147,7 @@ class ItemsController extends BaseController
             return Response::json($res, 400);
         }
 
-        $v = Validator::make($item->toArray(), Item::$updateRules);
+        $v = Validator::make($item->toArray(), Item::$publishRules);
 
         if ($v->fails()) {
             $res = ['errors' => $v->errors()];
