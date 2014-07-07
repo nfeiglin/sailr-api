@@ -22,6 +22,8 @@
 <body class="no-purple" ng-controller="feedController">
 @endif
 
+@include('parts.middle')
+
     @if($hasNavbar == 1)
         @include('parts.navbar')
         @if(isset($title))

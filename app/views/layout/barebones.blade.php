@@ -22,6 +22,7 @@
 
 
 <body ng-controller="feedController" class="no-bottom-margin">
+    @include('parts.middle')
     @yield('body', '')
     @include('parts.js-bottom')
 </body>
