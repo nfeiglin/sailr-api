@@ -6,10 +6,9 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
 
         @foreach($followers as $follower)
-            <?php $follower['profile_img'][0]['url'] = 'http://sailr.web/img/default-sm.jpg'; ?>
             <div class="item-user panel panel-default col-sm-6 col-md-6 col-lg-6">
                 <a href="{{ action('UsersController@show', $follower['username']) }}">
-                    <img src="{{ $follower['profile_img'][0]['url'] }}" alt="{{{ $follower['name']}}}'s profile image" class="item-user-img img-circle" draggable="false">
+                    <img src="{{ $follower['profile_img'][0]['url'] or '//sailr.co/img/default-sm.jpg' }}" alt="{{{ $follower['name']}}}'s profile image" class="item-user-img img-circle" draggable="false">
                 </a>
 
                 <a href="{{ action('UsersController@show', $follower['username']) }}" class="h4 name">
