@@ -200,6 +200,12 @@ Route::group(['before' => 'csrf'], function () {
         Route::resource('user', 'UsersController', ['only' => ['store', 'show']]);
 
     });
+
+    Route::group(['prefix' => 'onboard'], function(){
+       Route::group(['prefix' => 'recent'], function() {
+          Route::get('products/{offset?}/{limit?}', 'OnboardController@getRecentProducts');
+       });
+    });
 });
 
 

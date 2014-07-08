@@ -467,3 +467,104 @@ app.directive('sailrEntityLink', function() {
    }
 });
 
+app.factory('OnboardFactory', function($http){
+    var service = {};
+
+    service.getRecentProducts = function (offset, limit) {
+        console.log('OFFSET IS ::' + offset);
+        console.log('LIMIT IS:: ' + limit);
+        /*
+        if (!limit) {
+            limit = 25;
+        }
+*/
+        //url/{offset}/{limit}/
+        var url = baseURL + '/onboard/recent/products/' + offset + '/' + limit;
+        console.log(url);
+        return $http.get(url);
+    };
+
+    return service;
+});
+
+app.directive('sailrNumberOfProducts', function() {
+    return {
+        restrict: 'A',
+        controller: ['$scope', function($scope){}]
+    }
+});
+
+app.directive('sailrProductPreview', function() {
+    return {
+        restrict: 'AE',
+        scope: {
+            productTitle: '@',
+            productPreviewImageUrl: '@',
+            productLinkUrl: '@',
+            productSellerUsername: '@',
+            productSellerName: '@',
+            productSellerUrl: '@'
+        },
+
+        templateUrl: baseURL + '/js/templates/onboard/recent/products/product-preview.html'
+    }
+});
+
+app.directive('sailrRecentProducts', function() {
+    return {
+        restrict: 'AE',
+        require: 'sailrNumberOfProducts',
+        scope: {
+          sailrNumberOfProducts: '@'
+          
+        },
+
+        controller: ['$scope', '$http', 'OnboardFactory', function ($scope, $http, OnboardFactory) {
+
+            $scope.baseURL = baseURL;
+            $scope.products = [];
+            $scope.initialValue = 00;
+
+            $scope.getProducts = function (offset, limit) {
+
+                OnboardFactory.getRecentProducts(offset, limit)
+                    .success(function(data, status, headers) {
+                    /*append all the things */
+                    angular.forEach(data, function (value) {
+                       $scope.products.push(value);
+                    });
+
+                })
+                .error(function(data, status, headers) {
+                    $scope.webError = true;
+                    console.log(data);
+                });
+
+            };
+            
+        }],
+
+        templateUrl: baseURL + '/js/templates/onboard/recent/products/master.html',
+        link: function(scope, iElement, iAttrs) {
+
+            scope.initialValue = iAttrs.sailrNumberOfProducts;
+            iAttrs.$observe('sailrNumberOfProducts', function(){
+                console.log('NEW VALUE: ' + newValue);
+                console.log('OLD VALUE: ' + oldValue);
+
+                    if (iAttrs.sailrNumberOfProducts) {
+                        var offset = newValue - oldValue;
+                        scope.getProducts(offset, scope.numberOfProducts);
+                        console.log(iAttrs);
+                        console.log('IN LINK FUNCTION:: number of products: ' + iAttrs.numberOfProducts);
+                        scope.getProducts(offset, scope.numberOfProducts);
+                    }
+
+
+               });
+            },
+
+        }
+    }
+});
+
