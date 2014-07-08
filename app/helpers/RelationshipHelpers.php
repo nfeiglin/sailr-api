@@ -39,7 +39,8 @@ class RelationshipHelpers
 
         $users = User::whereIn('id', $arrayOne)->with(array(
             'ProfileImg' => function ($y) {
-                    $y->select(['id', 'type', 'url']);
+                    $y->where('type', '=', 'small');
+                    $y->select(['user_id', 'id', 'type', 'url']);
                 }
         ))->get($what);
 
@@ -59,7 +60,8 @@ class RelationshipHelpers
 
         $users = User::whereIn('id', $arrayOne)->with(array(
             'ProfileImg' => function ($y) {
-                    $y->select(['id', 'type', 'url']);
+                    $y->where('type', '=', 'small');
+                    $y->select(['user_id', 'id', 'type', 'url']);
                 }
         ))->get($what);
 
