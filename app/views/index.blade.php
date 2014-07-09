@@ -88,6 +88,9 @@
 <div class="ng-cloak container">
     <div class="row mt centered">
         <div class="col-lg-6 col-lg-offset-3">
+            <p>
+                <a href="{{ URL::to('/ANTdesign') }}">Click here</a> to see a real Sailr store in action
+            </p>
             <h1>Recently added products</h1>
         </div>
     </div>
