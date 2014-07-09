@@ -46,7 +46,24 @@
 
     		</div>
 			@endforeach
+
+            <div class="row">
+                <hr>
+                <div class="col-xs-12 ng-cloak">
+                    <h2>Recently added products</h2>
+                    <p class="subtitle">These are recently added products from everyone on Sailr</p>
+                </div>
+
+                <sailr-recent-products sailr-number-of-products="@{{ numberOfProducts }}" sailr-offset-by="@{{ offsetLoadProducts }}">
+                </sailr-recent-products>
+                <div class="col-xs-12 col-md-4 col-lg-4">
+                    <button class="btn btn-block btn-sm btn-purple" ng-click="loadMoreRecentProducts(3)">Load more recent...</button>
+                </div>
+            <hr>
+            </div>
+
+
 		{{ $paginator->links() }}
-    	</div>
+    </div>
 
 	@stop
