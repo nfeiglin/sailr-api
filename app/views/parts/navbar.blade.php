@@ -18,7 +18,7 @@
 
                 <div class="nav navbar-nav navbar-left">
                     @if(Auth::guest())
-                   <a href="{{ URL::action('UsersController@create') }}" class="btn btn-emerald navbar-btn btn-block btn-long">Register</a>
+                   <a href="{{ URL::action('UsersController@create') }}" class="btn btn-turq navbar-btn btn-block btn-long">Sign up</a>
                     @endif
 
                     @if(Auth::check())
