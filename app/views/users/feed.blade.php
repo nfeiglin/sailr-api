@@ -1,7 +1,20 @@
 @extends('layout.main')
+    @section('head')
+        <script src="{{ URL::asset('js/controllers/feed/feedContentController.js') }}"></script>
+    @stop
 	@section('content')
-		<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 well well-sm">
-			
+
+		<div class="col-lg-8 col-md-8 col-sm-8 col-sm-offset-2 col-lg-offset-2 col-md-offset-2 col-xs-12 well well-sm" data-ng-controller="feedContentController">
+
+            <div class="row">
+                <div class="col-xs-12 panel ng-cloak" style="margin-bottom: 20px">
+                    <sailr-feed-onboard-box>
+
+                    </sailr-feed-onboard-box>
+                </div>
+            </div>
+
+
 			@foreach($items as $item)
 			<div class="item" id="{{ $item['id'] }}">
 				<div class="item-user panel panel-default">

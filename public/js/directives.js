@@ -487,6 +487,14 @@ app.factory('OnboardFactory', function($http){
     return service;
 });
 
+app.directive('sailrFeedOnboardBox', function() {
+    return {
+        restrict: 'E',
+        scope: false,
+        templateUrl: baseURL + '/js/templates/onboard/feed/onboard-box.html'
+    }
+});
+
 app.directive('sailrNumberOfProducts', function() {
     return {
         restrict: 'A',
