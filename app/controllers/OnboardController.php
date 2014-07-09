@@ -19,7 +19,7 @@ class OnboardController extends \BaseController {
             },
 
             'Photos' => function($p) {
-                $p->where('type', '=', 'thumbnail');
+                $p->where('type', '=', 'full_res');
                 $p->select(['item_id', 'url']);
             }
         ])->get(['id', 'user_id', 'created_at', 'title', 'price', 'currency', 'ships_to']);
