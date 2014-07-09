@@ -38,7 +38,7 @@ class SessionController extends BaseController
             return Redirect::back()->with('message', 'Username, email or password is incorrect')->withInput(Input::only('username'));
         }
 
-        return Redirect::intended('/');
+        return Redirect::to('/');
     }
 
 
