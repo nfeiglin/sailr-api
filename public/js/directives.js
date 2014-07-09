@@ -473,14 +473,7 @@ app.factory('OnboardFactory', function($http){
     service.getRecentProducts = function (offset, limit) {
         console.log('OFFSET IS ::' + offset);
         console.log('LIMIT IS:: ' + limit);
-        /*
-        if (!limit) {
-            limit = 25;
-        }
-*/
-        //url/{offset}/{limit}/
         var url = baseURL + '/onboard/recent/products/' + offset + '/' + limit;
-        console.log(url);
         return $http.get(url);
     };
 
@@ -496,6 +489,13 @@ app.directive('sailrFeedOnboardBox', function() {
 });
 
 app.directive('sailrNumberOfProducts', function() {
+    return {
+        restrict: 'A',
+        controller: ['$scope', function($scope){}]
+    }
+});
+
+app.directive('sailrOffsetBy', function() {
     return {
         restrict: 'A',
         controller: ['$scope', function($scope){}]
@@ -521,9 +521,10 @@ app.directive('sailrProductPreview', function() {
 app.directive('sailrRecentProducts', function() {
     return {
         restrict: 'AE',
-        require: 'sailrNumberOfProducts',
+        require: ['sailrNumberOfProducts', 'sailrOffsetBy'],
         scope: {
-          sailrNumberOfProducts: '@'
+          sailrNumberOfProducts: '@',
+          sailrOffsetBy: '@'
           
         },
 
@@ -542,10 +543,12 @@ app.directive('sailrRecentProducts', function() {
                        $scope.products.push(value);
                     });
 
+                    //console.log('NUMBER OF ELEMENTS IN ARRAY:: ' + $scope.products.length);
+
                 })
                 .error(function(data, status, headers) {
                     $scope.webError = true;
-                    console.log(data);
+                    //console.log(data);
                 });
 
             };
@@ -553,26 +556,21 @@ app.directive('sailrRecentProducts', function() {
         }],
 
         templateUrl: baseURL + '/js/templates/onboard/recent/products/master.html',
-        link: function(scope, iElement, iAttrs) {
+        link: function(scope, elem, attrs) {
 
-            scope.initialValue = iAttrs.sailrNumberOfProducts;
-            iAttrs.$observe('sailrNumberOfProducts', function(){
-                console.log('NEW VALUE: ' + newValue);
-                console.log('OLD VALUE: ' + oldValue);
+            var loadProducts = function(numberToLoad, offset) {
+                scope.getProducts(offset, numberToLoad);
+                return true;
+            };
 
-                    if (iAttrs.sailrNumberOfProducts) {
-                        var offset = newValue - oldValue;
-                        scope.getProducts(offset, scope.numberOfProducts);
-                        console.log(iAttrs);
-                        console.log('IN LINK FUNCTION:: number of products: ' + iAttrs.numberOfProducts);
-                        scope.getProducts(offset, scope.numberOfProducts);
-                    }
+            scope.$watch(function() {
+                return [attrs.sailrNumberOfProducts, attrs.sailrOffsetBy];
+            }, function() {
+                loadProducts(scope.sailrNumberOfProducts, scope.sailrOffsetBy);
+            }, true);
 
-
-               });
-            },
+            }
 
         }
-    }
 });
 
