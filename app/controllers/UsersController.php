@@ -57,7 +57,7 @@ class UsersController extends \BaseController
         Event::fire('user.create', $user);
 
         //Take them to the choose plan page!
-        return Redirect::action('choose-plan')->with('message', 'Signed up! Welcome to Sailr');
+        return Redirect::action('choose-plan')->with('message', "Signed up! Welcome to Sailr <script>ga('send', 'event', 'user', 'create', 'signed up', 1);</script>");
     }
 
     /**
