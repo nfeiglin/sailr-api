@@ -75,8 +75,7 @@
         <hr>
         <div class="row centered">
             <div class="col-lg-6 col-lg-offset-3">
-                <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">
-                    &#10141; Sign up</a>
+                <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">Sign up</a>
             </div>
 
         </div>
