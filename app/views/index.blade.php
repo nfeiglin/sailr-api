@@ -84,7 +84,7 @@
     </div>
     <!-- /row -->
     <hr>
-</div>
+
 
 <div class="ng-cloak container">
     <div class="row mt centered">
@@ -95,10 +95,11 @@
 
     <div class="row mt centered">
 
-        <sailr-recent-products sailr-number-of-products="@{{ numberOfProducts }}">
+        <sailr-recent-products sailr-number-of-products="@{{ numberOfProducts }}" sailr-offset-by="@{{ offsetLoadProducts }}">
 
         </sailr-recent-products>
-        <button ng-click="numberOfProducts = 1234">HELLO</button>
+        <button class="btn btn-sm btn-purple" ng-click="loadMore(3)">Load more...</button>
+        <p class="ng-cloak help-block text-primary" ng-if="showNowSignupText">Seen enough products? <a href="{{ URL::action('UsersController@create') }}">Sign up now.</a></p>
 
     </div>
 </div>
@@ -168,7 +169,7 @@
 
 <p class="centered hidden">Based on BlackTie.co website - Attribution License 3.0 - 2013</p>
 <p class="centered">Prices subject to change. Contact founders@sailr.co with any questions, feedback or comments.</p>
-
+</div>
 
 
 @stop
