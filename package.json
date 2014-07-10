@@ -1,0 +1,33 @@
+{
+  "name": "sailr",
+  "description": "The streaming build system",
+  "version": "3.8.6",
+  "homepage": "http://gulpjs.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gulpjs/gulp"
+  },
+  "author": {
+    "name": "Fractal",
+    "email": "contact@wearefractal.com",
+    "url": "http://wearefractal.com/"
+  },
+  "devDependencies": {
+    "gulp": "*",
+    "del": "^0.1.1",
+    "gulp-autoprefixer": "0.0.8",
+    "gulp-cache": "^0.2.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-coffee": "^2.0.1",
+    "gulp-concat": "^2.3.3",
+    "gulp-imagemin": "^0.6.1",
+    "gulp-jshint": "^1.7.0",
+    "gulp-livereload": "^2.1.0",
+    "gulp-minify-css": "^0.3.6",
+    "gulp-notify": "^1.4.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-ruby-sass": "^0.6.0",
+    "gulp-sourcemaps": "^0.4.5",
+    "gulp-uglify": "^0.3.1"
+  }
+}
