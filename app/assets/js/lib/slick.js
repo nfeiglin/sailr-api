@@ -19,7 +19,7 @@
 (function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
+        define(['../../../../public/js/jquery'], factory);
     } else {
         factory(jQuery);
     }
