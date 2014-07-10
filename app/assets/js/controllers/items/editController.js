@@ -1,18 +1,10 @@
+if (itemModel) {
+    itemModel.price = parseFloat(itemModel.price);
+    itemModel.initial_units = parseFloat(itemModel.initial_units);
+    itemModel.ship_price = parseFloat(itemModel.ship_price);
+    itemModel.public = parseInt(itemModel.public);
+}
 
-/*
- if(itemModel.ship_price >= 0 || itemModel.ship_price.length > 0) {
- itemModel.ship_price = parseFloat(itemModel.ship_price);
- }
-
- var filteredItem = itemModel.filter(function(val) {
- return !(val === "" || typeof val == "undefined" || val === null);
- });
-
- */
-itemModel.price = parseFloat(itemModel.price);
-itemModel.initial_units = parseFloat(itemModel.initial_units);
-itemModel.ship_price = parseFloat(itemModel.ship_price);
-itemModel.public = parseInt(itemModel.public);
 
 var openFileBrowser = function () {
     document.getElementById('addFiles').click();

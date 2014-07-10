@@ -2,13 +2,6 @@
 var totalPriceText = $('#total-price');
 var checkoutBtn = $('#checkout-btn');
 $(document).ready(function(){
-	var imgGallery = $('.img-gallery');
-    imgGallery.slick({
-        dots: true,
-        arrows: false
-
-    });
-    
 
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.

@@ -1,16 +1,11 @@
 @extends('layout.settings.main')
 @section('head')
-<script src="{{ URL::asset('js/controllers/billing/billingController.js') }}"></script>
 <script>
-
    var cardType = '{{ $cardType or '' }}';
    var last4 = '{{ $last4 or '' }}';
    var usersName = '{{{ $user->name or ''}}}';
    var subscription = {{ $subscription }};
 </script>
-
-
-
 @stop
 
 @section('content')

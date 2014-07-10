@@ -7,7 +7,6 @@
         results: {{ $results }}
     };
 </script>
-<script src="{{ URL::asset('js/controllers/search/searchController.js') }}"></script>
 @stop
 
 @section('content')

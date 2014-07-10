@@ -6,7 +6,7 @@
         notifications: {{ $notifications }}
     };
 </script>
-<script src="{{ URL::asset('js/controllers/notifications/notificationsController.js') }}"></script>
+
 @stop
 
 @section('content')

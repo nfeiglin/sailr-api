@@ -1,9 +1,5 @@
 @extends('layout.barebones')
 
-@section('head')
-<script src="{{ URL::asset('js/controllers/subscription/chooseController.js') }}"></script>
-@stop
-
 @section('body')
 
 @if(Session::has('message'))<div class="alert alert-warning">{{ Session::get('message') }}</div> @endif

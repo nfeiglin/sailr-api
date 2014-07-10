@@ -4,10 +4,7 @@ body {
 }
 
 body .purpleBackground {
-    background: url('../images/swag-bg.jpg') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+    background: url('//sailr.co/build/images/purple-bg-sm.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -17,7 +14,6 @@ nav {
 
 .form-signin {
     max-width: 330px;
-
     padding: 15px;
     margin-bottom: auto;
     margin-top: 80px !important;

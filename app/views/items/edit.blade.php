@@ -8,7 +8,7 @@
     var itemModel = {{ $jsonItem }};
     var currencies = {{ json_encode(Config::get('currencies.both')) }};
 </script>
-<script src="{{ URL::asset('js/controllers/items/editController.js') }}"></script>
+
 @stop
 
 @section('content')

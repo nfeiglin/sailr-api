@@ -1,7 +1,4 @@
 @extends('layout.main')
-    @section('head')
-        <script src="{{ URL::asset('js/controllers/feed/feedContentController.js') }}"></script>
-    @stop
 	@section('content')
 
 		<div class="col-lg-8 col-md-8 col-sm-8 col-sm-offset-2 col-lg-offset-2 col-md-offset-2 col-xs-12 well well-sm" data-ng-controller="feedContentController">

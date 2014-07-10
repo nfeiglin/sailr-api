@@ -1,10 +1,5 @@
 @extends('layout.main')
 
-@section('head')
-<link href="{{ URL::asset('css/home.css') }}" rel="stylesheet">
-<script src="{{ URL::asset('js/controllers/homeController.js') }}"></script>
-@stop
-
 @section('full-width-top')
 <div id="headerwrap">
     <div class="container">

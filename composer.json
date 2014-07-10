@@ -16,8 +16,6 @@
         "laravel/cashier": "~2.0",
 		"pda/pheanstalk": "~2.0"
 
-
-
 	},
 	"autoload": {
 		"classmap": [

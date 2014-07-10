@@ -14,7 +14,6 @@
     @include('parts.js-head')
 
     <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
-    <script src="{{ URL::asset('js/controllers/users/updateController.js') }}"></script>
 
     @yield('head','')
 </head>

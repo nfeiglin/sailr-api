@@ -1,4 +1,4 @@
-app.factory('OnboardFactory', function($http){
+app.factory('OnboardFactory',['$http',  function($http){
     var service = {};
 
     service.getRecentProducts = function (offset, limit) {
@@ -9,9 +9,9 @@ app.factory('OnboardFactory', function($http){
     };
 
     return service;
-});
+}]);
 
-app.factory('StripeFactory', function ($q, $rootScope) {
+app.factory('StripeFactory',['$q', function ($q) {
     var service = {};
 
     service.sayHello = function () {
@@ -53,9 +53,9 @@ app.factory('StripeFactory', function ($q, $rootScope) {
     };
 
     return service;
-});
+}]);
 
-app.factory('HelperFactory', function ($http) {
+app.factory('HelperFactory', function () {
     var service = {};
 
     service.stripWhiteSpace = function (string) {
@@ -90,7 +90,7 @@ app.factory('HelperFactory', function ($http) {
 });
 
 
-app.factory('SubscriptionFactory', function ($q, $rootScope, $http) {
+app.factory('SubscriptionFactory', ['$q', '$rootScope', '$http', function ($q, $rootScope, $http) {
 
     var service = {};
     service.subscriptionURL = baseURL + '/settings/subscription';
@@ -160,9 +160,9 @@ app.factory('SubscriptionFactory', function ($q, $rootScope, $http) {
 
     return service;
 
-});
+}]);
 
-app.factory('CommentsFactory', function ($q, $http) {
+app.factory('CommentsFactory',['$q', '$http', function ($q, $http) {
 
     var service = {};
 
@@ -215,4 +215,4 @@ app.factory('CommentsFactory', function ($q, $http) {
     return service;
 
 
-});
+}]);

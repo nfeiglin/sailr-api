@@ -1,8 +1,6 @@
 @extends('layout.settings.main')
 
 @section('head')
-
-<script src="{{ URL::asset('js/controllers/subscription/manageController.js') }}"></script>
 <script>
     var subscription = {{ $subscription }};
     var user = {{ $user }};

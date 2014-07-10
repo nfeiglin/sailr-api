@@ -5,7 +5,6 @@
     var currencyCodes = {{ json_encode(Config::get('currencies.codes')) }};
 </script>
 
-<script src="{{ URL::asset('js/controllers/items/indexController.js') }}"></script>
 @stop
 
 @section('content')
