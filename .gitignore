@@ -12,3 +12,4 @@ sailr-web/.idea/sailr-web.iml
 sailr-web/.idea/workspace.xml
 .env.local.php
 compiled.php
+node_modules/
