@@ -15,3 +15,4 @@ compiled.php
 node_modules/
 app/assets/css/.sass-cache
 .idea
+.sass-cache
