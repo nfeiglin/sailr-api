@@ -27,7 +27,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
-
+//Route::get('asset/show/{path?}', 'Sailr\TestPipe\TestPipeController@showAsset')->where('path', '(.*)');
 
 View::composer('*', function ($view) {
     if (!array_key_exists('hasNavbar', $view->getData())) {
@@ -115,7 +115,7 @@ Route::group(['prefix' => 'legal'], function() {
 
 Route::get('/s/{query}', 'SearchesController@show');
 Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
-Route::post('payment/stripe/webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
+Route::any('payment/stripe/webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
 
 Route::group(['before' => 'csrf'], function () {
     Route::get('test', function () {
