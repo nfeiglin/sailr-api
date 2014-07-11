@@ -17,18 +17,23 @@ var paths = {
     scripts:
         [
             'app/assets/js/angular-file/**/*.js',
-            'app/assets/js/app.js',
+            'app/assets/js/twitter-text-1.9.1.js',
             'app/assets/js/lib/**/*.js',
+            'app/assets/js/main.js',
+            'app/assets/js/app.js',
             'app/assets/js/directives.js',
             'app/assets/js/factorys.js',
-            'app/assets/js/twitter-text-1.9.1.js',
-            'app/assets/js/main.js',
             'app/assets/js/controllers/**/*.js'
         ],
-    css: ['app/assets/css/base.css'],
+    css: ['app/assets/css/base.scss'],
     img: ['app/assets/img/**/*.jpg', 'app/assets/img/**/*.jpeg', 'app/assets/img/**/*.png', 'app/assets/img/**/*.gif']
 };
 
+var config = {
+    sass: {
+        loadPath: ['~/web/app/assets/css']
+    }
+};
 
 // Clean
 gulp.task('clean', function() {
@@ -38,8 +43,10 @@ gulp.task('clean', function() {
 
 gulp.task('scripts', function() {
     return gulp.src(paths.scripts)
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('public/build/js'))
         .pipe(uglify())
-        .pipe(concat('main.min.js'))
+        .pipe(rename('main.min.js'))
         .pipe(gulp.dest('public/build/js'))
         ;
 });
@@ -47,6 +54,7 @@ gulp.task('scripts', function() {
 // Styles
 gulp.task('styles', function() {
     return gulp.src(paths.css)
+        .pipe(sass(config.sass))
         .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
         .pipe(gulp.dest('public/build/css'))
         .pipe(minifycss())
