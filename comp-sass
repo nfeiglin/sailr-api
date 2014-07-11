@@ -1,0 +1,13 @@
+#!/bin/bash
+cd ~
+DIRECTORY="web/app/assets/css"
+cd $DIRECTORY
+CACHEDIR=".sass-cache"
+#if [ -d "$CACHEDIR" ]; then
+  rm -r $CACHEDIR
+  echo Cleared sass cache
+#fi
+sass base.scss > base.css
+echo Compiled scss
+echo now Gulp min time
+gulp styles
