@@ -10,7 +10,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .purpleBackground {
-    background: url('../build/images/purple-bg-sm.jpg') no-repeat center center fixed;
+    background: url($backgroundImageUrl) no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -43,11 +43,6 @@ nav .btn {
     background-size: contain;
 }
 
-
-[ng-cloak] {
-    display: none !important;
-}
-
 .ng-cloak {
     display: none !important;;
 }
@@ -67,10 +62,12 @@ a {
 
 #backgroundSwag {
     z-index: 400;
-    background: url('../build/images/purple-bg-sm.jpg') no-repeat;
+    background-image: url($backgroundImageUrl);
+    background-size: cover;
+    background-repeat: no-repeat;
     position: relative;
     padding-top: 150px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
 
 #backgroundSwag h1 {
@@ -232,10 +229,7 @@ button.paypal-btn:hover {
 }
 
 .noSelect {
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
+    user-select: none;
     cursor: pointer;
 
 }
@@ -248,10 +242,6 @@ button.paypal-btn:hover {
 }
 
 .animate-down.ng-show {
-    -webkit-transition: all 2.5s ease-in;
-    -moz-transition: all 2.5s ease-in;
-    -ms-transition: all 2.5s ease-in;
-    -o-transition: all 2.5s ease-in;
     transition: all 2.5s ease-in;
 
 }
@@ -343,7 +333,7 @@ input.ng-valid.ng-dirty:focus {
 
 /* Hide the border when editing a contenteditable div */
 [contenteditable]:focus {
-    outline: 0px solid transparent;
+    outline: 0 solid transparent;
 }
 
 
@@ -572,15 +562,6 @@ input[type="file"] {
     padding-bottom: 60px;
 }
 
-/*
-* {
-    -webkit-transition: all 0.2s ease;
-    -moz-transition:    all 0.2s ease;
-    -ms-transition:     all 0.2s ease;
-    -o-transition:      all 0.2s ease;
-}
-*/
-
 .no-bottom-margin {
     margin-bottom: 0 !important;
 }
@@ -592,7 +573,6 @@ input[type="file"] {
 .stuff-to-show {
     position: relative;
     height: 100px;
-    -webkit-transition:top linear 1.5s;
     transition:top linear 1.5s;
     top: 0;
 }
@@ -606,9 +586,6 @@ input[type="file"] {
 }
 
 animate.slide-hide, .slide-show {
-    -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
-    -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
-    -o-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
     transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
 }
 animate.slide-hide {
@@ -625,24 +602,12 @@ animate.slide-show {
 }
 animate.slide-show.slide-show-active {
     position: relative;
-    top: 0px;
+    top: 0;
 }
 
 #cardFormContainer > * {
-    -webkit-transition: all 0.2s ease;
-    -moz-transition:    all 0.2s ease;
-    -ms-transition:     all 0.2s ease;
-    -o-transition:      all 0.2s ease;
+    transition: all 0.2s ease;
 }
-
-/*
-* {
-    -webkit-transition: all 0.2s ease;
-    -moz-transition:    all 0.2s ease;
-    -ms-transition:     all 0.2s ease;
-    -o-transition:      all 0.2s ease;
-}
-*/
 
 .form-control {
     max-width: 100%
@@ -664,7 +629,6 @@ body {
 input.success {
     border-color: #50cc6e !important;
     border-width: 2px;
-    -webkit-box-shadow: inset 0 4px 4px rgba(0, 0, 0, .075);
     box-shadow: inset 0 4px 4px rgba(0, 0, 0, .075);
 }
 
