@@ -13,8 +13,6 @@
 
     @include('parts.js-head')
 
-    <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
-
     @yield('head','')
 </head>
 

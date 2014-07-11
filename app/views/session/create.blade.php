@@ -1,7 +1,4 @@
 @extends('layout.main')
-@section('head')
-<link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
-@stop
 
 @section('content')
 

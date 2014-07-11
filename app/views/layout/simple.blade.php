@@ -7,8 +7,6 @@
 
     <title>Sailr | {{{ Str::limit($title, 140) }}}</title>
     @include('parts.js-head')
-    <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
-
     @yield('head', '')
 </head>
 
