@@ -333,20 +333,19 @@ app.directive('focusMe',['$timeout', '$parse', function ($timeout, $parse) {
     };
 }]);
 
-
+/*
 app.directive('imgGallery', function() {
    return {
+       priority: -99,
        restrict: 'C',
        scope: false,
        link: function(scope, element, attrs) {
-            $(document).ready(function() {
                 element.slick({
                     dots: true,
                     arrows: false
 
                 });
-            });
-
        }
    }
 });
+    */
