@@ -3,7 +3,6 @@
 <script>
    var cardType = '{{ $cardType or '' }}';
    var last4 = '{{ $last4 or '' }}';
-   var usersName = '{{{ $user->name or ''}}}';
    var subscription = {{ $subscription }};
 </script>
 @stop
@@ -55,7 +54,7 @@
                                     </button>
                                 </div>
                                 <div class="ifBlock2" ng-if="posting">
-                                    <div class="dots">Updating...</div>
+                                    <div class="dots ng-cloak">Updating...</div>
                                 </div>
 
                             </div>
@@ -65,7 +64,6 @@
                 </div>
 
             </div>
-        <input type="hidden" value="{{ $user->name or ''}}" id="initName">
         </div>
 
 
@@ -123,25 +121,22 @@
 
 @stop
 
-@section('bottom')
-<script>
-
+@section('end-body')
+<script defer="defer">
     var cardPreview = $('#cardForm').card({
-        // a selector or jQuery object for the container
-        // where you want the card to appear
-        container: '.card-wrapper', // *required*
-        numberInput: 'input#cardNumber', // optional — default input[name="number"]
-        expiryInput: 'input#cardExpiry', // optional — default input[name="expiry"]
-        cvcInput: 'input#cardCVC', // optional — default input[name="cvc"]
-        nameInput: 'input#cardName', // optional - defaults input[name="name"]
+        container: '.card-wrapper',
+        numberInput: 'input#cardNumber',
+        expiryInput: 'input#cardExpiry',
+        cvcInput: 'input#cardCVC',
+        nameInput: 'input#cardName',
 
-        width: 360, // optional — default 350px
-        formatting: true // optional - default true
+        width: 360,
+        formatting: true,
+
+        values: {
+            name: loggedInUser.name
+        }
     });
 
-    if (usersName.length > 0) {
-        $('input#cardName').val(usersName);
-        $('input#cardName').trigger('change');
-    }
 </script>
 @stop
