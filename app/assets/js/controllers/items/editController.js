@@ -1,4 +1,4 @@
-app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$filter', function ($scope, $http, $upload, $timeout, $filter) {
+app.controller('editController', ['$scope', '$http', '$upload', '$timeout', function ($scope, $http, $upload, $timeout) {
 
     if (typeof itemModel != 'undefined') {
         itemModel.price = parseFloat(itemModel.price);
@@ -6,12 +6,6 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
         itemModel.ship_price = parseFloat(itemModel.ship_price);
         itemModel.public = parseInt(itemModel.public);
     }
-
-
-    var openFileBrowser = function () {
-        document.getElementById('addFiles').click();
-    };
-
 
     $scope.countries = countries;
     $scope.currencies = currencies;
@@ -105,17 +99,6 @@ app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$fi
 
 
             });
-
-    };
-
-    $scope.isFileBrowserOpen = false;
-    $scope.openFileBrowser = function () {
-        if (!$scope.isFileBrowserOpen) {
-            $scope.isFileBrowserOpen = true;
-            document.getElementById('addFiles').click();
-            $scope.isFileBrowserOpen = false;
-        }
-        console.log('BUTTON CLICKED');
 
     };
 
