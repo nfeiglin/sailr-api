@@ -38,8 +38,9 @@ nav .btn {
 }
 
 .center-logo {
-    background: url('../images/logo.png') top center no-repeat;
-    background-position: center;
+    background-image: url($logoUrl);
+    background-position: top center;
+    background-repeat: no-repeat;
     background-size: contain;
 }
 
