@@ -2016,6 +2016,2024 @@ var sailrClasses = {
         }
     }
 })();
+var app = angular.module('app', ['angularFileUpload', 'ngSanitize']);
+
+app.run(['$rootScope', function ($rootScope) {
+    if (baseURL) {
+        $rootScope.baseURL = baseURL;
+    }
+    else {
+        $rootScope.baseURL = 'https://sailr.co';
+    }
+
+    $rootScope.loggedInUser = loggedInUser;
+}]);
+
+var openFileBrowser = function () {
+    document.getElementById('addFiles').click();
+};
+app.directive('contenteditable', function () {
+    return {
+        restrict: 'A', // only activate on element attribute
+        require: '?ngModel', // get a hold of NgModelController
+        link: function (scope, element, attrs, ngModel) {
+            if (!ngModel) return; // do nothing if no ng-model
+
+            // Specify how UI should be updated
+            ngModel.$render = function () {
+                element.html(ngModel.$viewValue);
+            };
+
+            // Listen for change events to enable binding
+            element.on('blur keyup change input', function () {
+                scope.$apply(read);
+            });
+            read(); // initialize
+
+            // Write data to the model
+            function read() {
+                var html = element.html();
+                // When we clear the content editable the browser leaves a <br> behind
+                // If strip-br attribute is provided then we strip this out
+                if (attrs.stripBr && html == '<br>') {
+                    html = '';
+                }
+                ngModel.$setViewValue(html);
+            }
+        }
+    };
+});
+
+app.directive('num-binding', function () {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+            model: '=ngModel'
+        },
+        link: function (scope, element, attrs, ngModelCtrl) {
+            if (scope.model && typeof scope.model == 'string') {
+                scope.model = parseInt(scope.model);
+            }
+        }
+    };
+});
+
+
+app.directive('sailrFooter', ['$document', '$window', function ($document, $window) {
+    return {
+        scope: false,
+        link: function(scope, element, attrs) {
+
+            var positionFooter = function() {
+                var hasVScroll = document.body.scrollHeight | document.body.clientHeight > $window.innerHeight;
+                //console.log(element.style.height);
+
+                var newTop = $window.document.body.scrollHeight;// + element.style.height;
+                var stringNewHeight = newTop + 'px';
+                if (hasVScroll) {
+                    element.css({
+                        position: 'relative',
+                        top: '100%'
+                    });
+                }
+
+                else {
+                    element.css({
+                        position: 'absolute',
+                        top: stringNewHeight
+                    });
+                }
+            };
+
+            positionFooter();
+
+            scope.$watch($window.innerHeight, function(newValue, oldValue) {
+                positionFooter();
+
+            });
+
+
+        }
+    }
+
+
+}]);
+
+app.directive('sailrOpactiy', function () {
+
+    function link(scope, iElement, iAttrs) {
+
+        scope.sailrOpacity = iAttrs.sailrOpacity;
+        iElement.css({
+            opacity: scope.sailrOpacity
+        });
+    }
+
+    return {
+        restrict: 'A',
+        scope: {
+            sailrOpacity: '@'
+        },
+        link: link
+    }
+});
+
+
+app.directive('sailrComments', function () {
+    return {
+        restrict: 'AE',
+        require: '^sailrProductId',
+        scope: {
+            sailrProductId: '@'
+        },
+        controller: ['$scope', '$http', 'CommentsFactory', function ($scope, $http, CommentsFactory) {
+
+            $scope.comments = [];
+            $scope.commentOpacity = 1.00;
+            $scope.webError = false;
+
+            $scope.newComment = {};
+            $scope.loggedInUser = loggedInUser;
+            $scope.item_id = 0;
+
+            $scope.getComments = function (product_id) {
+                //console.log('PRODUCT ID:: ' + product_id);
+                $scope.item_id = product_id;
+
+
+                var getCommentsPromise = CommentsFactory.getComments($scope.item_id);
+
+                getCommentsPromise.then(function (successResponse) {
+                        $scope.comments = successResponse.data;
+                    },
+                    function (failResponse) {
+                        console.log(failResponse);
+                        $scope.webError = true;
+                    });
+
+            };
+
+            $scope.postNewComment = function () {
+                var newCommentIndex = $scope.comments.unshift({
+                    item_id: $scope.item_id,
+                    comment: $scope.newComment.comment,
+                    created_at: new Date(),
+                    user: loggedInUser
+                });
+
+                var newCommentPromise = CommentsFactory.postNewComment($scope.newComment.comment, $scope.item_id);
+                console.log(CommentsFactory);
+                console.log(newCommentPromise);
+
+                newCommentPromise.then(function (successResponse) {
+                        console.log(successResponse);
+                        $scope.newComment.comment = '';
+                        //Set opacity to 1.00
+                    },
+                    function (failResponse) {
+                        console.log(failResponse);
+                        $scope.comments = $scope.comments.splice(1, newCommentIndex);
+                    });
+
+            }
+        }],
+
+        templateUrl: baseURL + '/js/templates/comments/master.html',
+        link: function (scope, iElement, iAttrs) {
+            scope.getComments(iAttrs.sailrProductId);
+            scope.item_id = iAttrs.sailrProductId;
+        }
+    }
+});
+
+app.directive('sailrProductId', function () {
+    return {
+        controller: ['$scope', function ($scope) {}]
+    }
+});
+
+app.directive('sailrComment', function () {
+    return {
+        restrict: 'AE',
+        scope: {
+            profileImageUrl: '@',
+            username: '@',
+            name: '@',
+            commentText: '@'
+        },
+        controller: ['$scope', function ($scope) {
+
+        }],
+
+        link: function (scope, iElement, iAttrs) {
+            scope.username = iAttrs.username;
+            scope.name = iAttrs.name;
+            scope.profileImageUrl = iAttrs.profileImageUrl;
+            scope.commentText = iAttrs.commentText;
+            scope.baseURL = baseURL;
+
+        },
+
+        templateUrl: baseURL + '/js/templates/comments/comment-item.html'
+
+    }
+
+});
+
+app.directive('sailrEntityLink', function() {
+    return {
+        priority: -1,
+        restrict: 'AE',
+        scope: false,
+        link: function(scope, iElement, iAttrs) {
+            scope.$watch(iAttrs.sailrEntityLink, function(newValue, oldValue) {
+                var tempHTML = iElement.html();
+                iElement.html(twttr.txt.autoLink(tempHTML));
+            });
+
+        }
+    }
+});
+
+app.directive('sailrFeedOnboardBox', function() {
+    return {
+        restrict: 'E',
+        scope: false,
+        templateUrl: baseURL + '/js/templates/onboard/feed/onboard-box.html'
+    }
+});
+
+app.directive('sailrNumberOfProducts', function() {
+    return {
+        restrict: 'A',
+        controller: ['$scope', function($scope){}]
+    }
+});
+
+app.directive('sailrOffsetBy', function() {
+    return {
+        restrict: 'A',
+        controller: ['$scope', function($scope){}]
+    }
+});
+
+app.directive('sailrProductPreview', function() {
+    return {
+        restrict: 'AE',
+        scope: {
+            productTitle: '@',
+            productPreviewImageUrl: '@',
+            productLinkUrl: '@',
+            productSellerUsername: '@',
+            productSellerName: '@',
+            productSellerUrl: '@'
+        },
+
+        templateUrl: baseURL + '/js/templates/onboard/recent/products/product-preview.html'
+    }
+});
+
+app.directive('sailrRecentProducts', function() {
+    return {
+        restrict: 'AE',
+        require: ['sailrNumberOfProducts', 'sailrOffsetBy'],
+        scope: {
+            sailrNumberOfProducts: '@',
+            sailrOffsetBy: '@'
+
+        },
+
+        controller: ['$scope', '$http', 'OnboardFactory', function ($scope, $http, OnboardFactory) {
+
+            $scope.baseURL = baseURL;
+            $scope.products = [];
+            $scope.initialValue = 00;
+
+            $scope.getProducts = function (offset, limit) {
+
+                OnboardFactory.getRecentProducts(offset, limit)
+                    .success(function(data, status, headers) {
+                        /*append all the things */
+                        angular.forEach(data, function (value) {
+                            $scope.products.push(value);
+                        });
+
+                        //console.log('NUMBER OF ELEMENTS IN ARRAY:: ' + $scope.products.length);
+
+                    })
+                    .error(function(data, status, headers) {
+                        $scope.webError = true;
+                        //console.log(data);
+                    });
+
+            };
+
+        }],
+
+        templateUrl: baseURL + '/js/templates/onboard/recent/products/master.html',
+        link: function(scope, elem, attrs) {
+
+            var loadProducts = function(numberToLoad, offset) {
+                scope.getProducts(offset, numberToLoad);
+                return true;
+            };
+
+            scope.$watch(function() {
+                return [attrs.sailrNumberOfProducts, attrs.sailrOffsetBy];
+            }, function() {
+                loadProducts(scope.sailrNumberOfProducts, scope.sailrOffsetBy);
+            }, true);
+
+        }
+
+    }
+});
+
+app.directive('focusMe',['$timeout', '$parse', function ($timeout, $parse) {
+    return {
+        //scope: true,   // optionally create a child scope
+        link: function (scope, element, attrs) {
+            var model = $parse(attrs.focusMe);
+            scope.$watch(model, function (value) {
+                console.log('value=', value);
+                if (value === true) {
+                    $timeout(function () {
+                        element[0].focus();
+                    });
+                }
+            });
+        }
+    };
+}]);
+
+app.factory('OnboardFactory',['$http',  function($http){
+    var service = {};
+
+    service.getRecentProducts = function (offset, limit) {
+        console.log('OFFSET IS ::' + offset);
+        console.log('LIMIT IS:: ' + limit);
+        var url = baseURL + '/onboard/recent/products/' + offset + '/' + limit;
+        return $http.get(url);
+    };
+
+    return service;
+}]);
+
+app.factory('StripeFactory',['$q', function ($q) {
+    var service = {};
+
+    service.sayHello = function () {
+        return 'HELLO FROM STRIPE FACTORY';
+    };
+
+    service.setPublishableKey = function (key) {
+        Stripe.setPublishableKey(key);
+    };
+
+
+    service.createToken = function (cardData) {
+        var defered = $q.defer();
+
+        Stripe.card.createToken(cardData, function (status, response) {
+
+            if (response.error) {
+                service.errors = response.error;
+                defered.reject(response);
+
+            }
+
+            else {
+                service.token = response;
+                defered.resolve(response);
+
+            }
+        });
+
+        return defered.promise;
+    };
+
+    service.getToken = function () {
+        return service.token;
+    };
+
+    service.getErrors = function () {
+        return service.errors;
+    };
+
+    return service;
+}]);
+
+app.factory('HelperFactory', function () {
+    var service = {};
+
+    service.stripWhiteSpace = function (string) {
+        string = string.replace(/\s/g, "");
+        return string;
+    };
+
+    service.createStripeCardObjectFromFormattedInput = function (inputObject) {
+
+        var returnCard = {};
+        var expiryArray = service.stripWhiteSpace(inputObject.expiry).split('/');
+
+        returnCard = {
+            number: service.stripWhiteSpace(inputObject.number),
+            cvc: service.stripWhiteSpace(inputObject.cvc),
+            exp_month: expiryArray[0],
+            exp_year: expiryArray[1]
+        };
+
+        /* If there is a cardholder name, add it to the card object */
+        if (typeof inputObject.name !== 'undefined') {
+            if (inputObject.name.length > 0) {
+                returnCard.name = inputObject.name;
+            }
+        }
+
+        return returnCard;
+
+    };
+
+    return service;
+});
+
+
+app.factory('SubscriptionFactory', ['$q', '$rootScope', '$http', function ($q, $rootScope, $http) {
+
+    var service = {};
+    service.subscriptionURL = baseURL + '/settings/subscription';
+    console.log('SUBSCRIPTION URL:: ' + service.subscriptionURL);
+
+    service.sayHello = function () {
+        return 'HELLO FROM STRIPE FACTORY';
+    };
+
+    service.createSubscription = function (planID, stripeToken, couponCode) {
+
+        var data = {
+            _token: csrfToken,
+            stripeToken: stripeToken,
+            plan: 'awesome'
+        };
+
+        if(typeof couponCode !== 'undefined') {
+            if(couponCode.length > 0) {
+                data.coupon = couponCode;
+            }
+        }
+
+        var defered = $q.defer();
+
+        $http.post(service.subscriptionURL, data)
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+
+            .error(function (data, status, headers, config) {
+                var rejectObject = {
+                    data: data,
+                    status: status,
+                    headers: headers,
+                    config: config
+                };
+
+                defered.reject(rejectObject);
+
+            });
+
+        return defered.promise;
+    };
+
+    service.cancelSubscription = function () {
+
+        var configObject = {
+            _token: csrfToken
+            //_method: 'delete'
+        };
+
+        var defered = $q.defer();
+
+        $http.post(service.subscriptionURL + '/delete', configObject)
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+            .error(function (data, status) {
+                defered.reject(data);
+
+            });
+
+        return defered.promise;
+
+    };
+
+    return service;
+
+}]);
+
+app.factory('CommentsFactory',['$q', '$http', function ($q, $http) {
+
+    var service = {};
+
+    service.sayHello = function () {
+        console.log('Hello from CommentsFactory');
+        return 'Hello from CommentFactory';
+    };
+
+    service.postNewComment = function (commentText, productID) {
+        console.log('Add new comment function called');
+        var postObject = {
+            _token: csrfToken,
+            comment: commentText,
+            item_id: productID
+        };
+
+        var defered = $q.defer();
+
+        console.log('BASE URL:: ' + baseURL);
+        console.log(postObject);
+
+        $http.post(baseURL + '/comments', postObject)
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+            .error(function (data, status) {
+                defered.reject(data);
+            });
+
+        return defered.promise;
+
+    };
+
+    service.getComments = function (productID) {
+        var defered = $q.defer();
+
+        $http.get(baseURL + '/username/product/' + productID + '/' + 'comments')
+            .success(function (data, status) {
+                defered.resolve(data);
+            })
+            .error(function (data, status) {
+                defered.reject(data);
+            });
+
+        return defered.promise;
+
+    };
+
+
+    return service;
+
+
+}]);
+
+app.controller('homeController', ['$scope', function ($scope) {
+
+    $scope.numberOfProducts = 3;
+    $scope.alreadyLoadedNumber = $scope.numberOfProducts;
+    $scope.offsetLoadProducts = 0;
+    $scope.loadMoreButtonPressCount = 0;
+
+    $scope.showNowSignupText = false;
+
+    $scope.loadMore = function (numberToLoad) {
+        $scope.alreadyLoadedNumber = $scope.numberOfProducts + $scope.offsetLoadProducts;
+        $scope.numberOfProducts = numberToLoad;
+        $scope.offsetLoadProducts = $scope.alreadyLoadedNumber;
+
+        $scope.loadMoreButtonPressCount++;
+        if ($scope.loadMoreButtonPressCount > 2 && !$scope.showNowSignupText) {
+            $scope.showNowSignupText = true;
+        }
+    }
+
+}]);
+/*
+ var stripWhiteSpace = function (string) {
+ string = string.replace(/\s/g, "");
+ return string;
+ };
+ */
+
+app.controller('billingController', ['$scope', '$http', 'HelperFactory', 'StripeFactory', function ($scope, $http, HelperFactory, StripeFactory) {
+
+    $scope.showUpdateCard = false;
+    $scope.baseURL = baseURL;
+    $scope.card = {};
+    $scope.token = {};
+    $scope.posting = false;
+    $scope.card.name = loggedInUser.name;
+    $scope.card.last4 = last4;
+    $scope.card.type = cardType;
+
+    $scope.subscription = subscription;
+
+    $scope.updateCard = function () {
+        $scope.posting = true;
+
+        var stripeCard = HelperFactory.createStripeCardObjectFromFormattedInput($scope.card);
+
+        var StripePromise = StripeFactory.createToken(stripeCard);
+        StripePromise.then(function (response) {
+            console.log(response);
+            console.log('SUCCESS!');
+            //console.log('TOKEN:::: ' + JSON.stringify(StripeFactory.getToken()));
+            console.log(StripeFactory.getToken());
+            $scope.token = StripeFactory.getToken();
+            $scope.token.id = StripeFactory.getToken().id;
+            $scope.submitUpdate();
+
+
+        }, function (response) {
+            $scope.posting = false;
+            console.log('Stripe card fail::::');
+            console.log(response);
+            humane.log(StripeFactory.getErrors().message);
+
+        });
+
+    };
+
+    $scope.submitUpdate = function () {
+        $scope.posting = true;
+        var data = {
+            'stripeToken': $scope.token.id,
+            '_token': csrfToken
+        };
+
+
+        $http.put($scope.baseURL + '/settings/billing', data)
+            .success(function (data, status, headers, config) {
+                $scope.posting = false;
+                humane.log(data.message);
+
+
+                $scope.card.last4 = $scope.token.card.last4;
+                $scope.card.type = $scope.token.card.type;
+
+
+                if ($scope.showUpdateCard) {
+                    $scope.showUpdateCard = false;
+                }
+            }).
+            error(function (data, status, headers, config) {
+                $scope.posting = false;
+                if (!data) {
+                    humane.log("We're afraid something went wrong and the card didn't update");
+                }
+                else {
+                    humane.log(data.message);
+                }
+                if ($scope.showUpdateCard) {
+                    $scope.showUpdateCard = false;
+                }
+            });
+
+    };
+
+    $scope.toggleShowingForm = function () {
+        $scope.showUpdateCard = !$scope.showUpdateCard;
+    }
+
+
+}]);
+
+
+app.controller('feedContentController', ['$scope', function ($scope) {
+    $scope.numberOfProducts = 6;
+    $scope.alreadyLoadedNumber = $scope.numberOfProducts;
+    $scope.offsetLoadProducts = 0;
+
+    $scope.loadMoreRecentProducts = function (numberToLoad) {
+        $scope.alreadyLoadedNumber = $scope.numberOfProducts + $scope.offsetLoadProducts;
+        $scope.numberOfProducts = numberToLoad;
+        $scope.offsetLoadProducts = $scope.alreadyLoadedNumber;
+    }
+
+
+
+}]);
+app.controller('feedController', ['$scope', '$http', function ($scope, $http) {
+    $scope.baseURL = baseURL;
+    $scope.submitSearchForm = function() {
+        window.location = $scope.baseURL + '/s/' + encodeURIComponent($scope.searchText);
+    };
+
+}]);
+app.controller('editController', ['$scope', '$http', '$upload', '$timeout', function ($scope, $http, $upload, $timeout) {
+
+    if (typeof itemModel != 'undefined') {
+        itemModel.price = parseFloat(itemModel.price);
+        itemModel.initial_units = parseFloat(itemModel.initial_units);
+        itemModel.ship_price = parseFloat(itemModel.ship_price);
+        itemModel.public = parseInt(itemModel.public);
+    }
+
+    $scope.countries = countries;
+    $scope.currencies = currencies;
+    $scope.item = {};
+
+    if (itemModel.ships_to.length < 1) {
+        itemModel.ships_to = undefined;
+    }
+    $scope.item = itemModel;
+    $scope.photos = [];
+    $scope.dataUrls = [];
+
+    if("photos" in $scope.item) {
+        $scope.photos = $scope.item.photos;
+    }
+
+    /* Set the inital values for these fields as the data binding is a bit dodgy */
+    document.getElementById('title-heading').innerText = $scope.item.title;
+    document.getElementById('item-description').innerHTML = $scope.item.description;
+    // document.getElementById('item-price').value = $scope.item.price;
+    document.scope = $scope;
+
+    $scope.buttonPressed = function () {
+        console.log($scope.desc);
+        console.log($scope);
+    };
+
+    $scope.saveChanges = function () {
+        $scope.posting = true;
+
+        var data = $scope.item;
+        data._token = sessionToken;
+        console.log('the data to be sent is ' + JSON.stringify(data));
+
+        $http.put(updateURL, JSON.stringify(data))
+            .success(function (data, status, headers, config) {
+                $scope.posting = false;
+                $scope.responseData = data;
+                console.log('The response data is: ');
+                console.log($scope.responseData);
+                //window.location = $scope.responseData.redirect_url;
+                $scope.item.description = data.description;
+
+            })
+
+            .error(function (data, status, headers, config) {
+                $scope.posting = false;
+                console.log(data);
+
+
+            });
+
+    };
+
+    $scope.toggleVisibility = function () {
+        $scope.saveChanges();
+        $scope.posting = true;
+
+        var data = {
+            _token: sessionToken
+        };
+
+        console.log('the data to be sent is ' + JSON.stringify(data));
+
+        $http.put(updateURL  + '/toggle-visibility', JSON.stringify(data))
+            .success(function (data, status, headers, config) {
+                $scope.item.public = data.public;
+                $scope.posting = false;
+
+                humane.log(data.message);
+                console.log('The response data is: ');
+                console.log(data);
+
+            })
+
+            .error(function (data, status, headers, config) {
+                $scope.posting = false;
+                console.log(data);
+
+                if (data.message) {
+
+                    humane.log(data.message);
+                }
+
+                if (data.errors) {
+                    console.log('ERORROS ARE');
+                    console.log(data.errors);
+                    humane.log(data.errors);
+                }
+
+
+
+            });
+
+    };
+
+    $scope.tempURL = '';
+    $scope.uploading = false;
+    $scope.onFileSelect = function ($files) {
+
+
+        if ($scope.uploading) {
+            humane.log('One at a time please.');
+            return;
+        }
+        //$files: an array of files selected, each file has name, size, and type.
+        for (var i = 0; i < $files.length; i++) {
+            if ($files.length > 1) {
+                humane.log('Please only one photo at a time.. We are only new here.');
+                break;
+            }
+            var file = $files[i];
+            if (window.FileReader && file.type.indexOf('image') > -1) {
+                var fileReader = new FileReader();
+                fileReader.readAsDataURL($files[i]);
+
+                var tooBig = false;
+                if (file.size > 7340032) {
+                    tooBig = true;
+                    console.log('File too large.');
+                    humane.log('File is too large. Please try compressing it first.');
+                    return;
+                }
+
+
+                    console.log('not too big');
+                    var loadFile = function (fileReader, index) {
+                        fileReader.onload = function (e) {
+                            $timeout(function () {
+                                //$scope.showCropBox(e);
+                                $scope.dataUrls[index] = e.target.result;
+                                console.log(e.target.result);
+                                $scope.photos.push({url: e.target.result});
+                                $scope.tempURL = e.target.result;
+                            });
+                        }
+                    }(fileReader, i);
+
+
+            }
+
+
+            console.log(file);
+
+
+            humane.log('Uploading...');
+            $scope.uploading = true;
+
+            $scope.upload = $upload.upload({
+                url: baseURL + '/photo/upload/' + itemModel.id, //upload.php script, node.js route, or servlet url
+                // method: 'POST' or 'PUT',
+                // headers: {'header-key': 'header-value'},
+                // withCredentials: true,
+                data: {_token: csrfToken},
+                file: file,
+                fileFormDateName: 'photo'
+                // or list of files: $files for html5 only
+                /* set the file formData name ('Content-Desposition'). Default is 'file' */
+                //fileFormDataName: myFile, //or a list of names for multiple files (html5).
+                /* customize how data is added to formData. See #40#issuecomment-28612000 for sample code */
+                //formDataAppender: function(formData, key, val){}
+            }).progress(function (evt) {
+                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+            }).success(function (data, status, headers, config) {
+                $scope.photos[$scope.photos.length -1].set_id = data.set_id;
+                $scope.photos[$scope.photos.length -1].url = data.url;
+                // file is uploaded successfully
+                humane.log('Photo successfully uploaded!');
+                console.log(data);
+                console.log(status);
+                console.log(headers);
+                $scope.uploading = false;
+            })
+                .error(function (data, status, headers, config) {
+                    $scope.photos = $scope.photos.slice($scope.photos.length -1, 1);
+                    humane.log('Upload failed. ' + data);
+                    console.log(data);
+                    console.log(status);
+                    console.log(headers);
+                    $scope.uploading = false;
+                });
+
+        }
+
+    };
+
+    $scope.showCropBox = function(e) {
+        //$('#crop-modal').modal('show');
+        var image = new Image();
+        image.src = e.target.result;
+
+        image.onload = (function() {
+            var canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = image.height * (300 / image.width);
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            $('#image_input').html(['<img src="', canvas.toDataURL(), '"/>'].join(''));
+
+            var img = $('#image_input img')[0];
+            var canvas = document.createElement('canvas');
+
+            $('#image_input img').Jcrop({
+                bgColor: 'black',
+                bgOpacity: .6,
+                setSelect: [0, 0, 100, 100],
+                aspectRatio: 1,
+                //minSize: [150, 150],
+                keySupport: false,
+                //onSelect: imgSelect,
+                onChange: imgSelect
+            });
+
+
+            function imgSelect(selection) {
+                canvas.width = canvas.height = 100;
+
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, selection.x, selection.y, selection.w, selection.h, 0, 0, canvas.width, canvas.height);
+
+                $('#image_output').attr('src', canvas.toDataURL());
+                $('#image_source').text(canvas.toDataURL());
+            }
+        });
+
+        };
+
+    $scope.deletePhoto = function($index) {
+        var photo = $scope.photos[$index];
+        var set_id = photo.set_id;
+        photo.deleted = true;
+
+        var deleteImageUrl = baseURL + '/photo/' + $scope.item.id;
+        var data = {set_id: set_id, _token: csrfToken, _method: 'DELETE'};
+
+        humane.log('Deleting...');
+        $http.put(deleteImageUrl, JSON.stringify(data))
+            .success(function (data, status, headers, config) {
+                $scope.responseData = data;
+                console.log('The response data is: ');
+                console.log($scope.responseData);
+                humane.log('Photo deleted successfully');
+
+                if ($scope.item.public && data.message) {
+                    humane.log(data.message);
+                }
+
+                if (data.item) {
+
+                    $scope.item.public = data.item.public;
+                }
+
+                $scope.photos.splice($index, 1);
+
+            })
+
+            .error(function (data, status, headers, config) {
+                console.log(data);
+                humane.log('Photo deletion failed.');
+                photo.deleted = false;
+
+            });
+    };
+
+
+}]);
+app.controller('indexController', ['$scope', '$http', function($scope, $http) {
+
+    $scope.currency = 'USD';
+    $scope.codes = currencyCodes;
+
+    $scope.handleCodeChange = function ($index) {
+        $scope.currency = $scope.codes[$index];
+        console.log($scope.currency);
+    };
+
+    $scope.toggleAdd = function () {
+        $scope.shouldShowAdd = !$scope.shouldShowAdd;
+        $('#addItem').slideToggle(300);
+        //console.log('Show pressed');
+    };
+
+    $scope.formSubmit = function () {
+        $scope.posting = true;
+        $scope.formData = {_token: csrfToken, title: $scope.title, currency: $scope.currency, price: $scope.price};
+        console.log($scope.formData);
+
+        $http.post('/products', JSON.stringify($scope.formData))
+            .success(function (data, status) {
+                //console.log('the data to be sent is ' + JSON.stringify(data));
+                $scope.responseData = data;
+                //console.log($scope.responseData);
+
+                if (data.message) {
+                    $scope.posting = false;
+                    humane.log(data.message);
+                }
+
+                if (data.redirect_url) {
+                    window.location = $scope.responseData.redirect_url;
+                }
+
+                $scope.posting = false;
+            })
+
+            .error(function (data, status, headers, config) {
+                //console.log(data);
+                $scope.posting = false;
+
+            });
+    };
+
+}]);
+app.controller('showController', ['$scope', function ($scope) {
+    $scope.item = item;
+    $scope.user = $scope.item.user;
+    $scope.profile_img_url = $scope.user.profile_img.url;
+}]);
+app.controller('notificationsController', ['$scope', function ($scope) {
+    $scope.notifications = sailr.notifications;
+    $scope.baseURL = baseURL;
+
+}]);
+app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'HelperFactory', 'SubscriptionFactory', function ($scope, $http, $q, StripeFactory, HelperFactory, SubscriptionFactory) {
+
+    $scope.showingCreditForm = false;
+    $scope.showCardForm = false;
+    $scope.posting = false;
+    $scope.showCoupon = false;
+    $scope.couponCode = '';
+
+    //$scope.successSubscribe = false;
+    $scope.card = {};
+
+    $scope.toggleCouponShow = function() {
+      $scope.showCoupon = !$scope.showCoupon;
+    };
+    $scope.subscribeToPlan = function(planID) {
+        console.log('PLAN ID::: ' + planID);
+
+        $scope.posting = true;
+
+        var stripeCard = HelperFactory.createStripeCardObjectFromFormattedInput($scope.card);
+
+        var StripePromise = StripeFactory.createToken(stripeCard);
+
+        StripePromise.then(function(response)
+        {
+            console.log(response);
+            console.log(StripeFactory.getToken());
+
+            if ($scope.couponCode) {
+
+                var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id, $scope.couponCode);
+            }
+
+            else {
+                var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id);
+            }
+
+
+            createSubscriptionPromise.then(function(responseObject) {
+
+                $scope.posting = false;
+                $scope.showCardForm = false;
+                //Success!
+                console.log('SUCCESS on server subscription create');
+                console.log(responseObject);
+                humane.log(responseObject.message);
+                window.location =  responseObject.redirect_url;
+            },
+
+            function(responseObject) {
+                //Fail :(
+                $scope.posting = false;
+                $scope.$apply(function() {
+                    $scope.posting = false;
+                });
+
+                console.log('Subscription fail::   --');
+                console.log(responseObject);
+                humane.log(responseObject.data.message);
+
+            });
+
+
+        }, function(response)
+       {
+           $scope.posting = false;
+           console.log('Stripe card fail::::');
+           console.log(response);
+
+           humane.log(StripeFactory.getErrors().message);
+
+       });
+
+    };
+
+    $scope.handleSubscribeButtonPressed = function() {
+        if (!$scope.showingCreditForm) {
+            //cardFormContainer.slideToggle();
+            $scope.showCardForm = true;
+            $scope.showingCreditForm = true;
+        }
+
+
+    }
+
+
+}]);
+app.controller('manageController', ['$scope', '$http', '$q', 'SubscriptionFactory', '$rootScope', function ($scope, $http, $q, SubscriptionFactory) {
+//Code goes here
+    $scope.posting = false;
+    $scope.subscription = subscription;
+    $scope.user = user;
+
+    $scope.cancelSubscription = function () {
+        $scope.posting = true;
+        var cancelSubscription = SubscriptionFactory.cancelSubscription();
+
+        cancelSubscription.then(function(response) {
+            $scope.posting = false;
+            $scope.subscription.cancel_at_period_end = true;
+
+            humane.log(response.message);
+
+            //window.location.reload(false);
+        },
+            function (response) {
+                $scope.posting = false;
+                $scope.$apply();
+                humane.log(response.message)
+            }
+        );
+    }
+
+}]);
+app.controller('searchController', ['$scope', '$http', function ($scope, $http) {
+    $scope.results = sailr.results;
+    $scope.baseURL = baseURL;
+
+}]);
+app.controller('updateController', ['$scope', function ($scope) {
+
+    $scope.showSubmit = false;
+    $('#addFiles').on('change', function() {
+        $scope.$apply(function() {
+           $scope.showSubmit = true;
+        });
+    });
+
+    $scope.user = {};
+    $scope.fileButtonText = 'Select new profile photo';
+
+    $scope.user = loggedInUser;
+    $scope.user.username = $('input#username').val();
+    $scope.profileURL = profileImageURL;
+
+
+}]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// Generated by CoffeeScript 1.7.1
+    (function() {
+        var $, cardFromNumber, cardFromType, cards, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardNumber, formatExpiry, formatForwardExpiry, formatForwardSlash, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictExpiry, restrictNumeric, setCardType,
+            __slice = [].slice,
+            __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+        $ = jQuery;
+
+        $.payment = {};
+
+        $.payment.fn = {};
+
+        $.fn.payment = function() {
+            var args, method;
+            method = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+            return $.payment.fn[method].apply(this, args);
+        };
+
+        defaultFormat = /(\d{1,4})/g;
+
+        cards = [
+            {
+                type: 'maestro',
+                pattern: /^(5018|5020|5038|6304|6759|676[1-3])/,
+                format: defaultFormat,
+                length: [12, 13, 14, 15, 16, 17, 18, 19],
+                cvcLength: [3],
+                luhn: true
+            }, {
+                type: 'dinersclub',
+                pattern: /^(36|38|30[0-5])/,
+                format: defaultFormat,
+                length: [14],
+                cvcLength: [3],
+                luhn: true
+            }, {
+                type: 'laser',
+                pattern: /^(6706|6771|6709)/,
+                format: defaultFormat,
+                length: [16, 17, 18, 19],
+                cvcLength: [3],
+                luhn: true
+            }, {
+                type: 'jcb',
+                pattern: /^35/,
+                format: defaultFormat,
+                length: [16],
+                cvcLength: [3],
+                luhn: true
+            }, {
+                type: 'unionpay',
+                pattern: /^62/,
+                format: defaultFormat,
+                length: [16, 17, 18, 19],
+                cvcLength: [3],
+                luhn: false
+            }, {
+                type: 'discover',
+                pattern: /^(6011|65|64[4-9]|622)/,
+                format: defaultFormat,
+                length: [16],
+                cvcLength: [3],
+                luhn: true
+            }, {
+                type: 'mastercard',
+                pattern: /^5[1-5]/,
+                format: defaultFormat,
+                length: [16],
+                cvcLength: [3],
+                luhn: true
+            }, {
+                type: 'amex',
+                pattern: /^3[47]/,
+                format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/,
+                length: [15],
+                cvcLength: [3, 4],
+                luhn: true
+            }, {
+                type: 'visa',
+                pattern: /^4/,
+                format: defaultFormat,
+                length: [13, 16],
+                cvcLength: [3],
+                luhn: true
+            }
+        ];
+
+        cardFromNumber = function(num) {
+            var card, _i, _len;
+            num = (num + '').replace(/\D/g, '');
+            for (_i = 0, _len = cards.length; _i < _len; _i++) {
+                card = cards[_i];
+                if (card.pattern.test(num)) {
+                    return card;
+                }
+            }
+        };
+
+        cardFromType = function(type) {
+            var card, _i, _len;
+            for (_i = 0, _len = cards.length; _i < _len; _i++) {
+                card = cards[_i];
+                if (card.type === type) {
+                    return card;
+                }
+            }
+        };
+
+        luhnCheck = function(num) {
+            var digit, digits, odd, sum, _i, _len;
+            odd = true;
+            sum = 0;
+            digits = (num + '').split('').reverse();
+            for (_i = 0, _len = digits.length; _i < _len; _i++) {
+                digit = digits[_i];
+                digit = parseInt(digit, 10);
+                if ((odd = !odd)) {
+                    digit *= 2;
+                }
+                if (digit > 9) {
+                    digit -= 9;
+                }
+                sum += digit;
+            }
+            return sum % 10 === 0;
+        };
+
+        hasTextSelected = function($target) {
+            var _ref;
+            if (($target.prop('selectionStart') != null) && $target.prop('selectionStart') !== $target.prop('selectionEnd')) {
+                return true;
+            }
+            if (typeof document !== "undefined" && document !== null ? (_ref = document.selection) != null ? typeof _ref.createRange === "function" ? _ref.createRange().text : void 0 : void 0 : void 0) {
+                return true;
+            }
+            return false;
+        };
+
+        reFormatCardNumber = function(e) {
+            return setTimeout((function(_this) {
+                return function() {
+                    var $target, value;
+                    $target = $(e.currentTarget);
+                    value = $target.val();
+                    value = $.payment.formatCardNumber(value);
+                    return $target.val(value);
+                };
+            })(this));
+        };
+
+        formatCardNumber = function(e) {
+            var $target, card, digit, length, re, upperLength, value;
+            digit = String.fromCharCode(e.which);
+            if (!/^\d+$/.test(digit)) {
+                return;
+            }
+            $target = $(e.currentTarget);
+            value = $target.val();
+            card = cardFromNumber(value + digit);
+            length = (value.replace(/\D/g, '') + digit).length;
+            upperLength = 16;
+            if (card) {
+                upperLength = card.length[card.length.length - 1];
+            }
+            if (length >= upperLength) {
+                return;
+            }
+            if (($target.prop('selectionStart') != null) && $target.prop('selectionStart') !== value.length) {
+                return;
+            }
+            if (card && card.type === 'amex') {
+                re = /^(\d{4}|\d{4}\s\d{6})$/;
+            } else {
+                re = /(?:^|\s)(\d{4})$/;
+            }
+            if (re.test(value)) {
+                e.preventDefault();
+                return $target.val(value + ' ' + digit);
+            } else if (re.test(value + digit)) {
+                e.preventDefault();
+                return $target.val(value + digit + ' ');
+            }
+        };
+
+        formatBackCardNumber = function(e) {
+            var $target, value;
+            $target = $(e.currentTarget);
+            value = $target.val();
+            if (e.meta) {
+                return;
+            }
+            if (e.which !== 8) {
+                return;
+            }
+            if (($target.prop('selectionStart') != null) && $target.prop('selectionStart') !== value.length) {
+                return;
+            }
+            if (/\d\s$/.test(value)) {
+                e.preventDefault();
+                return $target.val(value.replace(/\d\s$/, ''));
+            } else if (/\s\d?$/.test(value)) {
+                e.preventDefault();
+                return $target.val(value.replace(/\s\d?$/, ''));
+            }
+        };
+
+        formatExpiry = function(e) {
+            var $target, digit, val;
+            digit = String.fromCharCode(e.which);
+            if (!/^\d+$/.test(digit)) {
+                return;
+            }
+            $target = $(e.currentTarget);
+            val = $target.val() + digit;
+            if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
+                e.preventDefault();
+                return $target.val("0" + val + " / ");
+            } else if (/^\d\d$/.test(val)) {
+                e.preventDefault();
+                return $target.val("" + val + " / ");
+            }
+        };
+
+        formatForwardExpiry = function(e) {
+            var $target, digit, val;
+            digit = String.fromCharCode(e.which);
+            if (!/^\d+$/.test(digit)) {
+                return;
+            }
+            $target = $(e.currentTarget);
+            val = $target.val();
+            if (/^\d\d$/.test(val)) {
+                return $target.val("" + val + " / ");
+            }
+        };
+
+        formatForwardSlash = function(e) {
+            var $target, slash, val;
+            slash = String.fromCharCode(e.which);
+            if (slash !== '/') {
+                return;
+            }
+            $target = $(e.currentTarget);
+            val = $target.val();
+            if (/^\d$/.test(val) && val !== '0') {
+                return $target.val("0" + val + " / ");
+            }
+        };
+
+        formatBackExpiry = function(e) {
+            var $target, value;
+            if (e.meta) {
+                return;
+            }
+            $target = $(e.currentTarget);
+            value = $target.val();
+            if (e.which !== 8) {
+                return;
+            }
+            if (($target.prop('selectionStart') != null) && $target.prop('selectionStart') !== value.length) {
+                return;
+            }
+            if (/\d(\s|\/)+$/.test(value)) {
+                e.preventDefault();
+                return $target.val(value.replace(/\d(\s|\/)*$/, ''));
+            } else if (/\s\/\s?\d?$/.test(value)) {
+                e.preventDefault();
+                return $target.val(value.replace(/\s\/\s?\d?$/, ''));
+            }
+        };
+
+        restrictNumeric = function(e) {
+            var input;
+            if (e.metaKey || e.ctrlKey) {
+                return true;
+            }
+            if (e.which === 32) {
+                return false;
+            }
+            if (e.which === 0) {
+                return true;
+            }
+            if (e.which < 33) {
+                return true;
+            }
+            input = String.fromCharCode(e.which);
+            return !!/[\d\s]/.test(input);
+        };
+
+        restrictCardNumber = function(e) {
+            var $target, card, digit, value;
+            $target = $(e.currentTarget);
+            digit = String.fromCharCode(e.which);
+            if (!/^\d+$/.test(digit)) {
+                return;
+            }
+            if (hasTextSelected($target)) {
+                return;
+            }
+            value = ($target.val() + digit).replace(/\D/g, '');
+            card = cardFromNumber(value);
+            if (card) {
+                return value.length <= card.length[card.length.length - 1];
+            } else {
+                return value.length <= 16;
+            }
+        };
+
+        restrictExpiry = function(e) {
+            var $target, digit, value;
+            $target = $(e.currentTarget);
+            digit = String.fromCharCode(e.which);
+            if (!/^\d+$/.test(digit)) {
+                return;
+            }
+            if (hasTextSelected($target)) {
+                return;
+            }
+            value = $target.val() + digit;
+            value = value.replace(/\D/g, '');
+            if (value.length > 6) {
+                return false;
+            }
+        };
+
+        restrictCVC = function(e) {
+            var $target, digit, val;
+            $target = $(e.currentTarget);
+            digit = String.fromCharCode(e.which);
+            if (!/^\d+$/.test(digit)) {
+                return;
+            }
+            if (hasTextSelected($target)) {
+                return;
+            }
+            val = $target.val() + digit;
+            return val.length <= 4;
+        };
+
+        setCardType = function(e) {
+            var $target, allTypes, card, cardType, val;
+            $target = $(e.currentTarget);
+            val = $target.val();
+            cardType = $.payment.cardType(val) || 'unknown';
+            if (!$target.hasClass(cardType)) {
+                allTypes = (function() {
+                    var _i, _len, _results;
+                    _results = [];
+                    for (_i = 0, _len = cards.length; _i < _len; _i++) {
+                        card = cards[_i];
+                        _results.push(card.type);
+                    }
+                    return _results;
+                })();
+                $target.removeClass('unknown');
+                $target.removeClass(allTypes.join(' '));
+                $target.addClass(cardType);
+                $target.toggleClass('identified', cardType !== 'unknown');
+                return $target.trigger('payment.cardType', cardType);
+            }
+        };
+
+        $.payment.fn.formatCardCVC = function() {
+            this.payment('restrictNumeric');
+            this.on('keypress', restrictCVC);
+            return this;
+        };
+
+        $.payment.fn.formatCardExpiry = function() {
+            this.payment('restrictNumeric');
+            this.on('keypress', restrictExpiry);
+            this.on('keypress', formatExpiry);
+            this.on('keypress', formatForwardSlash);
+            this.on('keypress', formatForwardExpiry);
+            this.on('keydown', formatBackExpiry);
+            return this;
+        };
+
+        $.payment.fn.formatCardNumber = function() {
+            this.payment('restrictNumeric');
+            this.on('keypress', restrictCardNumber);
+            this.on('keypress', formatCardNumber);
+            this.on('keydown', formatBackCardNumber);
+            this.on('keyup', setCardType);
+            this.on('paste', reFormatCardNumber);
+            return this;
+        };
+
+        $.payment.fn.restrictNumeric = function() {
+            this.on('keypress', restrictNumeric);
+            return this;
+        };
+
+        $.payment.fn.cardExpiryVal = function() {
+            return $.payment.cardExpiryVal($(this).val());
+        };
+
+        $.payment.cardExpiryVal = function(value) {
+            var month, prefix, year, _ref;
+            value = value.replace(/\s/g, '');
+            _ref = value.split('/', 2), month = _ref[0], year = _ref[1];
+            if ((year != null ? year.length : void 0) === 2 && /^\d+$/.test(year)) {
+                prefix = (new Date).getFullYear();
+                prefix = prefix.toString().slice(0, 2);
+                year = prefix + year;
+            }
+            month = parseInt(month, 10);
+            year = parseInt(year, 10);
+            return {
+                month: month,
+                year: year
+            };
+        };
+
+        $.payment.validateCardNumber = function(num) {
+            var card, _ref;
+            num = (num + '').replace(/\s+|-/g, '');
+            if (!/^\d+$/.test(num)) {
+                return false;
+            }
+            card = cardFromNumber(num);
+            if (!card) {
+                return false;
+            }
+            return (_ref = num.length, __indexOf.call(card.length, _ref) >= 0) && (card.luhn === false || luhnCheck(num));
+        };
+
+        $.payment.validateCardExpiry = (function(_this) {
+            return function(month, year) {
+                var currentTime, expiry, prefix, _ref;
+                if (typeof month === 'object' && 'month' in month) {
+                    _ref = month, month = _ref.month, year = _ref.year;
+                }
+                if (!(month && year)) {
+                    return false;
+                }
+                month = $.trim(month);
+                year = $.trim(year);
+                if (!/^\d+$/.test(month)) {
+                    return false;
+                }
+                if (!/^\d+$/.test(year)) {
+                    return false;
+                }
+                if (!(parseInt(month, 10) <= 12)) {
+                    return false;
+                }
+                if (year.length === 2) {
+                    prefix = (new Date).getFullYear();
+                    prefix = prefix.toString().slice(0, 2);
+                    year = prefix + year;
+                }
+                expiry = new Date(year, month);
+                currentTime = new Date;
+                expiry.setMonth(expiry.getMonth() - 1);
+                expiry.setMonth(expiry.getMonth() + 1, 1);
+                return expiry > currentTime;
+            };
+        })(this);
+
+        $.payment.validateCardCVC = function(cvc, type) {
+            var _ref, _ref1;
+            cvc = $.trim(cvc);
+            if (!/^\d+$/.test(cvc)) {
+                return false;
+            }
+            if (type) {
+                return _ref = cvc.length, __indexOf.call((_ref1 = cardFromType(type)) != null ? _ref1.cvcLength : void 0, _ref) >= 0;
+            } else {
+                return cvc.length >= 3 && cvc.length <= 4;
+            }
+        };
+
+        $.payment.cardType = function(num) {
+            var _ref;
+            if (!num) {
+                return null;
+            }
+            return ((_ref = cardFromNumber(num)) != null ? _ref.type : void 0) || null;
+        };
+
+        $.payment.formatCardNumber = function(num) {
+            var card, groups, upperLength, _ref;
+            card = cardFromNumber(num);
+            if (!card) {
+                return num;
+            }
+            upperLength = card.length[card.length.length - 1];
+            num = num.replace(/\D/g, '');
+            num = num.slice(0, +upperLength + 1 || 9e9);
+            if (card.format.global) {
+                return (_ref = num.match(card.format)) != null ? _ref.join(' ') : void 0;
+            } else {
+                groups = card.format.exec(num);
+                if (groups != null) {
+                    groups.shift();
+                }
+                return groups != null ? groups.join(' ') : void 0;
+            }
+        };
+
+    }).call(this);
+
+},{}],2:[function(require,module,exports){
+    var $, Card,
+        __slice = [].slice;
+
+    require('jquery.payment');
+
+    $ = jQuery;
+
+    $.card = {};
+
+    $.card.fn = {};
+
+    $.fn.card = function(opts) {
+        return $.card.fn.construct.apply(this, opts);
+    };
+
+    Card = (function() {
+        Card.prototype.cardTemplate = "<div class=\"card-container\">\n    <div class=\"card\">\n        <div class=\"front\">\n                <div class=\"card-logo visa\">visa</div>\n                <div class=\"card-logo mastercard\">MasterCard</div>\n                <div class=\"card-logo amex\"></div>\n                <div class=\"card-logo discover\">discover</div>\n            <div class=\"lower\">\n                <div class=\"shiny\"></div>\n                <div class=\"cvc display\">{{cvc}}</div>\n                <div class=\"number display\">{{number}}</div>\n                <div class=\"name display\">{{name}}</div>\n                <div class=\"expiry display\" data-before=\"{{monthYear}}\" data-after=\"{{validDate}}\">{{expiry}}</div>\n            </div>\n        </div>\n        <div class=\"back\">\n            <div class=\"bar\"></div>\n            <div class=\"cvc display\">{{cvc}}</div>\n            <div class=\"shiny\"></div>\n        </div>\n    </div>\n</div>";
+
+        Card.prototype.template = function(tpl, data) {
+            return tpl.replace(/\{\{(.*?)\}\}/g, function(match, key, str) {
+                return data[key];
+            });
+        };
+
+        Card.prototype.cardTypes = ['maestro', 'dinersclub', 'laser', 'jcb', 'unionpay', 'discover', 'mastercard', 'amex', 'visa'];
+
+        Card.prototype.defaults = {
+            formatting: true,
+            formSelectors: {
+                numberInput: 'input[name="number"]',
+                expiryInput: 'input[name="expiry"]',
+                cvcInput: 'input[name="cvc"]',
+                nameInput: 'input[name="name"]'
+            },
+            cardSelectors: {
+                cardContainer: '.card-container',
+                card: '.card',
+                numberDisplay: '.number',
+                expiryDisplay: '.expiry',
+                cvcDisplay: '.cvc',
+                nameDisplay: '.name'
+            },
+            messages: {
+                validDate: 'valid\nthru',
+                monthYear: 'month/year'
+            },
+            values: {
+                number: '&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;',
+                cvc: '&bull;&bull;&bull;',
+                expiry: '&bull;&bull;/&bull;&bull;',
+                name: 'Full Name'
+            },
+            classes: {
+                valid: 'card-valid',
+                invalid: 'card-invalid'
+            }
+        };
+
+        function Card(el, opts) {
+            this.options = $.extend(true, {}, this.defaults, opts);
+            $.extend(this.options.messages, $.card.messages);
+            $.extend(this.options.values, $.card.values);
+            this.$el = $(el);
+            if (!this.options.container) {
+                console.log("Please provide a container");
+                return;
+            }
+            this.$container = $(this.options.container);
+            this.render();
+            this.attachHandlers();
+            this.handleInitialValues();
+        }
+
+        Card.prototype.render = function() {
+            var baseWidth, ua;
+            this.$container.append(this.template(this.cardTemplate, $.extend({}, this.options.messages, this.options.values)));
+            $.each(this.options.cardSelectors, (function(_this) {
+                return function(name, selector) {
+                    return _this["$" + name] = _this.$container.find(selector);
+                };
+            })(this));
+            $.each(this.options.formSelectors, (function(_this) {
+                return function(name, selector) {
+                    var obj;
+                    if (_this.options[name]) {
+                        obj = $(_this.options[name]);
+                    } else {
+                        obj = _this.$el.find(selector);
+                    }
+                    if (!obj.length) {
+                        console.error("Card can't find a " + name + " in your form.");
+                    }
+                    return _this["$" + name] = obj;
+                };
+            })(this));
+            if (this.options.formatting) {
+                this.$numberInput.payment('formatCardNumber');
+                this.$cvcInput.payment('formatCardCVC');
+                if (this.$expiryInput.length === 1) {
+                    this.$expiryInput.payment('formatCardExpiry');
+                }
+            }
+            if (this.options.width) {
+                baseWidth = parseInt(this.$cardContainer.css('width'));
+                this.$cardContainer.css("transform", "scale(" + (this.options.width / baseWidth) + ")");
+            }
+            if (typeof navigator !== "undefined" && navigator !== null ? navigator.userAgent : void 0) {
+                ua = navigator.userAgent.toLowerCase();
+                if (ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1) {
+                    this.$card.addClass('safari');
+                }
+            }
+            if (new Function("/*@cc_on return @_jscript_version; @*/")()) {
+                return this.$card.addClass('ie-10');
+            }
+        };
+
+        Card.prototype.attachHandlers = function() {
+            var expiryFilters;
+            this.$numberInput.bindVal(this.$numberDisplay, {
+                fill: false,
+                filters: this.validToggler('cardNumber')
+            }).on('payment.cardType', this.handle('setCardType'));
+            expiryFilters = [
+                function(val) {
+                    return val.replace(/(\s+)/g, '');
+                }
+            ];
+            if (this.$expiryInput.length === 1) {
+                expiryFilters.push(this.validToggler('cardExpiry'));
+                this.$expiryInput.on('keydown', this.handle('captureTab'));
+            }
+            this.$expiryInput.bindVal(this.$expiryDisplay, {
+                join: function(text) {
+                    if (text[0].length === 2 || text[1]) {
+                        return "/";
+                    } else {
+                        return "";
+                    }
+                },
+                filters: expiryFilters
+            });
+            this.$cvcInput.bindVal(this.$cvcDisplay, {
+                filters: this.validToggler('cardCVC')
+            }).on('focus', this.handle('flipCard')).on('blur', this.handle('flipCard'));
+            return this.$nameInput.bindVal(this.$nameDisplay, {
+                fill: false,
+                filters: this.validToggler('cardHolderName'),
+                join: ' '
+            }).on('keydown', this.handle('captureName'));
+        };
+
+        Card.prototype.handleInitialValues = function() {
+            return $.each(this.options.formSelectors, (function(_this) {
+                return function(name, selector) {
+                    var el;
+                    el = _this["$" + name];
+                    if (el.val()) {
+                        el.trigger('paste');
+                        return setTimeout(function() {
+                            return el.trigger('keyup');
+                        });
+                    }
+                };
+            })(this));
+        };
+
+        Card.prototype.handle = function(fn) {
+            return (function(_this) {
+                return function(e) {
+                    var $el, args;
+                    $el = $(e.currentTarget);
+                    args = Array.prototype.slice.call(arguments);
+                    args.unshift($el);
+                    return _this.handlers[fn].apply(_this, args);
+                };
+            })(this);
+        };
+
+        Card.prototype.validToggler = function(validatorName) {
+            var isValid;
+            if (validatorName === "cardExpiry") {
+                isValid = function(val) {
+                    var objVal;
+                    objVal = $.payment.cardExpiryVal(val);
+                    return $.payment.validateCardExpiry(objVal.month, objVal.year);
+                };
+            } else if (validatorName === "cardCVC") {
+                isValid = (function(_this) {
+                    return function(val) {
+                        return $.payment.validateCardCVC(val, _this.cardType);
+                    };
+                })(this);
+            } else if (validatorName === "cardNumber") {
+                isValid = function(val) {
+                    return $.payment.validateCardNumber(val);
+                };
+            } else if (validatorName === "cardHolderName") {
+                isValid = function(val) {
+                    return val !== "";
+                };
+            }
+            return (function(_this) {
+                return function(val, $in, $out) {
+                    var result;
+                    result = isValid(val);
+                    _this.toggleValidClass($in, result);
+                    _this.toggleValidClass($out, result);
+                    return val;
+                };
+            })(this);
+        };
+
+        Card.prototype.toggleValidClass = function(el, test) {
+            el.toggleClass(this.options.classes.valid, test);
+            return el.toggleClass(this.options.classes.invalid, !test);
+        };
+
+        Card.prototype.handlers = {
+            setCardType: function($el, e, cardType) {
+                if (!this.$card.hasClass(cardType)) {
+                    this.$card.removeClass('unknown');
+                    this.$card.removeClass(this.cardTypes.join(' '));
+                    this.$card.addClass(cardType);
+                    this.$card.toggleClass('identified', cardType !== 'unknown');
+                    return this.cardType = cardType;
+                }
+            },
+            flipCard: function($el, e) {
+                return this.$card.toggleClass('flipped');
+            },
+            captureTab: function($el, e) {
+                var keyCode, val;
+                keyCode = e.keyCode || e.which;
+                if (keyCode !== 9 || e.shiftKey) {
+                    return;
+                }
+                val = $el.payment('cardExpiryVal');
+                if (!(val.month || val.year)) {
+                    return;
+                }
+                if (!$.payment.validateCardExpiry(val.month, val.year)) {
+                    return e.preventDefault();
+                }
+            },
+            captureName: function($el, e) {
+                var banKeyCodes;
+                banKeyCodes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 106, 107, 109, 110, 111, 186, 187, 188, 189, 190, 191, 192, 219, 220, 221, 222];
+                if (banKeyCodes.indexOf(e.which || e.keyCode) !== -1) {
+                    return e.preventDefault();
+                }
+            }
+        };
+
+        $.fn.bindVal = function(out, opts) {
+            var $el, i, joiner, o, outDefaults;
+            if (opts == null) {
+                opts = {};
+            }
+            opts.fill = opts.fill || false;
+            opts.filters = opts.filters || [];
+            if (!(opts.filters instanceof Array)) {
+                opts.filters = [opts.filters];
+            }
+            opts.join = opts.join || "";
+            if (!(typeof opts.join === "function")) {
+                joiner = opts.join;
+                opts.join = function() {
+                    return joiner;
+                };
+            }
+            $el = $(this);
+            outDefaults = (function() {
+                var _i, _len, _results;
+                _results = [];
+                for (i = _i = 0, _len = out.length; _i < _len; i = ++_i) {
+                    o = out[i];
+                    _results.push(out.eq(i).text());
+                }
+                return _results;
+            })();
+            $el.on('focus', function() {
+                return out.addClass('focused');
+            });
+            $el.on('blur', function() {
+                return out.removeClass('focused');
+            });
+            $el.on('keyup change paste', function(e) {
+                var filter, join, outVal, val, _i, _j, _len, _len1, _ref, _results;
+                val = $el.map(function() {
+                    return $(this).val();
+                }).get();
+                join = opts.join(val);
+                val = val.join(join);
+                if (val === join) {
+                    val = "";
+                }
+                _ref = opts.filters;
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                    filter = _ref[_i];
+                    val = filter(val, $el, out);
+                }
+                _results = [];
+                for (i = _j = 0, _len1 = out.length; _j < _len1; i = ++_j) {
+                    o = out[i];
+                    if (opts.fill) {
+                        outVal = val + outDefaults[i].substring(val.length);
+                    } else {
+                        outVal = val || outDefaults[i];
+                    }
+                    _results.push(out.eq(i).text(outVal));
+                }
+                return _results;
+            });
+            return $el;
+        };
+
+        return Card;
+
+    })();
+
+    $.fn.extend({
+        card: function() {
+            var args, option;
+            option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+            return this.each(function() {
+                var $this, data;
+                $this = $(this);
+                data = $this.data('card');
+                if (!data) {
+                    $this.data('card', (data = new Card(this, option)));
+                }
+                if (typeof option === 'string') {
+                    return data[option].apply(data, args);
+                }
+            });
+        }
+    });
+
+
+},{"jquery.payment":1}]},{},[2])
 
 
 /*global module, console*/
@@ -5182,10 +7200,15 @@ if (typeof module === 'object') {
     };
 
 }));
-
-var totalPriceText = $('#total-price');
-var checkoutBtn = $('#checkout-btn');
 $(document).ready(function(){
+    //var totalPriceText = $('#total-price');
+    //var checkoutBtn = $('#checkout-btn');
+
+    $('.img-gallery').slick({
+        dots: true,
+        arrows: false
+
+    });
 
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
@@ -5198,7 +7221,7 @@ if (!typeof item === 'undefined') {
     item['price'] = parseFloat(item['price']);
 }
 
-
+/*
 var doUpdatePrice = function() {
   if($('#country').val() == item['country']) {
     //Domestic shipping
@@ -5220,6 +7243,8 @@ $('#country').change(function() {
   doUpdatePrice();
 
 });
+*/
+
 var placeSearch, autocomplete;
 var componentForm = {
   street_number: 'short_name',
@@ -5268,7 +7293,7 @@ function fillInAddress() {
   }
 
   $('#hidden-form').show();
-  doUpdatePrice();
+  //doUpdatePrice();
 }
 // [END region_fillform]
 
@@ -5290,6 +7315,23 @@ function geolocate() {
 initialize();
 //geolocate();
 
+    if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+        var msViewportStyle = document.createElement('style');
+        msViewportStyle.appendChild(
+            document.createTextNode(
+                '@-ms-viewport{width:auto!important}'
+            )
+        );
+        document.querySelector('head').appendChild(msViewportStyle);
+    }
+
+    $(function () {
+        var nua = navigator.userAgent;
+        var isAndroid = (nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1 && nua.indexOf('Chrome') === -1);
+        if (isAndroid) {
+            $('select.form-control').removeClass('form-control').css('width', '100%');
+        }
+    });
 });
 
 //Code for user.show page
@@ -5297,7 +7339,7 @@ initialize();
 var unfollowButton = $('#unfollow-btn');
 
 unfollowButton.on('mouseover', function() {
-    console.log('MOUSEOVER');
+    //console.log('MOUSEOVER');
     $(this).text('Unfollow');
     $(this).addClass('btn-danger');
 
@@ -5307,9 +7349,6 @@ unfollowButton.on('mouseleave', function() {
     unfollowButton.text('Following');
     unfollowButton.removeClass('btn-danger');
 });
-
-/*$('select').selectpicker();*/
-
 
 var mediumEditor = new MediumEditor('[data-md-ed]', {
     firstHeader: 'h3',
@@ -5324,1210 +7363,3 @@ var mediumEditor = new MediumEditor('[data-md-ed]', {
 
 
 
-
-var app = angular.module('app', ['angularFileUpload', 'ngSanitize']);
-
-app.run(['$rootScope', function ($rootScope) {
-    if (baseURL) {
-        $rootScope.baseURL = baseURL;
-    }
-    else {
-        $rootScope.baseURL = 'https://sailr.co';
-    }
-
-    $rootScope.loggedInUser = loggedInUser;
-}]);
-app.directive('contenteditable', function () {
-    return {
-        restrict: 'A', // only activate on element attribute
-        require: '?ngModel', // get a hold of NgModelController
-        link: function (scope, element, attrs, ngModel) {
-            if (!ngModel) return; // do nothing if no ng-model
-
-            // Specify how UI should be updated
-            ngModel.$render = function () {
-                element.html(ngModel.$viewValue);
-            };
-
-            // Listen for change events to enable binding
-            element.on('blur keyup change input', function () {
-                scope.$apply(read);
-            });
-            read(); // initialize
-
-            // Write data to the model
-            function read() {
-                var html = element.html();
-                // When we clear the content editable the browser leaves a <br> behind
-                // If strip-br attribute is provided then we strip this out
-                if (attrs.stripBr && html == '<br>') {
-                    html = '';
-                }
-                ngModel.$setViewValue(html);
-            }
-        }
-    };
-});
-
-app.directive('num-binding', function () {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        scope: {
-            model: '=ngModel'
-        },
-        link: function (scope, element, attrs, ngModelCtrl) {
-            if (scope.model && typeof scope.model == 'string') {
-                scope.model = parseInt(scope.model);
-            }
-        }
-    };
-});
-
-
-app.directive('sailrFooter', ['$document', '$window', function ($document, $window) {
-    return {
-        scope: false,
-        link: function(scope, element, attrs) {
-
-            var positionFooter = function() {
-                var hasVScroll = document.body.scrollHeight | document.body.clientHeight > $window.innerHeight;
-                //console.log(element.style.height);
-
-                var newTop = $window.document.body.scrollHeight;// + element.style.height;
-                var stringNewHeight = newTop + 'px';
-                if (hasVScroll) {
-                    element.css({
-                        position: 'relative',
-                        top: '100%'
-                    });
-                }
-
-                else {
-                    element.css({
-                        position: 'absolute',
-                        top: stringNewHeight
-                    });
-                }
-            };
-
-            positionFooter();
-
-            scope.$watch($window.innerHeight, function(newValue, oldValue) {
-                positionFooter();
-
-            });
-
-
-        }
-    }
-
-
-}]);
-
-app.directive('sailrOpactiy', function () {
-
-    function link(scope, iElement, iAttrs) {
-
-        scope.sailrOpacity = iAttrs.sailrOpacity;
-        iElement.css({
-            opacity: scope.sailrOpacity
-        });
-    }
-
-    return {
-        restrict: 'A',
-        scope: {
-            sailrOpacity: '@'
-        },
-        link: link
-    }
-});
-
-
-app.directive('sailrComments', function () {
-    return {
-        restrict: 'AE',
-        require: '^sailrProductId',
-        scope: {
-            sailrProductId: '@'
-        },
-        controller: ['$scope', '$http', 'CommentsFactory', function ($scope, $http, CommentsFactory) {
-
-            $scope.comments = [];
-            $scope.commentOpacity = 1.00;
-            $scope.webError = false;
-
-            $scope.newComment = {};
-            $scope.loggedInUser = loggedInUser;
-            $scope.item_id = 0;
-
-            $scope.getComments = function (product_id) {
-                //console.log('PRODUCT ID:: ' + product_id);
-                $scope.item_id = product_id;
-
-
-                var getCommentsPromise = CommentsFactory.getComments($scope.item_id);
-
-                getCommentsPromise.then(function (successResponse) {
-                        $scope.comments = successResponse.data;
-                    },
-                    function (failResponse) {
-                        console.log(failResponse);
-                        $scope.webError = true;
-                    });
-
-            };
-
-            $scope.postNewComment = function () {
-                var newCommentIndex = $scope.comments.unshift({
-                    item_id: $scope.item_id,
-                    comment: $scope.newComment.comment,
-                    created_at: new Date(),
-                    user: loggedInUser
-                });
-
-                var newCommentPromise = CommentsFactory.postNewComment($scope.newComment.comment, $scope.item_id);
-                console.log(CommentsFactory);
-                console.log(newCommentPromise);
-
-                newCommentPromise.then(function (successResponse) {
-                        console.log(successResponse);
-                        $scope.newComment.comment = '';
-                        //Set opacity to 1.00
-                    },
-                    function (failResponse) {
-                        console.log(failResponse);
-                        $scope.comments = $scope.comments.splice(1, newCommentIndex);
-                    });
-
-            }
-        }],
-
-        templateUrl: baseURL + '/js/templates/comments/master.html',
-        link: function (scope, iElement, iAttrs) {
-            scope.getComments(iAttrs.sailrProductId);
-            scope.item_id = iAttrs.sailrProductId;
-        }
-    }
-});
-
-app.directive('sailrProductId', function () {
-    return {
-        controller: ['$scope', function ($scope) {}]
-    }
-});
-
-app.directive('sailrComment', function () {
-    return {
-        restrict: 'AE',
-        scope: {
-            profileImageUrl: '@',
-            username: '@',
-            name: '@',
-            commentText: '@'
-        },
-        controller: ['$scope', function ($scope) {
-
-        }],
-
-        link: function (scope, iElement, iAttrs) {
-            scope.username = iAttrs.username;
-            scope.name = iAttrs.name;
-            scope.profileImageUrl = iAttrs.profileImageUrl;
-            scope.commentText = iAttrs.commentText;
-            scope.baseURL = baseURL;
-
-        },
-
-        templateUrl: baseURL + '/js/templates/comments/comment-item.html'
-
-    }
-
-});
-
-app.directive('sailrEntityLink', function() {
-    return {
-        priority: -1,
-        restrict: 'AE',
-        scope: false,
-        link: function(scope, iElement, iAttrs) {
-            scope.$watch(iAttrs.sailrEntityLink, function(newValue, oldValue) {
-                var tempHTML = iElement.html();
-                iElement.html(twttr.txt.autoLink(tempHTML));
-            });
-
-        }
-    }
-});
-
-app.directive('sailrFeedOnboardBox', function() {
-    return {
-        restrict: 'E',
-        scope: false,
-        templateUrl: baseURL + '/js/templates/onboard/feed/onboard-box.html'
-    }
-});
-
-app.directive('sailrNumberOfProducts', function() {
-    return {
-        restrict: 'A',
-        controller: ['$scope', function($scope){}]
-    }
-});
-
-app.directive('sailrOffsetBy', function() {
-    return {
-        restrict: 'A',
-        controller: ['$scope', function($scope){}]
-    }
-});
-
-app.directive('sailrProductPreview', function() {
-    return {
-        restrict: 'AE',
-        scope: {
-            productTitle: '@',
-            productPreviewImageUrl: '@',
-            productLinkUrl: '@',
-            productSellerUsername: '@',
-            productSellerName: '@',
-            productSellerUrl: '@'
-        },
-
-        templateUrl: baseURL + '/js/templates/onboard/recent/products/product-preview.html'
-    }
-});
-
-app.directive('sailrRecentProducts', function() {
-    return {
-        restrict: 'AE',
-        require: ['sailrNumberOfProducts', 'sailrOffsetBy'],
-        scope: {
-            sailrNumberOfProducts: '@',
-            sailrOffsetBy: '@'
-
-        },
-
-        controller: ['$scope', '$http', 'OnboardFactory', function ($scope, $http, OnboardFactory) {
-
-            $scope.baseURL = baseURL;
-            $scope.products = [];
-            $scope.initialValue = 00;
-
-            $scope.getProducts = function (offset, limit) {
-
-                OnboardFactory.getRecentProducts(offset, limit)
-                    .success(function(data, status, headers) {
-                        /*append all the things */
-                        angular.forEach(data, function (value) {
-                            $scope.products.push(value);
-                        });
-
-                        //console.log('NUMBER OF ELEMENTS IN ARRAY:: ' + $scope.products.length);
-
-                    })
-                    .error(function(data, status, headers) {
-                        $scope.webError = true;
-                        //console.log(data);
-                    });
-
-            };
-
-        }],
-
-        templateUrl: baseURL + '/js/templates/onboard/recent/products/master.html',
-        link: function(scope, elem, attrs) {
-
-            var loadProducts = function(numberToLoad, offset) {
-                scope.getProducts(offset, numberToLoad);
-                return true;
-            };
-
-            scope.$watch(function() {
-                return [attrs.sailrNumberOfProducts, attrs.sailrOffsetBy];
-            }, function() {
-                loadProducts(scope.sailrNumberOfProducts, scope.sailrOffsetBy);
-            }, true);
-
-        }
-
-    }
-});
-
-app.directive('focusMe',['$timeout', '$parse', function ($timeout, $parse) {
-    return {
-        //scope: true,   // optionally create a child scope
-        link: function (scope, element, attrs) {
-            var model = $parse(attrs.focusMe);
-            scope.$watch(model, function (value) {
-                console.log('value=', value);
-                if (value === true) {
-                    $timeout(function () {
-                        element[0].focus();
-                    });
-                }
-            });
-        }
-    };
-}]);
-
-
-app.directive('imgGallery', function() {
-   return {
-       restrict: 'C',
-       scope: false,
-       link: function(scope, element, attrs) {
-            $(document).ready(function() {
-                element.slick({
-                    dots: true,
-                    arrows: false
-
-                });
-            });
-
-       }
-   }
-});
-app.factory('OnboardFactory',['$http',  function($http){
-    var service = {};
-
-    service.getRecentProducts = function (offset, limit) {
-        console.log('OFFSET IS ::' + offset);
-        console.log('LIMIT IS:: ' + limit);
-        var url = baseURL + '/onboard/recent/products/' + offset + '/' + limit;
-        return $http.get(url);
-    };
-
-    return service;
-}]);
-
-app.factory('StripeFactory',['$q', function ($q) {
-    var service = {};
-
-    service.sayHello = function () {
-        return 'HELLO FROM STRIPE FACTORY';
-    };
-
-    service.setPublishableKey = function (key) {
-        Stripe.setPublishableKey(key);
-    };
-
-
-    service.createToken = function (cardData) {
-        var defered = $q.defer();
-
-        Stripe.card.createToken(cardData, function (status, response) {
-
-            if (response.error) {
-                service.errors = response.error;
-                defered.reject(response);
-
-            }
-
-            else {
-                service.token = response;
-                defered.resolve(response);
-
-            }
-        });
-
-        return defered.promise;
-    };
-
-    service.getToken = function () {
-        return service.token;
-    };
-
-    service.getErrors = function () {
-        return service.errors;
-    };
-
-    return service;
-}]);
-
-app.factory('HelperFactory', function () {
-    var service = {};
-
-    service.stripWhiteSpace = function (string) {
-        string = string.replace(/\s/g, "");
-        return string;
-    };
-
-    service.createStripeCardObjectFromFormattedInput = function (inputObject) {
-
-        var returnCard = {};
-        var expiryArray = service.stripWhiteSpace(inputObject.expiry).split('/');
-
-        returnCard = {
-            number: service.stripWhiteSpace(inputObject.number),
-            cvc: service.stripWhiteSpace(inputObject.cvc),
-            exp_month: expiryArray[0],
-            exp_year: expiryArray[1]
-        };
-
-        /* If there is a cardholder name, add it to the card object */
-        if (typeof inputObject.name !== 'undefined') {
-            if (inputObject.name.length > 0) {
-                returnCard.name = inputObject.name;
-            }
-        }
-
-        return returnCard;
-
-    };
-
-    return service;
-});
-
-
-app.factory('SubscriptionFactory', ['$q', '$rootScope', '$http', function ($q, $rootScope, $http) {
-
-    var service = {};
-    service.subscriptionURL = baseURL + '/settings/subscription';
-    console.log('SUBSCRIPTION URL:: ' + service.subscriptionURL);
-
-    service.sayHello = function () {
-        return 'HELLO FROM STRIPE FACTORY';
-    };
-
-    service.createSubscription = function (planID, stripeToken, couponCode) {
-
-        var data = {
-            _token: csrfToken,
-            stripeToken: stripeToken,
-            plan: 'awesome'
-        };
-
-        if(typeof couponCode !== 'undefined') {
-            if(couponCode.length > 0) {
-                data.coupon = couponCode;
-            }
-        }
-
-        var defered = $q.defer();
-
-        $http.post(service.subscriptionURL, data)
-            .success(function (data, status) {
-                defered.resolve(data);
-            })
-
-            .error(function (data, status, headers, config) {
-                var rejectObject = {
-                    data: data,
-                    status: status,
-                    headers: headers,
-                    config: config
-                };
-
-                defered.reject(rejectObject);
-
-            });
-
-        return defered.promise;
-    };
-
-    service.cancelSubscription = function () {
-
-        var configObject = {
-            _token: csrfToken
-            //_method: 'delete'
-        };
-
-        var defered = $q.defer();
-
-        $http.post(service.subscriptionURL + '/delete', configObject)
-            .success(function (data, status) {
-                defered.resolve(data);
-            })
-            .error(function (data, status) {
-                defered.reject(data);
-
-            });
-
-        return defered.promise;
-
-    };
-
-    return service;
-
-}]);
-
-app.factory('CommentsFactory',['$q', '$http', function ($q, $http) {
-
-    var service = {};
-
-    service.sayHello = function () {
-        console.log('Hello from CommentsFactory');
-        return 'Hello from CommentFactory';
-    };
-
-    service.postNewComment = function (commentText, productID) {
-        console.log('Add new comment function called');
-        var postObject = {
-            _token: csrfToken,
-            comment: commentText,
-            item_id: productID
-        };
-
-        var defered = $q.defer();
-
-        console.log('BASE URL:: ' + baseURL);
-        console.log(postObject);
-
-        $http.post(baseURL + '/comments', postObject)
-            .success(function (data, status) {
-                defered.resolve(data);
-            })
-            .error(function (data, status) {
-                defered.reject(data);
-            });
-
-        return defered.promise;
-
-    };
-
-    service.getComments = function (productID) {
-        var defered = $q.defer();
-
-        $http.get(baseURL + '/username/product/' + productID + '/' + 'comments')
-            .success(function (data, status) {
-                defered.resolve(data);
-            })
-            .error(function (data, status) {
-                defered.reject(data);
-            });
-
-        return defered.promise;
-
-    };
-
-
-    return service;
-
-
-}]);
-
-app.controller('homeController', ['$scope', function ($scope) {
-
-    $scope.numberOfProducts = 3;
-    $scope.alreadyLoadedNumber = $scope.numberOfProducts;
-    $scope.offsetLoadProducts = 0;
-    $scope.loadMoreButtonPressCount = 0;
-
-    $scope.showNowSignupText = false;
-
-    $scope.loadMore = function (numberToLoad) {
-        $scope.alreadyLoadedNumber = $scope.numberOfProducts + $scope.offsetLoadProducts;
-        $scope.numberOfProducts = numberToLoad;
-        $scope.offsetLoadProducts = $scope.alreadyLoadedNumber;
-
-        $scope.loadMoreButtonPressCount++;
-        if ($scope.loadMoreButtonPressCount > 2 && !$scope.showNowSignupText) {
-            $scope.showNowSignupText = true;
-        }
-    }
-
-}]);
-/*
- var stripWhiteSpace = function (string) {
- string = string.replace(/\s/g, "");
- return string;
- };
- */
-
-app.controller('billingController', ['$scope', '$http', 'HelperFactory', 'StripeFactory', function ($scope, $http, HelperFactory, StripeFactory) {
-
-    $scope.showUpdateCard = false;
-    $scope.baseURL = baseURL;
-    $scope.card = {};
-    $scope.token = {};
-    $scope.posting = false;
-    $scope.card.name = usersName;
-    $scope.card.last4 = last4;
-    $scope.card.type = cardType;
-
-    $scope.subscription = subscription;
-
-    $scope.updateCard = function () {
-        $scope.posting = true;
-
-        var stripeCard = HelperFactory.createStripeCardObjectFromFormattedInput($scope.card);
-
-        var StripePromise = StripeFactory.createToken(stripeCard);
-        StripePromise.then(function (response) {
-            console.log(response);
-            console.log('SUCCESS!');
-            //console.log('TOKEN:::: ' + JSON.stringify(StripeFactory.getToken()));
-            console.log(StripeFactory.getToken());
-            $scope.token = StripeFactory.getToken();
-            $scope.token.id = StripeFactory.getToken().id;
-            $scope.submitUpdate();
-
-
-        }, function (response) {
-            $scope.posting = false;
-            console.log('Stripe card fail::::');
-            console.log(response);
-            humane.log(StripeFactory.getErrors().message);
-
-        });
-
-    };
-
-    $scope.submitUpdate = function () {
-        $scope.posting = true;
-        var data = {
-            'stripeToken': $scope.token.id,
-            '_token': csrfToken
-        };
-
-
-        $http.put($scope.baseURL + '/settings/billing', data)
-            .success(function (data, status, headers, config) {
-                $scope.posting = false;
-                humane.log(data.message);
-
-
-                $scope.card.last4 = $scope.token.card.last4;
-                $scope.card.type = $scope.token.card.type;
-
-
-                if ($scope.showUpdateCard) {
-                    $scope.showUpdateCard = false;
-                }
-            }).
-            error(function (data, status, headers, config) {
-                $scope.posting = false;
-                if (!data) {
-                    humane.log("We're afraid something went wrong and the card didn't update");
-                }
-                else {
-                    humane.log(data.message);
-                }
-                if ($scope.showUpdateCard) {
-                    $scope.showUpdateCard = false;
-                }
-            });
-
-    };
-
-    $scope.toggleShowingForm = function () {
-        $scope.showUpdateCard = !$scope.showUpdateCard;
-    }
-
-
-}]);
-
-
-app.controller('feedContentController', ['$scope', function ($scope) {
-    $scope.numberOfProducts = 6;
-    $scope.alreadyLoadedNumber = $scope.numberOfProducts;
-    $scope.offsetLoadProducts = 0;
-
-    $scope.loadMoreRecentProducts = function (numberToLoad) {
-        $scope.alreadyLoadedNumber = $scope.numberOfProducts + $scope.offsetLoadProducts;
-        $scope.numberOfProducts = numberToLoad;
-        $scope.offsetLoadProducts = $scope.alreadyLoadedNumber;
-    }
-
-
-
-}]);
-app.controller('feedController', ['$scope', '$http', function ($scope, $http) {
-    $scope.baseURL = baseURL;
-    $scope.submitSearchForm = function() {
-        window.location = $scope.baseURL + '/s/' + encodeURIComponent($scope.searchText);
-    };
-
-}]);
-app.controller('editController', ['$scope', '$http', '$upload', '$timeout', '$filter', function ($scope, $http, $upload, $timeout, $filter) {
-
-    if (typeof itemModel != 'undefined') {
-        itemModel.price = parseFloat(itemModel.price);
-        itemModel.initial_units = parseFloat(itemModel.initial_units);
-        itemModel.ship_price = parseFloat(itemModel.ship_price);
-        itemModel.public = parseInt(itemModel.public);
-    }
-
-
-    var openFileBrowser = function () {
-        document.getElementById('addFiles').click();
-    };
-
-    
-    $scope.countries = countries;
-    $scope.currencies = currencies;
-    $scope.item = {};
-
-    if (itemModel.ships_to.length < 1) {
-        itemModel.ships_to = undefined;
-    }
-    $scope.item = itemModel;
-    $scope.photos = [];
-    $scope.dataUrls = [];
-
-    if("photos" in $scope.item) {
-        $scope.photos = $scope.item.photos;
-    }
-
-    /* Set the inital values for these fields as the data binding is a bit dodgy */
-    document.getElementById('title-heading').innerText = $scope.item.title;
-    document.getElementById('item-description').innerHTML = $scope.item.description;
-    // document.getElementById('item-price').value = $scope.item.price;
-    document.scope = $scope;
-
-    $scope.buttonPressed = function () {
-        console.log($scope.desc);
-        console.log($scope);
-    };
-
-    $scope.saveChanges = function () {
-        $scope.posting = true;
-
-        var data = $scope.item;
-        data._token = sessionToken;
-        console.log('the data to be sent is ' + JSON.stringify(data));
-
-        $http.put(updateURL, JSON.stringify(data))
-            .success(function (data, status, headers, config) {
-                $scope.posting = false;
-                $scope.responseData = data;
-                console.log('The response data is: ');
-                console.log($scope.responseData);
-                //window.location = $scope.responseData.redirect_url;
-                $scope.item.description = data.description;
-
-            })
-
-            .error(function (data, status, headers, config) {
-                $scope.posting = false;
-                console.log(data);
-
-
-            });
-
-    };
-
-    $scope.toggleVisibility = function () {
-        $scope.saveChanges();
-        $scope.posting = true;
-
-        var data = {
-            _token: sessionToken
-        };
-
-        console.log('the data to be sent is ' + JSON.stringify(data));
-
-        $http.put(updateURL  + '/toggle-visibility', JSON.stringify(data))
-            .success(function (data, status, headers, config) {
-                $scope.item.public = data.public;
-                $scope.posting = false;
-
-                humane.log(data.message);
-                console.log('The response data is: ');
-                console.log(data);
-
-            })
-
-            .error(function (data, status, headers, config) {
-                $scope.posting = false;
-                console.log(data);
-
-                if (data.message) {
-
-                    humane.log(data.message);
-                }
-
-                if (data.errors) {
-                    console.log('ERORROS ARE');
-                    console.log(data.errors);
-                    humane.log(data.errors);
-                }
-
-
-
-            });
-
-    };
-
-    $scope.isFileBrowserOpen = false;
-    $scope.openFileBrowser = function () {
-        if (!$scope.isFileBrowserOpen) {
-            $scope.isFileBrowserOpen = true;
-            document.getElementById('addFiles').click();
-            $scope.isFileBrowserOpen = false;
-        }
-        console.log('BUTTON CLICKED');
-
-    };
-
-    $scope.tempURL = '';
-    $scope.uploading = false;
-    $scope.onFileSelect = function ($files) {
-
-
-        if ($scope.uploading) {
-            humane.log('One at a time please.');
-            return;
-        }
-        //$files: an array of files selected, each file has name, size, and type.
-        for (var i = 0; i < $files.length; i++) {
-            if ($files.length > 1) {
-                humane.log('Please only one photo at a time.. We are only new here.');
-                break;
-            }
-            var file = $files[i];
-            if (window.FileReader && file.type.indexOf('image') > -1) {
-                var fileReader = new FileReader();
-                fileReader.readAsDataURL($files[i]);
-
-                var tooBig = false;
-                if (file.size > 7340032) {
-                    tooBig = true;
-                    console.log('File too large.');
-                    humane.log('File is too large. Please try compressing it first.');
-                    return;
-                }
-
-
-                    console.log('not too big');
-                    var loadFile = function (fileReader, index) {
-                        fileReader.onload = function (e) {
-                            $timeout(function () {
-                                //$scope.showCropBox(e);
-                                $scope.dataUrls[index] = e.target.result;
-                                console.log(e.target.result);
-                                $scope.photos.push({url: e.target.result});
-                                $scope.tempURL = e.target.result;
-                            });
-                        }
-                    }(fileReader, i);
-
-
-            }
-
-
-            console.log(file);
-
-
-            humane.log('Uploading...');
-            $scope.uploading = true;
-
-            $scope.upload = $upload.upload({
-                url: baseURL + '/photo/upload/' + itemModel.id, //upload.php script, node.js route, or servlet url
-                // method: 'POST' or 'PUT',
-                // headers: {'header-key': 'header-value'},
-                // withCredentials: true,
-                data: {_token: csrfToken},
-                file: file,
-                fileFormDateName: 'photo'
-                // or list of files: $files for html5 only
-                /* set the file formData name ('Content-Desposition'). Default is 'file' */
-                //fileFormDataName: myFile, //or a list of names for multiple files (html5).
-                /* customize how data is added to formData. See #40#issuecomment-28612000 for sample code */
-                //formDataAppender: function(formData, key, val){}
-            }).progress(function (evt) {
-                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-            }).success(function (data, status, headers, config) {
-                $scope.photos[$scope.photos.length -1].set_id = data.set_id;
-                $scope.photos[$scope.photos.length -1].url = data.url;
-                // file is uploaded successfully
-                humane.log('Photo successfully uploaded!');
-                console.log(data);
-                console.log(status);
-                console.log(headers);
-                $scope.uploading = false;
-            })
-                .error(function (data, status, headers, config) {
-                    $scope.photos = $scope.photos.slice($scope.photos.length -1, 1);
-                    humane.log('Upload failed. ' + data);
-                    console.log(data);
-                    console.log(status);
-                    console.log(headers);
-                    $scope.uploading = false;
-                });
-
-        }
-
-    };
-
-    $scope.showCropBox = function(e) {
-        //$('#crop-modal').modal('show');
-        var image = new Image();
-        image.src = e.target.result;
-
-        image.onload = (function() {
-            var canvas = document.createElement('canvas');
-            canvas.width = 300;
-            canvas.height = image.height * (300 / image.width);
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-            $('#image_input').html(['<img src="', canvas.toDataURL(), '"/>'].join(''));
-
-            var img = $('#image_input img')[0];
-            var canvas = document.createElement('canvas');
-
-            $('#image_input img').Jcrop({
-                bgColor: 'black',
-                bgOpacity: .6,
-                setSelect: [0, 0, 100, 100],
-                aspectRatio: 1,
-                //minSize: [150, 150],
-                keySupport: false,
-                //onSelect: imgSelect,
-                onChange: imgSelect
-            });
-
-
-            function imgSelect(selection) {
-                canvas.width = canvas.height = 100;
-
-                var ctx = canvas.getContext('2d');
-                ctx.drawImage(img, selection.x, selection.y, selection.w, selection.h, 0, 0, canvas.width, canvas.height);
-
-                $('#image_output').attr('src', canvas.toDataURL());
-                $('#image_source').text(canvas.toDataURL());
-            }
-        });
-
-        };
-
-    $scope.deletePhoto = function($index) {
-        var photo = $scope.photos[$index];
-        var set_id = photo.set_id;
-        photo.deleted = true;
-
-        var deleteImageUrl = baseURL + '/photo/' + $scope.item.id;
-        var data = {set_id: set_id, _token: csrfToken, _method: 'DELETE'};
-
-        humane.log('Deleting...');
-        $http.put(deleteImageUrl, JSON.stringify(data))
-            .success(function (data, status, headers, config) {
-                $scope.responseData = data;
-                console.log('The response data is: ');
-                console.log($scope.responseData);
-                humane.log('Photo deleted successfully');
-
-                if ($scope.item.public && data.message) {
-                    humane.log(data.message);
-                }
-
-                if (data.item) {
-
-                    $scope.item.public = data.item.public;
-                }
-
-                $scope.photos.splice($index, 1);
-
-            })
-
-            .error(function (data, status, headers, config) {
-                console.log(data);
-                humane.log('Photo deletion failed.');
-                photo.deleted = false;
-
-            });
-    };
-
-
-}]);
-app.controller('indexController', ['$scope', '$http', function($scope, $http) {
-
-    $scope.currency = 'USD';
-    $scope.codes = currencyCodes;
-
-    $scope.handleCodeChange = function ($index) {
-        $scope.currency = $scope.codes[$index];
-        console.log($scope.currency);
-    };
-
-    $scope.toggleAdd = function () {
-        $scope.shouldShowAdd = !$scope.shouldShowAdd;
-        $('#addItem').slideToggle(300);
-        //console.log('Show pressed');
-    };
-
-    $scope.formSubmit = function () {
-        $scope.posting = true;
-        $scope.formData = {_token: csrfToken, title: $scope.title, currency: $scope.currency, price: $scope.price};
-        console.log($scope.formData);
-
-        $http.post('/products', JSON.stringify($scope.formData))
-            .success(function (data, status) {
-                //console.log('the data to be sent is ' + JSON.stringify(data));
-                $scope.responseData = data;
-                //console.log($scope.responseData);
-
-                if (data.message) {
-                    $scope.posting = false;
-                    humane.log(data.message);
-                }
-
-                if (data.redirect_url) {
-                    window.location = $scope.responseData.redirect_url;
-                }
-
-                $scope.posting = false;
-            })
-
-            .error(function (data, status, headers, config) {
-                //console.log(data);
-                $scope.posting = false;
-
-            });
-    };
-
-}]);
-app.controller('showController', ['$scope', function ($scope) {
-    $scope.item = item;
-    $scope.user = $scope.item.user;
-    $scope.profile_img_url = $scope.user.profile_img.url;
-}]);
-app.controller('notificationsController', ['$scope', function ($scope) {
-    $scope.notifications = sailr.notifications;
-    $scope.baseURL = baseURL;
-
-}]);
-app.controller('searchController', ['$scope', '$http', function ($scope, $http) {
-    $scope.results = sailr.results;
-    $scope.baseURL = baseURL;
-
-}]);
-app.controller('chooseController', ['$scope', '$http', '$q', 'StripeFactory', 'HelperFactory', 'SubscriptionFactory', function ($scope, $http, $q, StripeFactory, HelperFactory, SubscriptionFactory) {
-
-    $scope.showingCreditForm = false;
-    $scope.showCardForm = false;
-    $scope.posting = false;
-    $scope.showCoupon = false;
-    $scope.couponCode = '';
-
-    //$scope.successSubscribe = false;
-    $scope.card = {};
-
-    $scope.toggleCouponShow = function() {
-      $scope.showCoupon = !$scope.showCoupon;
-    };
-    $scope.subscribeToPlan = function(planID) {
-        console.log('PLAN ID::: ' + planID);
-
-        $scope.posting = true;
-
-        var stripeCard = HelperFactory.createStripeCardObjectFromFormattedInput($scope.card);
-
-        var StripePromise = StripeFactory.createToken(stripeCard);
-
-        StripePromise.then(function(response)
-        {
-            console.log(response);
-            console.log(StripeFactory.getToken());
-
-            if ($scope.couponCode) {
-
-                var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id, $scope.couponCode);
-            }
-
-            else {
-                var createSubscriptionPromise = SubscriptionFactory.createSubscription(planID, StripeFactory.getToken().id);
-            }
-
-
-            createSubscriptionPromise.then(function(responseObject) {
-
-                $scope.posting = false;
-                $scope.showCardForm = false;
-                //Success!
-                console.log('SUCCESS on server subscription create');
-                console.log(responseObject);
-                humane.log(responseObject.message);
-                window.location =  responseObject.redirect_url;
-            },
-
-            function(responseObject) {
-                //Fail :(
-                $scope.posting = false;
-                $scope.$apply(function() {
-                    $scope.posting = false;
-                });
-
-                console.log('Subscription fail::   --');
-                console.log(responseObject);
-                humane.log(responseObject.data.message);
-
-            });
-
-
-        }, function(response)
-       {
-           $scope.posting = false;
-           console.log('Stripe card fail::::');
-           console.log(response);
-
-           humane.log(StripeFactory.getErrors().message);
-
-       });
-
-    };
-
-    $scope.handleSubscribeButtonPressed = function() {
-        if (!$scope.showingCreditForm) {
-            //cardFormContainer.slideToggle();
-            $scope.showCardForm = true;
-            $scope.showingCreditForm = true;
-        }
-
-
-    }
-
-
-}]);
-app.controller('manageController', ['$scope', '$http', '$q', 'SubscriptionFactory', '$rootScope', function ($scope, $http, $q, SubscriptionFactory) {
-//Code goes here
-    $scope.posting = false;
-    $scope.subscription = subscription;
-    $scope.user = user;
-
-    $scope.cancelSubscription = function () {
-        $scope.posting = true;
-        var cancelSubscription = SubscriptionFactory.cancelSubscription();
-
-        cancelSubscription.then(function(response) {
-            $scope.posting = false;
-            $scope.subscription.cancel_at_period_end = true;
-
-            humane.log(response.message);
-
-            //window.location.reload(false);
-        },
-            function (response) {
-                $scope.posting = false;
-                $scope.$apply();
-                humane.log(response.message)
-            }
-        );
-    }
-
-}]);
-var openFileBrowser = function () {
-    document.getElementById('addFiles').click();
-};
-
-
-app.controller('updateController', ['$scope', function ($scope) {
-
-    $scope.showSubmit = false;
-    $('#addFiles').on('change', function() {
-        $scope.$apply(function() {
-           $scope.showSubmit = true;
-        });
-    });
-
-    $scope.user = {};
-    $scope.fileButtonText = 'Select new profile photo';
-
-    $scope.user = loggedInUser;
-    $scope.profileURL = profileImageURL;
-
-
-}]);
