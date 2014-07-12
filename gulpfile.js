@@ -11,7 +11,8 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
-    coffee = require('gulp-coffee');
+    //coffee = require('gulp-coffee'),
+    gzip = require('gulp-gzip');
 
 var paths = {
     scripts:
@@ -42,12 +43,15 @@ gulp.task('clean', function() {
 });
 
 gulp.task('scripts', function() {
+    var dest = 'public/build/js';
     return gulp.src(paths.scripts)
         .pipe(concat('main.js'))
-        .pipe(gulp.dest('public/build/js'))
+        .pipe(gulp.dest(dest))
         .pipe(uglify())
         .pipe(rename('main.min.js'))
-        .pipe(gulp.dest('public/build/js'))
+        .pipe(gulp.dest(dest))
+        .pipe(gzip())
+        .pipe(gulp.dest(dest))
         ;
 });
 
@@ -59,6 +63,8 @@ gulp.task('styles', function() {
         .pipe(gulp.dest('public/build/css'))
         .pipe(minifycss())
         .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest('public/build/css'))
+        .pipe(gzip())
         .pipe(gulp.dest('public/build/css'));
 });
 
