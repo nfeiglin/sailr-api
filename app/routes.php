@@ -27,6 +27,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
+//App::register('Sailr\TestPipe\TestPipeServiceProvider')
 //Route::get('asset/show/{path?}', 'Sailr\TestPipe\TestPipeController@showAsset')->where('path', '(.*)');
 //\Sailr\TestPipe\TestPipe::make()->tags('css')
 
