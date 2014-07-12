@@ -1,9 +1,11 @@
 $baseURL: '//homestead.app:8000';
 $backgroundImageUrl: "//homestead.app:8000/build/images/purple-bg-sm.jpg";
+$logoUrl: "//homestead.app:8000/build/images/logo.png";
 
 @import 'main/custom';
 @import 'main/login';
 @import 'lib/card';
-@import 'lib/slick';
+@import 'lib/spinners';
 @import 'lib/medium-editor';
 @import 'lib/medium-bootstrap';
+@import 'lib/ie-viewport-fix';
