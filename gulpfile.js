@@ -18,12 +18,12 @@ var paths = {
         [
             'app/assets/js/angular-file/**/*.js',
             'app/assets/js/twitter-text-1.9.1.js',
-            'app/assets/js/lib/**/*.js',
-            'app/assets/js/main.js',
             'app/assets/js/app.js',
             'app/assets/js/directives.js',
             'app/assets/js/factorys.js',
-            'app/assets/js/controllers/**/*.js'
+            'app/assets/js/controllers/**/*.js',
+            'app/assets/js/lib/**/*.js',
+            'app/assets/js/main.js'
         ],
     css: ['app/assets/css/base.scss'],
     img: ['app/assets/img/**/*.jpg', 'app/assets/img/**/*.jpeg', 'app/assets/img/**/*.png', 'app/assets/img/**/*.gif']
