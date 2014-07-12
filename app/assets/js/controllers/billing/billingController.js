@@ -12,7 +12,7 @@ app.controller('billingController', ['$scope', '$http', 'HelperFactory', 'Stripe
     $scope.card = {};
     $scope.token = {};
     $scope.posting = false;
-    $scope.card.name = usersName;
+    $scope.card.name = loggedInUser.name;
     $scope.card.last4 = last4;
     $scope.card.type = cardType;
 

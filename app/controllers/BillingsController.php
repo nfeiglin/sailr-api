@@ -40,7 +40,7 @@ class BillingsController extends \BaseController {
 
         $title = 'Billing Settings';
 
-		return View::make('settings.billing', compact('cardType', 'last4', 'title', 'user', 'invoices', 'renewDateString', 'subscription'));
+		return View::make('settings.billing', compact('cardType', 'last4', 'title', 'invoices', 'renewDateString', 'subscription'));
 	}
 
 	/**
