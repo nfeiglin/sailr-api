@@ -19,7 +19,7 @@ if (!typeof item === 'undefined') {
     item['price'] = parseFloat(item['price']);
 }
 
-
+/*
 var doUpdatePrice = function() {
   if($('#country').val() == item['country']) {
     //Domestic shipping
@@ -41,6 +41,8 @@ $('#country').change(function() {
   doUpdatePrice();
 
 });
+*/
+
 var placeSearch, autocomplete;
 var componentForm = {
   street_number: 'short_name',
@@ -89,7 +91,7 @@ function fillInAddress() {
   }
 
   $('#hidden-form').show();
-  doUpdatePrice();
+  //doUpdatePrice();
 }
 // [END region_fillform]
 
