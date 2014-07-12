@@ -28,6 +28,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 */
 
 //Route::get('asset/show/{path?}', 'Sailr\TestPipe\TestPipeController@showAsset')->where('path', '(.*)');
+//\Sailr\TestPipe\TestPipe::make()->tags('css')
 
 View::composer('*', function ($view) {
     if (!array_key_exists('hasNavbar', $view->getData())) {
