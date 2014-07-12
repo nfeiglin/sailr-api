@@ -1,7 +1,12 @@
-
-var totalPriceText = $('#total-price');
-var checkoutBtn = $('#checkout-btn');
 $(document).ready(function(){
+    //var totalPriceText = $('#total-price');
+    //var checkoutBtn = $('#checkout-btn');
+
+    $('.img-gallery').slick({
+        dots: true,
+        arrows: false
+
+    });
 
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
@@ -106,6 +111,23 @@ function geolocate() {
 initialize();
 //geolocate();
 
+    if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+        var msViewportStyle = document.createElement('style');
+        msViewportStyle.appendChild(
+            document.createTextNode(
+                '@-ms-viewport{width:auto!important}'
+            )
+        );
+        document.querySelector('head').appendChild(msViewportStyle);
+    }
+
+    $(function () {
+        var nua = navigator.userAgent;
+        var isAndroid = (nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1 && nua.indexOf('Chrome') === -1);
+        if (isAndroid) {
+            $('select.form-control').removeClass('form-control').css('width', '100%');
+        }
+    });
 });
 
 //Code for user.show page
@@ -113,7 +135,7 @@ initialize();
 var unfollowButton = $('#unfollow-btn');
 
 unfollowButton.on('mouseover', function() {
-    console.log('MOUSEOVER');
+    //console.log('MOUSEOVER');
     $(this).text('Unfollow');
     $(this).addClass('btn-danger');
 
@@ -123,9 +145,6 @@ unfollowButton.on('mouseleave', function() {
     unfollowButton.text('Following');
     unfollowButton.removeClass('btn-danger');
 });
-
-/*$('select').selectpicker();*/
-
 
 var mediumEditor = new MediumEditor('[data-md-ed]', {
     firstHeader: 'h3',
