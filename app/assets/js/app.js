@@ -10,3 +10,7 @@ app.run(['$rootScope', function ($rootScope) {
 
     $rootScope.loggedInUser = loggedInUser;
 }]);
+
+var openFileBrowser = function () {
+    document.getElementById('addFiles').click();
+};
