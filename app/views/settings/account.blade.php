@@ -16,18 +16,17 @@
                     <div class="thumbnail">
                         <img ng-src="@{{ profileURL }}" src="{{ $profileImageURL }}" class="img-circle img-responsive img-thumbnail">
                         <div class="caption">
-                            <h3 class="text-center">@{{ user.name }}</h3>
+                            <h3 class="text-center" ng-bind="user.name"></h3>
+                            <h4 class="text-center text-muted">@<span ng-bind="user.username">{{ $user->username }}</span></h4>
                         </div>
-                        <a href="#" class="btn btn-md btn-default" onclick="openFileBrowser()" id="fileButton">
-                            @{{ fileButtonText }}
-                        </a>
+                        <a href="#" class="btn btn-md btn-default ng-cloak" onclick="openFileBrowser()" id="fileButton" ng-bind="fileButtonText">Select new...</a>
 
                         <form name="photos" ng-submit="photos.$valid" method="post" action="{{ URL::action('ProfileImageController@store') }}" id="imageForm" enctype="multipart/form-data">
                             <input type="file" accept="image/*" id="addFiles" name="photos" ng-required="required" required="required" class="form-control">
                             {{ Form::token() }}
                             <div ng-if="showSubmit">
-                                <button type="submit" class="btn btn-block btn-turq" ng-disabled="photos.$invalid">Submit</button>
-                                <p class="help-block">Press submit to update your profile photo</p>
+                                <button type="submit" class="btn btn-block btn-turq ng-cloak" ng-disabled="photos.$invalid">Submit</button>
+                                <p class="help-block ng-cloak">Press submit to update your profile photo</p>
                             </div>
 
                         </form>
@@ -37,10 +36,6 @@
             </div>
         </div>
 
-
-
-
-
         {{ Form::model($user, ['action' => 'SettingsController@putAccount', 'method' => 'PUT', 'class' => '', 'validate' => 'validate' ]) }}
         <div class="form-group">
             {{ Form::label('Name') }}
@@ -49,13 +44,15 @@
 
         <div class="form-group">
             {{ Form::label('Username') }}
-            {{ Form::text('username',null, ['class' => 'form-control']) }}
+            {{ Form::text('username',null, ['class' => 'form-control', 'id' => 'username', 'ng-model' => 'user.username', 'autocomplete' => 'off']) }}
+            <p><span ng-bind="baseURL"></span>/<b ng-bind="user.username"></b></p>
+            <p class="help-block">Changing your username will change your store URL and may affect links to your store.</p>
         </div>
 
         <div class="form-group">
             {{ Form::label('Email') }}
-            <p class="alert alert-danger" style="color: #000000">{{ Lang::get('form.paypal-email') }}</p>
             {{ Form::email('email',null, ['class' => 'form-control']) }}
+            <p class="help-block">{{ Lang::get('form.paypal-email') }}</p>
 
         </div>
 

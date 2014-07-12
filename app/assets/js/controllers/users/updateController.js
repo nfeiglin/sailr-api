@@ -1,8 +1,3 @@
-var openFileBrowser = function () {
-    document.getElementById('addFiles').click();
-};
-
-
 app.controller('updateController', ['$scope', function ($scope) {
 
     $scope.showSubmit = false;
@@ -16,6 +11,7 @@ app.controller('updateController', ['$scope', function ($scope) {
     $scope.fileButtonText = 'Select new profile photo';
 
     $scope.user = loggedInUser;
+    $scope.user.username = $('input#username').val();
     $scope.profileURL = profileImageURL;
 
 
