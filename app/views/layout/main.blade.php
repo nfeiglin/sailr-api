@@ -53,6 +53,7 @@
 
     @include('parts.footer')
     @include('parts.js-bottom')
+    @yield('end-body', '')
 </body>
 
 </html>
