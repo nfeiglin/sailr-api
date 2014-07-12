@@ -8,7 +8,7 @@
 @stop
 @section('content')
 
-<div ng-controller="manageController">
+<div ng-controller="manageController" class="ng-cloak">
 
     <div ng-if="subscription.id">
         <p>
@@ -42,7 +42,7 @@
 
         </div>
 
-        <div ng-if="posting" class="pull-right">
+        <div ng-if="posting" class="pull-right ng-cloak">
             <div class="dots">
                 Unsubscribing...
             </div>
