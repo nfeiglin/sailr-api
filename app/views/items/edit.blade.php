@@ -30,10 +30,10 @@
             </div>
 
             <div class="col-xs-12 col-lg-12">
-                <a href="#" class="btn btn-lg btn-primary btn-block" onclick="openFileBrowser()">
+                <a href="#" class="btn btn-lg btn-primary btn-block" id="openFileButton" onclick="openFileBrowser()">
                     <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
-                    <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
                 </a>
+                <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
                 <p class="help-block">Photos will be cropped and scaled to a square. Square photos (JPG, PNG etc.) of at least 612px horizontally are encouraged. Maximum size 7MB.</p>
             </div>
 
@@ -125,5 +125,4 @@
     </div>
 
 </div>
-
 @stop
