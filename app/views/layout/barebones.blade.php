@@ -14,7 +14,7 @@
     @include('parts.js-head')
 
     <script>
-        var usersName = '{{{ $user->name or ''}}}';
+        var usersName = loggedInUser.name;
     </script>
 
     @yield('head','')
@@ -25,6 +25,7 @@
     @include('parts.middle')
     @yield('body', '')
     @include('parts.js-bottom')
+    @yield('end-body', '')
 </body>
 
 </html>
