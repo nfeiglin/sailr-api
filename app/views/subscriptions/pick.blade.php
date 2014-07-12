@@ -74,7 +74,7 @@
                             <li>No Sailr fees</li>
                         </ul>
 
-                        <div class="row ng-cloak" id="cardFormContainer" ng-show="showCardForm" ng-animate="'animate'">
+                        <div class="row ng-cloak" id="cardFormContainer" ng-show="showCardForm">
                             <div class="row hidden-xs" style="margin-bottom: 25px;">
                                 <div class="hide-name">
                                     <div class="card-wrapper"></div>
@@ -171,26 +171,19 @@
 
 </div>
 <input id="zzzCardName" type="hidden" hidden="hidden">
-<script>
+@stop
 
+@section('end-body')
+<script defer="defer">
     var cardPreview = $('#cardForm').card({
-        // a selector or jQuery object for the container
-        // where you want the card to appear
-        container: '.card-wrapper', // *required*
-        numberInput: 'input#cardNumber', // optional — default input[name="number"]
-        expiryInput: 'input#cardExpiry', // optional — default input[name="expiry"]
-        cvcInput: 'input#cardCVC', // optional — default input[name="cvc"]
-        nameInput: 'input#zzzCardName', // optional - defaults input[name="name"]
-
+        container: '.card-wrapper',
+        numberInput: 'input#cardNumber',
+        expiryInput: 'input#cardExpiry',
+        cvcInput: 'input#cardCVC',
+        nameInput: 'input#zzzCardName',
         width: 380, // optional — default 350px
         formatting: true // optional - default true
     });
 
-    /*  if (usersName.length > 0) {
-     $('input#cardName').val(usersName);
-     $('input#cardName').trigger('change');
-     }
-     */
 </script>
-
 @stop
