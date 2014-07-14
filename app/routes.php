@@ -2,7 +2,9 @@
 use Intervention\Image\Facades;
 
     Route::post('purchase/{id}', 'BuyController@store', ['before' => 'auth']);
-    //Testing
+    Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
+    Route::post('payment/stripe-webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -83,10 +85,6 @@ View::composer('password.reset', function($view){
     $view->with('purpleBG', true);
 });
 
-Route::get('/i/info', function() {
-    $u = Auth::user();
-    dd($u->canPerformActionOnPlan('product.create'));
-});
 
 if (Auth::check()) {
     Route::get('/', 'UsersController@self_feed');
@@ -116,8 +114,6 @@ Route::group(['prefix' => 'legal'], function() {
 });
 
 Route::get('/s/{query}', 'SearchesController@show');
-Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
-Route::any('payment/stripe/webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
 
 Route::group(['before' => 'csrf'], function () {
     Route::get('test', function () {
