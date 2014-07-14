@@ -72,6 +72,16 @@
         <!-- /row -->
     </div>
     <!-- /container -->
+
+    <div class="container">
+        <div class="row centered">
+            <div class="col-lg-6 col-lg-offset-3">
+                <p>
+                    <a href="{{ URL::to('/ANTdesign') }}">Click here</a> to see a real Sailr store in action
+                </p>
+            </div>
+        </div>
+
     <div class="container">
         <hr>
         <div class="row centered">
@@ -86,16 +96,58 @@
     <hr>
 
 
-<div class="ng-cloak container">
-    <div class="row mt centered">
-        <div class="col-lg-6 col-lg-offset-3">
-            <p>
-                <a href="{{ URL::to('/ANTdesign') }}">Click here</a> to see a real Sailr store in action
-            </p>
-            <h1>Recently added products</h1>
+    <div class="container" id="pricing">
+        <div class="row mt centered">
+            <div class="col-lg-6 col-lg-offset-3">
+                <h1>Our pricing.</h1>
+            </div>
         </div>
-    </div>
+        <!-- /row -->
+        <div class="row mt centered">
+            <div class="col-lg-6">
+                <span class="glyphicon glyphicon-cloud" style="font-size: 80px;"></span>
+                <h4>Free</h4>
 
+                <p>Best suited to people browsing, buying and occasionally selling.</p>
+                <ul class="list-unstyled">
+                    <li>Limited to 4 listings per month</li>
+                    <li>Maximum sale&nbsp;price of&nbsp;$40 including shipping</li>
+                    <li>Buy and sell on your computer and mobile devices</li>
+                    <li>Manage your sales</li>
+                    <li>Get paid straight to your Paypal account</li>
+                    <li>Buy from other sellers</li>
+                    <li>No Sailr fees</li>
+
+                </ul>
+            </div>
+            <!--/col-lg-4 -->
+            <div class="col-lg-6 well well-lg">
+                <span class="glyphicon glyphicon-tower" style="font-size: 80px;"></span>
+
+                <h3>Awesome</h3>
+                <h4>$12.99 /month</h4>
+
+                <p class="subtitle">Excellent for sellers wanting freedom and flexibility.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Unlimited</strong> listings per month</li>
+                    <li><strong>Unlimited</strong> sale price</li>
+                    <li>Buy and sell on your computer and mobile devices</li>
+                    <li>Manage your sales</li>
+                    <li>Get paid straight into your PayPal account</li>
+                    <li>Buy from other sellers</li>
+                    <li>No Sailr fees</li>
+                </ul>
+
+            </div>
+            <!--/col-lg-4 -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+
+    <div class="col-lg-6 col-lg-offset-3">
+        <h1>Recently added products</h1>
+    </div>
     <div class="row mt centered">
 
         <sailr-recent-products sailr-number-of-products="@{{ numberOfProducts }}" sailr-offset-by="@{{ offsetLoadProducts }}">
@@ -107,56 +159,6 @@
     </div>
 </div>
 
-
-<div class="container" id="pricing">
-    <div class="row mt centered">
-        <div class="col-lg-6 col-lg-offset-3">
-            <h1>Our pricing.</h1>
-        </div>
-    </div>
-    <!-- /row -->
-    <div class="row mt centered">
-        <div class="col-lg-6">
-            <span class="glyphicon glyphicon-cloud" style="font-size: 80px;"></span>
-            <h4>Free</h4>
-
-            <p>Best suited to people browsing, buying and occasionally selling.</p>
-            <ul class="list-unstyled">
-                <li>Post up to 4 listings per month</li>
-                <li>Maximum sale&nbsp;price of&nbsp;$40 including shipping</li>
-                <li>Buy and sell on your computer and mobile devices</li>
-                <li>Manage your sales</li>
-                <li>Get paid straight to your Paypal account</li>
-                <li>Buy from other sellers</li>
-                <li>No Sailr fees</li>
-
-            </ul>
-        </div>
-        <!--/col-lg-4 -->
-        <div class="col-lg-6 well well-lg">
-            <span class="glyphicon glyphicon-tower" style="font-size: 80px;"></span>
-
-            <h3>Awesome</h3>
-            <h4>$12.99 /month</h4>
-
-            <p class="subtitle">Excellent for sellers wanting freedom and flexibility.</p>
-            <ul class="list-unstyled">
-                <li><strong>Unlimited</strong> listings per month</li>
-                <li><strong>Unlimited</strong> sale price</li>
-                <li>Buy and sell on your computer and mobile devices</li>
-                <li>Manage your sales</li>
-                <li>Customised header image on your page</li>
-                <li>Get paid straight to your Paypal account</li>
-                <li>Buy from other sellers</li>
-                <li>No Sailr fees</li>
-            </ul>
-
-        </div>
-        <!--/col-lg-4 -->
-    </div>
-    <!-- /row -->
-</div>
-<!-- /container -->
 <div class="container">
     <hr>
     <div class="row centered">
