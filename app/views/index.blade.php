@@ -36,7 +36,8 @@
     <div class="container">
         <div class="row mt centered">
             <div class="col-lg-6 col-lg-offset-3">
-                <h1>Buy and sell online and with Sailr</h1>
+                <h1>Create an online store with Sailr</h1>
+                <h3 class="subtitle"><small>Sell, buy, and follow your favourite creators.</small></h3>
 
                 <h3>The intersection of a social network and Ecommerce marketplace is here.</h3>
             </div>
