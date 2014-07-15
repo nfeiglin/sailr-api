@@ -1,3 +1,9 @@
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: touch;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif; }
+
 @media (min-width: 768px) {
   .row {
     margin-right: 0;
@@ -505,11 +511,6 @@ animate.slide-show.slide-show-active {
 
 .stripe-form-badge img {
   margin-bottom: 10px; }
-
-body {
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -webkit-overflow-scrolling: touch; }
 
 input.success {
   border-color: #50cc6e !important;

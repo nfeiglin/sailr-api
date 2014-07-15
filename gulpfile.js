@@ -32,7 +32,7 @@ var paths = {
 
 var config = {
     sass: {
-        loadPath: ['~/web/app/assets/css']
+        loadPath: ['~/web/app/assets/css', '~/Documents/sailr-web/app/assets/css']
     }
 };
 
