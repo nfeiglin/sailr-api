@@ -108,11 +108,11 @@ body{background-color:#f2f2f2;font-weight:300;font-size:16px;color:#555}h1,h2,h3
             <div class="col-lg-6">
                 <span class="glyphicon glyphicon-cloud" style="font-size: 80px;"></span>
                 <h4>Free</h4>
-
                 <p>Best suited to people browsing, buying and occasionally selling.</p>
+                <p class="h5">Launch special. Now add UNLIMITED products on the free plan with no restrictions</p>
                 <ul class="list-unstyled">
-                    <li>Limited to 4 listings per month</li>
-                    <li>Maximum sale&nbsp;price of&nbsp;$40 including shipping</li>
+                    <li style="text-decoration: line-through;">Limited to 4 listings per month</li>
+                    <li style="text-decoration: line-through;">Maximum sale&nbsp;price of&nbsp;$40 including shipping</li>
                     <li>Buy and sell on your computer and mobile devices</li>
                     <li>Manage your sales</li>
                     <li>Get paid straight to your Paypal account</li>
