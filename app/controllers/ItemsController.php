@@ -40,7 +40,7 @@ class ItemsController extends BaseController
 
 
 
-        /*
+
         $u = Auth::user();
 
         if ($u->canPerformActionOnPlan('product.create') != true) {
@@ -48,7 +48,7 @@ class ItemsController extends BaseController
             $message = "Please upgrade your plan to add more products <a href='$upgradeURL' class='btn btn-md btn-turq'>Upgrade</a>";
             return Response::json(['message' => $message]);
         }
-        */
+
 
         $input = Input::json()->all();
 
