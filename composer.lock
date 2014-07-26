@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aaf2d80f1338ab37908e37beb2977e97",
+    "hash": "27786582b848e43f9d16e6fc2c4dffd7",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -993,16 +993,16 @@
         },
         {
             "name": "laravel/cashier",
-            "version": "v2.0.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/cashier.git",
-                "reference": "e77ed8d178d1a350e6501dff8f7faa6d1e0a7400"
+                "reference": "3fb0e39304cf8584ec239f7096bcc1a7f271c93c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/cashier/zipball/e77ed8d178d1a350e6501dff8f7faa6d1e0a7400",
-                "reference": "e77ed8d178d1a350e6501dff8f7faa6d1e0a7400",
+                "url": "https://api.github.com/repos/laravel/cashier/zipball/3fb0e39304cf8584ec239f7096bcc1a7f271c93c",
+                "reference": "3fb0e39304cf8584ec239f7096bcc1a7f271c93c",
                 "shasum": ""
             },
             "require": {
@@ -1022,7 +1022,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
@@ -1047,7 +1047,7 @@
                 "laravel",
                 "stripe"
             ],
-            "time": "2014-06-24 00:44:52"
+            "time": "2014-07-18 20:15:27"
         },
         {
             "name": "laravel/framework",
@@ -2789,7 +2789,8 @@
     "stability-flags": {
         "doctrine/dbal": 20,
         "way/generators": 20,
-        "logicalgrape/paypal-ipn-laravel": 20
+        "logicalgrape/paypal-ipn-laravel": 20,
+        "laravel/cashier": 20
     },
     "platform": [
 

@@ -13,7 +13,7 @@
         "jenssegers/mongodb": "v1.4",
         "guzzlehttp/guzzle": "~4.0",
         "logicalgrape/paypal-ipn-laravel": "dev-master",
-        "laravel/cashier": "~2.0",
+        "laravel/cashier": "2.0.*@dev",
 		"pda/pheanstalk": "~2.0"
 
 	},
