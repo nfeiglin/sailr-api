@@ -29,7 +29,7 @@ nav .btn {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(250, 247, 244, 0.6); }
+  background: #2c3e50; }
 
 .center-logo {
   background-image: url("//sailr.co/build/images/logo.png");

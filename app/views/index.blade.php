@@ -1,23 +1,22 @@
 @extends('layout.main')
 @section('head')
 
-<style>
-body{background-color:#f2f2f2;font-weight:300;font-size:16px;color:#555}h1,h2,h3,h4,h5,h6{font-weight:300;color:#333}h1{font-size:40px}h3{color:#95a5a6;font-weight:400}h4{color:#95a5a6;font-weight:400;font-size:20px}p{line-height:28px;margin-bottom:25px;font-size:16px}.centered{text-align:center}a{color:#3498db;word-wrap:break-word;-webkit-transition:color .1s ease-in,background .1s ease-in;-moz-transition:color .1s ease-in,background .1s ease-in;-ms-transition:color .1s ease-in,background .1s ease-in;-o-transition:color .1s ease-in,background .1s ease-in;transition:color .1s ease-in,background .1s ease-in}a:focus,a:hover{color:#7b7b7b;text-decoration:none;outline:0}a:after,a:before{-webkit-transition:color .1s ease-in,background .1s ease-in;-moz-transition:color .1s ease-in,background .1s ease-in;-ms-transition:color .1s ease-in,background .1s ease-in;-o-transition:color .1s ease-in,background .1s ease-in;transition:color .1s ease-in,background .1s ease-in}hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0}.mt{margin-top:40px;margin-bottom:40px}.form-control{height:42px;font-size:18px;width:280px}i{margin:8px;color:#3498db}#headerwrap{margin-top:-20px;padding-top:200px;min-height:650px;width:100%;background:#5856D6 url(../build/images/purple-bg-sm.jpg) no-repeat center center;background-size:cover;filter:blur(13px)}#headerwrap h1{margin-top:60px;margin-bottom:15px;color:#fff;font-size:60px;font-weight:300;letter-spacing:1px}#headerwrap .subtitle{color:#fff;font-size:24px;line-height:2.5em}#headerwrap .btn-container{vertical-align:middle}img.centered{margin-left:auto;margin-right:auto}
-</style>
+@include('parts.home.inline-css')
+
 @stop
 
 @section('full-width-top')
 <div id="headerwrap">
     <div class="container">
-        <div class="col-lg-8 col-xs-12 col-sm-12 text-white">
-            <h1>Make an online store in seconds</h1>
-            <h2 class="text-white">1. Create an account</h2>
-            <h2 class="text-white">2. Add products to your store</h2>
-            <h2 class="text-white">3. Get paid directly to your PayPal</h2>
-        </div>
+        <div class="col-lg-12 col-xs-12 col-sm-12 text-white">
+            <h1 class="text-center">Sell, discover, and buy fashion</h1>
+            <div class="col-lg-4 col-md-4 center-block">
+                <div class="">
+                    <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq cta-btn btn-big">Sign up</a>
+                </div>
+            </div>
 
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-sm-4 btn-container pull-left">
-            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq cta-btn btn-big text-center">Sign up!</a>
+
         </div>
 
     </div>
