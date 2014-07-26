@@ -25,7 +25,7 @@
                             <input type="file" accept="image/*" id="addFiles" name="photos" ng-required="required" required="required" class="form-control">
                             {{ Form::token() }}
                             <div ng-if="showSubmit">
-                                <button type="submit" class="btn btn-block btn-turq ng-cloak" ng-disabled="photos.$invalid">Submit</button>
+                                <button type="submit" class="btn btn-block btn-blue ng-cloak" ng-disabled="photos.$invalid">Submit</button>
                                 <p class="help-block ng-cloak">Press submit to update your profile photo</p>
                             </div>
 
@@ -64,7 +64,7 @@
 
 
 
-        <button class="btn btn-lg btn-primary btn-block" value="submit" type="submit">Save</button>
+        <button class="btn btn-lg btn-blue btn-block" value="submit" type="submit">Save</button>
         {{ Form::close() }}
     </div>
 

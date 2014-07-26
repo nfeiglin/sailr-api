@@ -30,7 +30,7 @@
     @if($you_follow != true && Auth::check() && !$is_self)
     {{ Form::open(['action' => 'RelationshipsController@store' ]) }}
     <input type="hidden" value="{{{ $user['username'] }}}" name="username">
-    <button class="btn btn-lg btn-primary btn-block" type="submit"><span class="glyphicon glyphicon-user"></span> Follow</button>
+    <button class="btn btn-lg btn-blue btn-block" type="submit"><span class="glyphicon glyphicon-user"></span> Follow</button>
     {{ Form::close() }}
 
     @endif
@@ -38,7 +38,7 @@
     @if($you_follow == true && Auth::check() && !$is_self)
     {{ Form::open(['action' => 'RelationshipsController@destroy', 'method' => 'delete' ]) }}
     <input type="hidden" value="{{{ $user['username'] }}}" name="username">
-    <button class="btn btn-lg btn-primary btn-block" type="submit" id="unfollow-btn">Following</button>
+    <button class="btn btn-lg btn-blue btn-block" type="submit" id="unfollow-btn">Following</button>
 
     @if($follows_you)
         <span class="label label-info">{{{ $user['username'] }}} follows you</span>
@@ -47,7 +47,7 @@
     @endif
 
     @if(!Auth::check())
-    <a class="btn btn-lg btn-primary btn-block" href="#loginModal" data-toggle="modal" data-target="#loginModal" title="Please log in to follow">Follow {{{ $user['username'] }}}</a>
+    <a class="btn btn-lg btn-blue btn-block" href="#loginModal" data-toggle="modal" data-target="#loginModal" title="Please log in to follow">Follow {{{ $user['username'] }}}</a>
     @endif
 
     @if($user['bio']) <p class="well" sailr-entity-link>{{{ $user['bio'] }}}</p> @endif

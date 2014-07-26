@@ -14,6 +14,6 @@
     <input type="password" class="form-control" value="{{{ Input::old('password') }}}" placeholder="New password" name="password" required="required">
     <input type="password" class="form-control" value="{{{ Input::old('password_confirmation') }}}" placeholder="Confirm password" name="password_confirmation" required="required">
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Reset password</button>
+    <button class="btn btn-lg btn-blue btn-block" type="submit">Reset password</button>
 </form>
 @stop

@@ -30,7 +30,7 @@
             </div>
 
             <div class="col-xs-12 col-lg-12">
-                <a href="#" class="btn btn-lg btn-primary btn-block" id="openFileButton" onclick="openFileBrowser()">
+                <a href="#" class="btn btn-lg btn-blue btn-block" id="openFileButton" onclick="openFileBrowser()">
                     <span class="glyphicon glyphicon-cloud-upload"></span> Add photo
                 </a>
                 <input type="file" ng-file-select="onFileSelect($files)" accept="image/*" id="addFiles">
@@ -110,7 +110,7 @@
     <div class="row">
         <div class="form-group">
             <div class="btn-group">
-                <a data-ng-click="saveChanges()" class="btn btn-lg btn-primary ng-cloak" ng-if="!posting">Save changes</a>
+                <a data-ng-click="saveChanges()" class="btn btn-lg btn-blue ng-cloak" ng-if="!posting">Save changes</a>
 
                 <div ng-if="posting" class="ng-cloak">
                     <div class="dots">
@@ -119,7 +119,7 @@
                 </div>
 
             </div>
-            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-turq ng-cloak" ng-if="!item.public && !posting && updateForm.$valid && photos.length > 0"><i class="glyphicon glyphicon-eye-open"></i> Publish</a>
+            <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-blue ng-cloak" ng-if="!item.public && !posting && updateForm.$valid && photos.length > 0"><i class="glyphicon glyphicon-eye-open"></i> Publish</a>
             <a data-ng-click="toggleVisibility()" class="btn btn-lg pull-right btn-default ng-cloak" ng-if="item.public && !posting"><i class="glyphicon glyphicon-eye-close"></i> Unpublish</a>
         </div>
     </div>

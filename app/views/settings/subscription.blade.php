@@ -59,7 +59,7 @@
         </p>
 
         <p>
-            <a ng-href="@{{ baseURL + '/plans/choose' }}" class="btn btn-turq btn-md">Get Awesome</a>
+            <a ng-href="@{{ baseURL + '/plans/choose' }}" class="btn btn-blue btn-md">Get Awesome</a>
         </p>
 
     </div>

@@ -32,7 +32,7 @@
 
         </div>
 
-        <button class="btn btn-primary btn-lg btn-block" value="submit">Confirm purchase {{ $payment[0]->OrderTotal->currencyID }}{{ $payment[0]->OrderTotal->value }}
+        <button class="btn btn-blue btn-lg btn-block" value="submit">Confirm purchase {{ $payment[0]->OrderTotal->currencyID }}{{ $payment[0]->OrderTotal->value }}
         </button>
     <a href="{{ URL::to('/') }}" class="text-muted small cancel-purchase">Cancel. Take me home.</a>
 </form>

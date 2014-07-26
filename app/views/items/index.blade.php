@@ -17,7 +17,7 @@
                 <h4 class="text-center">Add item</h4>
             </div>
 
-            <div class="add-new-form panel animate-down vis-hidden" id="addItem">
+            <div class="add-new-form panel animate-down vis-hidden add-product-toggle" id="addItem">
                 <form class='form-horizontal' data-ng-submit="formSubmit()" name="itemForm">
                 <input type="hidden" value="{{ Session::token() }}" name="_token">
                 <div class="product-list panel-body">
@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="col-xs-2 col-sm-2 col-lg-1 col-md-1">
-                        <input type="submit" class="btn btn-primary btn-block" value="Add" ng-disabled="itemForm.$invalid || posting" ng-if="!posting">
+                        <input type="submit" class="btn btn-blue btn-block" value="Add" ng-disabled="itemForm.$invalid || posting" ng-if="!posting">
 
                         <div ng-if="posting">
                             <div class="dots btn-block">

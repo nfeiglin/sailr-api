@@ -16,8 +16,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .purpleBackground {
-    background: url($backgroundImageUrl) no-repeat center center fixed;
-    background-size: cover;
+  background: #ffffff;
+}
+
+#headerwrap .head-subtitle {
+  font-size: 22px;
+  color: #E9E9E9;
 }
 
 
@@ -28,10 +32,6 @@ p {
 nav {
     margin-bottom: 0 !important;
 
-}
-
-nav .btn {
-    z-index: 999999;
 }
 
 .nav-bg {
@@ -59,10 +59,6 @@ nav .btn {
     display: none !important;
 }
 
-.nav .btn {
-    margin-left: 5px;
-    margin-right: 5px;
-}
 
 a {
     z-index: 999;
@@ -70,28 +66,21 @@ a {
 
 #backgroundSwag {
     z-index: 400;
-    background-image: url($backgroundImageUrl);
-    background-size: cover;
-    background-repeat: no-repeat;
     position: relative;
     padding-top: 150px;
     padding-bottom: 0;
+    color: #555;
+    background: #f2f2f2;
 }
 
 #backgroundSwag h1 {
-    color: #ffffff;
+    color: #555
 }
 
 #backgroundSwag .container h1 {
     margin-bottom: 0;
 }
 
-.btn-clear {
-    background-color: #ffffff;
-    border-radius: 3px 3px 3px 3px;
-    border-color: #ffffff;
-    color: #ffffff;
-}
 
 .item-user {
     /*
@@ -184,26 +173,8 @@ img.profile-img {
 
 }
 
-button.del-btn {
-    margin: 0;
-    text-align: right;
-    float: right;
-    vertical-align: middle;
-    bottom: 0;
-}
-
 .item {
     padding-bottom: 20px;
-}
-
-button.paypal-btn {
-    background: url('../images/pp.png') no-repeat;
-    background-size: contain;
-    color: transparent;
-}
-
-button.paypal-btn:hover {
-    color: transparent;
 }
 
 .swag {
@@ -413,106 +384,7 @@ input[type="file"] {
     height: 90px;
 }
 
-
-.btn.delete-image {
-    margin-top: 15px;
-}
-
 .text-white {
-    color: #ffffff;
-}
-
-.btn-big {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 24px;
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    font-weight: bold;
-    vertical-align: middle;
-}
-
-/*
-.btn-big:hover:after {
-    content: ' Do it!';
-}
-*/
-
-.btn-long {
-    padding-left: 60px;
-    padding-right: 60px;
-    border-radius: 0;
-    -webkit-border-radius: 0;
-}
-
-.btn-md-long {
-    padding-left: 25px;
-    padding-right: 25px;
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    max-width: 1000%;
-}
-.btn-purple {
-    background-color: #5856D6;
-    border-color: #5c5ada;
-    color: #ffffff;
-}
-
-.btn-purple:hover {
-    color: #ffffff;
-    background-color: #615fff;
-}
-
-.btn-purple:disabled {
-    color: #ffffff;
-    background-color: #343468;
-    border-color: #454491;
-}
-
-.btn-purple:active {
-    color: #ffffff;
-    background-color: #615fff;
-}
-
-.btn-purple:active:hover {
-    color: #ffffff;
-    background-color: #615fff;
-}
-
-
-.btn-turq {
-    background: #1abc9c;
-    border-color: #1ac6a6;
-    color: #ffffff;
-}
-
-.btn-turq:hover {
-    background: #1ac6a6;
-    border-color: #1ac6a6;
-    color: #ffffff;
-}
-
-.btn-turq:active {
-    background: #1ac6a6;
-    border-color: #1ac6a6;
-    color: #ffffff;
-}
-
-.btn-turq:hover:active {
-    background: #1ac6a6;
-    border-color: #1ac6a6;
-    color: #ffffff;
-}
-
-.btn-emerald {
-    background: #2ecc71;
-    border-color: #2ed77c;
-    color: #ffffff;
-}
-
-.btn-emerald:hover {
-    background: #2edd81;
-    border-color: #2ed77c;
     color: #ffffff;
 }
 
@@ -521,25 +393,7 @@ input[type="file"] {
     margin-left: 0 !important;
 }
 
-
-.square-btn {
-    margin-bottom: 15px;
-    margin-top: 15px;
-
-    padding-bottom: 20px;
-    padding-top: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-
-    position: relative;
-    min-height: 50px;
-    max-height: 100%;
-    width: 100%;
-    background-color: turquoise;
-}
-
-
-.square-content{
+.square-content {
     position:  absolute;
     top: 0;
     left: 0;
@@ -672,4 +526,17 @@ input.success {
 
 .navbar-toggle {
     background: #1abc9c;
+}
+
+.add-product-toggle {
+  color: $mainBackgroundColor;
+  background: $homeBackgroundColour;
+}
+
+.add-product-toggle:hover {
+  color: darken($mainBackgroundColor, 60%);
+}
+
+.dark-blue-bg {
+  background: $mainBackgroundColor;
 }

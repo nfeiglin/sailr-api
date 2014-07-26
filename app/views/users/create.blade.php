@@ -24,7 +24,7 @@
             Agree to our <a href="{{ URL::action('termsOfService') }}">terms of service</a> and <a href="{{ URL::action('privacyPolicy') }}">privacy policy</a>
         </div>
         <input type="checkbox" class="form-control" name="terms_of_service" value="1">
-    <input class="btn btn-lg btn-turq btn-block btn-big" type="submit" value="Sign up">
+    <input class="btn btn-lg btn-blue btn-block btn-big" type="submit" value="Sign up">
 </form>
     </div>
 

@@ -18,18 +18,18 @@
 
                 <div class="nav navbar-nav navbar-left">
                     @if(Auth::guest())
-                   <a href="{{ URL::action('UsersController@create') }}" class="btn btn-turq navbar-btn btn-block btn-long">Sign up</a>
+                   <a href="{{ URL::action('UsersController@create') }}" class="btn btn-blue navbar-btn btn-block btn-long">SIGN UP</a>
                     @endif
 
                     @if(Auth::check())
-                    <a class="btn btn-primary navbar-btn" href="{{ URL::to('/') }}">
+                    <a class="btn navbar-btn unstyled-nav-btn" href="{{ URL::to('/') }}">
                         <span class="glyphicon glyphicon-home"></span> Home</a>
 
-                    <a class="btn btn-primary navbar-btn" href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
+                    <a class="btn navbar-btn unstyled-nav-btn" href="{{ URL::action('UsersController@show',Auth::user()->username) }}">
                         <span class="glyphicon glyphicon-user"></span> Me
                     </a>
 
-                    <a class="btn btn-primary navbar-btn" href="{{ URL::action('NotificationsController@index') }}">
+                    <a class="btn navbar-btn unstyled-nav-btn" href="{{ URL::action('NotificationsController@index') }}">
                         <span class="glyphicon glyphicon-bell"></span> Notifications
                         @if(isset($unread_notifications_count))
                            @if($unread_notifications_count > 0)
@@ -44,7 +44,7 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     @if(Auth::guest())
-                        <a href="/session/create" class="btn btn-link navbar-btn">Login</a>
+                        <a href="/session/create" class="btn navbar-btn unstyled-nav-btn">LOGIN</a>
                     @endif
 
                     @if(Auth::check())
@@ -56,12 +56,12 @@
                     <li>
 
                             <div>
-                                <a class="btn btn-primary navbar-btn" href="{{ URL::action('ItemsController@index') }}"><span class="glyphicon glyphicon-tags"></span> Products</a>
+                                <a class="btn navbar-btn unstyled-nav-btn" href="{{ URL::action('ItemsController@index') }}"><span class="glyphicon glyphicon-tags"></span> Products</a>
                             </div>
                     </li>
 
                     <li class="dropdown list-unstyled">
-                        <button class="btn btn-primary navbar-btn" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Settings</button>
+                        <button class="btn navbar-btn unstyled-nav-btn" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span> Settings</button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ URL::action('UsersController@show',Auth::user()->username) }}">

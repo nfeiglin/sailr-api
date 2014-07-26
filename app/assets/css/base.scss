@@ -1,11 +1,17 @@
 $baseURL: '//sailr.co';
 $backgroundImageUrl: "//sailr.co/build/images/purple-bg-sm.jpg";
 $logoUrl: "//sailr.co/build/images/logo.png";
+$mainBackgroundColor: #2c3e50;
+$veryLightGrey: #f5f5f5;
+$homeBackgroundColour: #f2f2f2;
 
 @import 'main/custom';
 @import 'main/login';
+@import 'main/buttons';
 @import 'lib/card';
 @import 'lib/spinners';
 @import 'lib/medium-editor';
 @import 'lib/medium-bootstrap';
 @import 'lib/ie-viewport-fix';
+
+

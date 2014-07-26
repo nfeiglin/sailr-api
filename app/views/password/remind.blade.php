@@ -10,6 +10,6 @@
     <p class="form-signin message h5 well well-sm">It's okay, we all forget sometimes.</p>
     @endif
     <input type="email" class="form-control" value="{{{ Input::old('email') }}}" placeholder="Email address" name="email" required="required" autofocus>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Send reset email</button>
+    <button class="btn btn-lg btn-blue btn-block" type="submit">Send reset email</button>
 </form>
 @stop

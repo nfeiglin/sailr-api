@@ -39,9 +39,9 @@
             @yield('sidebar', '')
             <div class="sidebar-content panel">
                 <div class="btn-group-verticalf">
-                    <a href="{{ URL::action('SettingsController@getAccount') }}" class="btn btn-block btn-primary">Account settings</a>
-                    <a href="{{ URL::action('BillingsController@index') }}" class="btn btn-block btn-primary">Billing settings</a>
-                    <a href="{{ URL::action('SubscriptionsController@index') }}" class="btn btn-block btn-primary">Subscription settings</a>
+                    <a href="{{ URL::action('SettingsController@getAccount') }}" class="btn btn-block btn-blue">Account settings</a>
+                    <a href="{{ URL::action('BillingsController@index') }}" class="btn btn-block btn-blue">Billing settings</a>
+                    <a href="{{ URL::action('SubscriptionsController@index') }}" class="btn btn-block btn-blue">Subscription settings</a>
                 </div>
             </div>
         </div>

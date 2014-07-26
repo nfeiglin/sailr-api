@@ -16,7 +16,7 @@
                 <a href="{{ action('UsersController@show', $item['user']['username']) }}" class="h4 name">{{ $item['user']['name'] }} </a> <a href="{{ action('UsersController@show', $item['user']['username']) }}"class="h5 username">{{ '@' . $item['user']['username'] }}</a>
             </div>
 
-            <button class="btn btn-primary btn-lg btn-turq btn-big btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
+            <button class="btn btn-blue btn-lg btn-blue btn-big btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
             <p class="ships_to">Ships to {{ CountryHelpers::getCountryNameFromISOCode($item['ships_to']) }}</p>
 
 			<div class="item buy-page" id="{{ $item['id'] }}">
@@ -42,7 +42,7 @@
 
     		</div>
 
-            <button class="btn btn-turq btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
+            <button class="btn btn-blue btn-lg btn-block" data-toggle="modal" data-target="#buyModal">Buy now {{ $item['currency']}}{{$item['price']}}</button>
             <hr>
 
             <sailr-comments sailr-product-id="{{ $item['id'] }}"></sailr-comments>

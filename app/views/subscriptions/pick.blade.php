@@ -123,7 +123,7 @@
                                             </div>
                                             <div class="col-xs-12 col-lg-12">
                                                 <div class="form-group">
-                                                    <input ng-hide="posting" type="submit" value="Subscribe AU12.99/month" class="btn btn-lg btn-block btn-turq" ng-if="showingCreditForm" ng-disabled="cardForm.$invalid && showingCreditForm">
+                                                    <input ng-hide="posting" type="submit" value="Subscribe AU12.99/month" class="btn btn-lg btn-block btn-blue" ng-if="showingCreditForm" ng-disabled="cardForm.$invalid && showingCreditForm">
                                                 </div>
                                             </div>
                                         </form>
@@ -144,7 +144,7 @@
                         </div>
 
 
-                        <button class="btn btn-lg btn-turq btn-md-long ng-cloak" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
+                        <button class="btn btn-lg btn-blue btn-md-long ng-cloak" ng-click="handleSubscribeButtonPressed()" ng-if="!showingCreditForm">
                             Start Awesome ($12.99/month)
                         </button>
                         <p class="small text-muted ng-cloak">The plan will auto-renew until canceled.</p>

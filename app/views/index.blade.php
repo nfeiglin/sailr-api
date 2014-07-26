@@ -8,21 +8,19 @@
 @section('full-width-top')
 <div id="headerwrap">
     <div class="container">
-        <div class="col-lg-12 col-xs-12 col-sm-12 text-white">
-            <h1 class="text-center">Sell, discover, and buy fashion</h1>
-            <div class="col-lg-4 col-md-4 center-block">
-                <div class="">
-                    <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq cta-btn btn-big">Sign up</a>
-                </div>
+        <div class="col-lg-12 col-xs-12 col-sm-12 text-white text-center">
+            <h1>Buy, sell, and discover <span id="changeWord">fashion</span></h1>
+            <div class="h3 head-subtitle">Join the community and follow your favourite creators</div>
+            <div class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4 center-middle">
+                <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-blue cta-btn btn-big">Sign up</a>
             </div>
-
 
         </div>
 
+
     </div>
 
-
-</div>
+    </div>
 @stop
 
 @section('content')
@@ -44,14 +42,14 @@
         <!-- /row -->
         <div class="row mt centered">
             <div class="col-lg-4">
-                <span class="glyphicon glyphicon-tags" style="font-size: 80px;"></span>
+                <span class="glyphicon glyphicon-tags big-font"></span>
                 <h4>Sell simply</h4>
 
                 <p>Sell with ease and update your listings with our beautiful product listing editor.</p>
             </div>
             <!--/col-lg-4 -->
             <div class="col-lg-4">
-                <span class="glyphicon glyphicon-user" style="font-size: 80px;"></span>
+                <span class="glyphicon glyphicon-user big-font"></span>
                 <h4>Follow creators and friends</h4>
 
                 <p>Follow your friends, favourite brands, shops, and creators. See the latest things they are selling in
@@ -60,7 +58,7 @@
             <!--/col-lg-4 -->
 
             <div class="col-lg-4">
-                <span class="glyphicon glyphicon-leaf" style="font-size: 80px;"></span>
+                <span class="glyphicon glyphicon-leaf big-font"></span>
                 <h4>All you need, nothing else</h4>
 
                 <p>Sailr offers everything you need to quickly and easily sell. No unnecessary menus or options.</p>
@@ -86,7 +84,7 @@
         <hr>
         <div class="row centered">
             <div class="col-lg-6 col-lg-offset-3">
-                <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">Sign up</a>
+                <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-blue btn-big">Sign up</a>
             </div>
 
         </div>
@@ -105,7 +103,7 @@
         <!-- /row -->
         <div class="row mt centered">
             <div class="col-lg-6">
-                <span class="glyphicon glyphicon-cloud" style="font-size: 80px;"></span>
+                <span class="glyphicon glyphicon-cloud big-font"></span>
                 <h4>Free</h4>
                 <p>Best suited to people browsing, buying and occasionally selling.</p>
                 <ul class="list-unstyled">
@@ -121,7 +119,7 @@
             </div>
             <!--/col-lg-4 -->
             <div class="col-lg-6 well well-lg">
-                <span class="glyphicon glyphicon-tower" style="font-size: 80px;"></span>
+                <span class="glyphicon glyphicon-tower big-font"></span>
 
                 <h3>Awesome</h3>
                 <h4>$12.99 /month</h4>
@@ -162,7 +160,7 @@
     <hr>
     <div class="row centered">
         <div class="col-lg-6 col-lg-offset-3">
-            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-turq btn-big">Sign
+            <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block  btn-blue btn-big">Sign
                 up!</a>
         </div>
         <!--End mc_embed_signup-->

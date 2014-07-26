@@ -13,7 +13,7 @@
     <input type="text" class="form-control" value="{{{ Input::old('username') }}}" placeholder="Email address or Username" name="username" required="required" autofocus>
     <input type="password" class="form-control" placeholder="Password" name="password" required="required">
 
-    <button class="btn btn-lg btn-big btn-turq btn-block" type="submit">Login</button>
+    <button class="btn btn-lg btn-big btn-blue btn-block" type="submit">Login</button>
     <a class="text-muted" style="margin-top: 15px; margin-bottom: 4px;" href="{{ URL::action('RemindersController@getRemind') }}">Forgot password?</a>
 </form>
 @stop
