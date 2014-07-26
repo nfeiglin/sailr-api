@@ -38,16 +38,20 @@ class ItemsController extends BaseController
     public function store()
     {
 
+
+
+
         $u = Auth::user();
+
         if ($u->canPerformActionOnPlan('product.create') != true) {
             $upgradeURL = URL::action('choose-plan');
             $message = "Please upgrade your plan to add more products <a href='$upgradeURL' class='btn btn-md btn-turq'>Upgrade</a>";
             return Response::json(['message' => $message]);
         }
+
+
         $input = Input::json()->all();
 
-        //return Response::json($input, 200);
-        //$input = ['title' => 'title', 'currency' => 'AUD', 'price' => 32.55];
         $rules = [
             'title' => 'required|max:255',
             'currency' => 'required|currency',

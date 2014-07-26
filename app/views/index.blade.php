@@ -108,7 +108,6 @@ body{background-color:#f2f2f2;font-weight:300;font-size:16px;color:#555}h1,h2,h3
             <div class="col-lg-6">
                 <span class="glyphicon glyphicon-cloud" style="font-size: 80px;"></span>
                 <h4>Free</h4>
-
                 <p>Best suited to people browsing, buying and occasionally selling.</p>
                 <ul class="list-unstyled">
                     <li>Limited to 4 listings per month</li>
