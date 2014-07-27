@@ -47,6 +47,10 @@
 
             <sailr-comments sailr-product-id="{{ $item['id'] }}"></sailr-comments>
 
+            <div class="share-buttons">
+                <div class="addthis_native_toolbox"></div>
+            </div>
+
         </div>
             @if(Auth::check())
 
