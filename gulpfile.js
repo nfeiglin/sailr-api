@@ -26,7 +26,7 @@ var paths = {
             'app/assets/js/lib/**/*.js',
             'app/assets/js/main.js'
         ],
-    css: ['app/assets/css/base.scss'],
+    css: ['app/assets/css/**/*.scss', 'app/assets/css/**/*.css'],
     img: ['app/assets/img/**/*.jpg', 'app/assets/img/**/*.jpeg', 'app/assets/img/**/*.png', 'app/assets/img/**/*.gif']
 };
 
