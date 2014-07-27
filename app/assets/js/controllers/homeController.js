@@ -1,14 +1,5 @@
 app.controller('homeController', ['$scope', '$interval', function ($scope, $interval) {
 
-    var words = [
-        'bags',
-        'shoes',
-        'makeup',
-        'fashion',
-        'jewellery',
-        'accessories'
-    ];
-
     $scope.theWord = 'fashion';
 
     $scope.numberOfProducts = 3;
@@ -38,7 +29,7 @@ app.controller('homeController', ['$scope', '$interval', function ($scope, $inte
            changeWord.removeClass('animate-title-text-in');
             var word = words[i];
            $scope.theWord = word;
-            //changeWord.fadeIn().text(word);
+
             changeWord.animate({'opacity': 0}, 600, function () {
                 $(this).addClass('animate-title-text-in');
                 $(this).text(word);
