@@ -20,10 +20,35 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 #headerwrap .head-subtitle {
+  margin-top: 5px;
+  margin-bottom: 25px;
+  letter-spacing: 1.2px;
   font-size: 22px;
   color: #E9E9E9;
 }
 
+#headerwrap .title {
+  /*position: relative;*/
+  transition: all 0.3s ease;
+}
+
+.animate-title-text-in {
+  -webkit-animation: cssAnimation 1.0114s 1 ease;
+  -moz-animation: cssAnimation 1.0114s 1 ease;
+  -o-animation: cssAnimation 1.0114s 1 ease;
+}
+@-webkit-keyframes cssAnimation {
+  from { -webkit-transform: rotate(30deg) scale(0.97) skew(1deg) translate(137px); }
+  to { -webkit-transform: rotate(0deg) scale(1.0) skew(0deg) translate(0); }
+}
+@-moz-keyframes cssAnimation {
+  from { -moz-transform: rotate(30deg) scale(0.97) skew(1deg) translate(137px); }
+  to { -moz-transform: rotate(0deg) scale(1.0) skew(0deg) translate(0); }
+}
+@-o-keyframes cssAnimation {
+  from { -o-transform: rotate(30deg) scale(0.97) skew(1deg) translate(137px); }
+  to { -o-transform: rotate(0deg) scale(1.0) skew(0deg) translate(0); }
+}
 
 p {
     font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -539,4 +564,11 @@ input.success {
 
 .dark-blue-bg {
   background: $mainBackgroundColor;
+}
+
+.share-buttons {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

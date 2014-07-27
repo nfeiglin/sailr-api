@@ -31,23 +31,31 @@ app.controller('homeController', ['$scope', '$interval', function ($scope, $inte
 
     var i = 0;
     var length = words.length;
-    var changeWord = document.getElementById('changeWord');
+    var changeWord = $('#changeWord');
 
     $scope.doWordChange = function() {
-        $interval(function() {
+       var intervalPromise = $interval(function() {
+           changeWord.removeClass('animate-title-text-in');
             var word = words[i];
            $scope.theWord = word;
-            $('#changeWord').fadeIn().text(word);
-            //document.getElementById('changeWord').innerHTML(word);
-            console.log(word);
+            //changeWord.fadeIn().text(word);
+            changeWord.animate({'opacity': 0}, 600, function () {
+                $(this).addClass('animate-title-text-in');
+                $(this).text(word);
+            }).animate({'opacity': 1}, 600);
+
+            //console.log(word);
             i++;
 
             if (i >= length) {
                 i = 0;
             }
-        }, 3000);
+        }, 2500);
+
+        $scope.$on('$destroy', function () { $interval.cancel(intervalPromise); });
     };
 
     $scope.doWordChange();
+
 
 }]);

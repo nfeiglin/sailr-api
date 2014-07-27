@@ -8,19 +8,32 @@
 @section('full-width-top')
 <div id="headerwrap">
     <div class="container">
-        <div class="col-lg-12 col-xs-12 col-sm-12 text-white text-center">
-            <h1>Buy, sell, and discover <span id="changeWord">fashion</span></h1>
-            <div class="h3 head-subtitle">Join the community and follow your favourite creators</div>
-            <div class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4 center-middle">
-                <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-blue cta-btn btn-big">Sign up</a>
+        <div class="col-lg-12 col-xs-12 col-sm-12 text-white">
+            <div class="row headerwrap-navbar">
+                <div class="pull-right">
+                    <a href="http://blog.sailr.co" alt="Sailr blog" class="btn navbar-btn unstyled-nav-btn">Blog</a>
+                    <a href="{{ URL::action('SessionController@create') }}" alt="Sailr blog" class="btn navbar-btn unstyled-nav-btn">Login</a>
+                </div>
             </div>
 
+            <div class="row">
+                <div class="center-block">
+                    <h1 class="title text-center" id="headerTitle">Buy, sell, and discover<br><span id="changeWord" class="animate-title-text-in">fashion & more</span></h1>
+                </div>
+
+            </div>
+
+            <div class="text-center">
+                <div class="h2 head-subtitle">
+                    Join the community and follow your favourite creators
+                </div>
+                <div class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4 center-middle">
+                    <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block btn-blue cta-btn btn-big">Sign up now</a>
+                </div>
+            </div>
         </div>
-
-
     </div>
-
-    </div>
+</div>
 @stop
 
 @section('content')
@@ -162,6 +175,8 @@
         <div class="col-lg-6 col-lg-offset-3">
             <a href="{{ URL::action('UsersController@create') }}" class="btn btn-lg btn-block  btn-blue btn-big">Sign
                 up!</a>
+
+
         </div>
         <!--End mc_embed_signup-->
     </div>
@@ -169,8 +184,13 @@
 <!-- /row -->
 <hr>
 
-<p class="centered hidden">Based on BlackTie.co website - Attribution License 3.0 - 2013</p>
-<p class="centered">Prices subject to change. Contact founders@sailr.co with any questions, feedback or comments.</p>
+<div class="hidden">Based on BlackTie.co website - Attribution License 3.0 - 2013</div>
+<p class="centered">Contact founders[at]sailr.co with any questions, feedback or comments. <a href="https://twitter.com/getSailr" target="_blank">Follow us on Twitter</a></p>
+
+<div class="share-buttons centered">
+    <div class="addthis_native_toolbox"></div>
+</div>
+
 </div>
 
 
