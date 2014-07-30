@@ -16,9 +16,14 @@ class BaseTagger {
     }
 
     public function getTaggedUserNames($string) {
-        $usernames = [];
-        //Do rejex magic here
-        $this->taggedUsernames = $usernames;
+
+        $regexPattern = '/(?<=@)[^\s]+/';
+
+        preg_match_all($regexPattern, $string, $matches);
+
+        $this->taggedUsernames = $matches[0];
+
+        return $this->taggedUsernames;
 
     }
 }
