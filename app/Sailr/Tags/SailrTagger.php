@@ -2,6 +2,7 @@
 
 
 namespace Sailr\Tags;
+use User;
 
 class SailrTagger extends BaseTagger {
 
@@ -24,15 +25,15 @@ class SailrTagger extends BaseTagger {
         $users = User::whereIn('username', $usernames);
 
         if($relationships) {
-            $users->with($relationships);
+            $users = $users->with($relationships);
         }
 
         if ($columns) {
-            $users->get($columns);
+            $users = $users->get($columns);
         }
 
         else {
-            $users->get();
+            $users = $users->get();
         }
 
         return $users;
