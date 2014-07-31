@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "27786582b848e43f9d16e6fc2c4dffd7",
+    "hash": "aaf2d80f1338ab37908e37beb2977e97",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -386,12 +386,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "3065aff5ac1e2230a853c7bfaadd8594845aeb9b"
+                "reference": "663135d59bd8abb64e3efea3adc53aed9674df74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/3065aff5ac1e2230a853c7bfaadd8594845aeb9b",
-                "reference": "3065aff5ac1e2230a853c7bfaadd8594845aeb9b",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/663135d59bd8abb64e3efea3adc53aed9674df74",
+                "reference": "663135d59bd8abb64e3efea3adc53aed9674df74",
                 "shasum": ""
             },
             "require": {
@@ -449,7 +449,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-07-25 01:21:04"
+            "time": "2014-07-27 12:25:05"
         },
         {
             "name": "doctrine/inflector",
@@ -791,16 +791,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "fc0c20277260f09aa0bd172d66d8b39957c50078"
+                "reference": "fb679336b3e7af812d058bd250588ffff9608cc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/fc0c20277260f09aa0bd172d66d8b39957c50078",
-                "reference": "fc0c20277260f09aa0bd172d66d8b39957c50078",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/fb679336b3e7af812d058bd250588ffff9608cc3",
+                "reference": "fb679336b3e7af812d058bd250588ffff9608cc3",
                 "shasum": ""
             },
             "require": {
@@ -845,7 +845,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2014-06-30 15:30:03"
+            "time": "2014-07-27 20:53:47"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -993,7 +993,7 @@
         },
         {
             "name": "laravel/cashier",
-            "version": "dev-master",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/cashier.git",
@@ -1037,9 +1037,7 @@
             "authors": [
                 {
                     "name": "Taylor Otwell",
-                    "email": "taylorotwell@gmail.com",
-                    "homepage": "https://github.com/taylorotwell",
-                    "role": "Creator of Laravel"
+                    "email": "taylorotwell@gmail.com"
                 }
             ],
             "keywords": [
@@ -1828,16 +1826,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v1.16.0",
+            "version": "v1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "9401a361fa0323935002aa96f46983f9ecd880bb"
+                "reference": "a7b9c582ceb3728d78778dcaf0a70d08c65f2e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/9401a361fa0323935002aa96f46983f9ecd880bb",
-                "reference": "9401a361fa0323935002aa96f46983f9ecd880bb",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/a7b9c582ceb3728d78778dcaf0a70d08c65f2e86",
+                "reference": "a7b9c582ceb3728d78778dcaf0a70d08c65f2e86",
                 "shasum": ""
             },
             "require": {
@@ -1872,7 +1870,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2014-06-18 00:21:25"
+            "time": "2014-07-30 03:11:22"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2789,8 +2787,7 @@
     "stability-flags": {
         "doctrine/dbal": 20,
         "way/generators": 20,
-        "logicalgrape/paypal-ipn-laravel": 20,
-        "laravel/cashier": 20
+        "logicalgrape/paypal-ipn-laravel": 20
     },
     "platform": [
 
