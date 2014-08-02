@@ -37,10 +37,6 @@ class ItemsController extends BaseController
 
     public function store()
     {
-
-
-
-
         $u = Auth::user();
 
         if ($u->canPerformActionOnPlan('product.create') != true) {
