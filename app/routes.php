@@ -1,6 +1,14 @@
 <?php
 use Intervention\Image\Facades;
 
+Route::resource('{username}/collections', 'CollectionsController');
+
+Route::get('{username}/collections', 'CollectionsController@index');
+Route::get('{username}/collections/{id}', 'CollectionsController@show');
+
+Route::post('api/collections/favourite', 'CollectionsApiController@favourite');
+Route::get('api/collections/{username}/all', 'CollectionsApiController@index');
+
     Route::post('purchase/{id}', 'BuyController@store', ['before' => 'auth']);
     Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
     Route::post('payment/stripe-webhook', 'Laravel\Cashier\WebhookController@handleWebhook');

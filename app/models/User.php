@@ -39,7 +39,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
         'terms_of_service' => 'accepted',
         'name' => 'required|min:2|max:99',
         'email' => 'required|email|max:99|unique:users,email',
-        'username' => 'required|alpha_dash|max:99|regex:^((?!sailr).)*$|unique:users,username',
+        'username' => 'required|alpha_dash|max:99|unique:users,username',
         'password' => 'required|min:6',
         'bio' => 'sometimes|max:240'
     );
@@ -47,7 +47,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
     public static $updateRules = array(
         'name' => 'sometimes|min:2|max:99',
         'email' => 'sometimes|email|max:99|unique:users,email',
-        'username' => 'sometimes|alpha_dash|max:99|regex:^((?!sailr).)*$|unique:users,username',
+        'username' => 'sometimes|alpha_dash|max:99|unique:users,username',
         'password' => 'sometimes|min:6',
         'bio' => 'sometimes|max:240'
 
@@ -121,6 +121,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
     public function items()
     {
         return $this->hasMany('Item');
+    }
+
+    public function collections() {
+        return $this->belongsToMany('Collection')->withTimestamps();
+    }
+
+    public function collection() {
+        return $this->hasMany('Collection');
     }
 
     public function following()

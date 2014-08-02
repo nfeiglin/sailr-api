@@ -9,6 +9,7 @@
         'accessories'
     ];
 </script>
+<script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js"></script>
 
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700|Lato:400,700' rel='stylesheet' type='text/css'>

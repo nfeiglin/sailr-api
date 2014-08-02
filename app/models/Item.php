@@ -26,6 +26,10 @@ class Item extends Eloquent
         return $this->hasMany('Comment');
     }
 
+    public function collections() {
+        return $this->belongsToMany('Collection')->withTimestamps();
+    }
+
     public static $updateRules = [
         'title' => ['sometimes', 'max:255'],
         'price' => ['sometimes', 'min:0', 'max:999999', 'numeric'],
