@@ -7,6 +7,9 @@ Route::get('{username}/collections', 'CollectionsController@index');
 Route::get('{username}/collections/{id}', 'CollectionsController@show');
 
 Route::post('api/collections/favourite', 'CollectionsApiController@favourite');
+Route::post('api/collections/store', 'CollectionsApiController@store');
+Route::post('api/collections/destroy/{id}', 'CollectionsApiController@destroy');
+
 Route::get('api/collections/{username}/all', 'CollectionsApiController@index');
 
     Route::post('purchase/{id}', 'BuyController@store', ['before' => 'auth']);

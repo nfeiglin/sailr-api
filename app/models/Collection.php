@@ -1,7 +1,13 @@
 <?php
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Sailr\Observers\CollectionObserver;
 class Collection extends \Eloquent {
     use SoftDeletingTrait;
+
+    public static function boot() {
+        parent::boot();
+        Collection::observe(new CollectionObserver());
+    }
 
     public $timestamps = true;
 	protected $fillable = ['title', 'public', 'user_id'];

@@ -18,6 +18,7 @@ class CreateCollectionsTable extends Migration {
 			$table->integer('user_id')->unsigned();
 			$table->string('title', 255);
 			$table->boolean('public')->default(1);
+            $table->string('preview_image');
 			$table->timestamps();
             $table->softDeletes();
 		});
