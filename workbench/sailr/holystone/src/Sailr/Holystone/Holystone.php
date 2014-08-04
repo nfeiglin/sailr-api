@@ -11,7 +11,7 @@ class Holystone implements HolystoneInterface {
     public $configuration;
 
     public function __construct() {
-        $this->markdownParser = new \Parsedown();
+        //$this->markdownParser = new \Parsedown();
         $this->holystoneConfig = \HTMLPurifier_Config::createDefault();
         $this->holystoneConfig->set('HTML.AllowedElements', implode(',', Config::get('holystone::config.elements')));
         //$this->holystoneConfig->set('HTML.TidyLevel', 'medium');
@@ -29,7 +29,7 @@ class Holystone implements HolystoneInterface {
      * @return string
      */
     public function sanitize($html = '') {
-        $html = $this->markdownParser->text($html);
+        //$html = $this->markdownParser->text($html);
         $html = $this->htmlPurifier->purify($html);
 
         return $html;
