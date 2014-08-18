@@ -202,7 +202,7 @@ class CollectionsApiController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroyCollection($id)
     {
         /* TODO: Test this... it is faulty */
 
@@ -214,20 +214,44 @@ class CollectionsApiController extends \BaseController
             return Response::json([], 403);
         }
 
-        if (Input::has('collection_item_id')) {
-            $collection->items()->where('id', Input::get('collection_item_id'))->detach();
-        }
-
-        else {
-            $collection->delete();
-        }
-
+        $collection->delete();
         return Response::json([], 204);
 
 
     }
 
+    /**
+     * Remove the specified resource from storage.
+     * DELETE /collections/{id}
+     *
+     * @param  int $collection_id
+     * @param int $item_id
+     * @return Response
+     */
+    public function destroyCollectionItem($collection_id, $item_id)
+    {
+        /* TODO: Test this... it is faulty */
+
+        $user = User::findOrFail(12); //Auth::user();
+
+        $collection = Collection::findOrFail($collection_id);
+
+        if (!$this->canAdminCollection($collection, $user)) {
+            return Response::json(['message' => 'You do not have admin privileges on this collection'], 403);
+        }
+
+        $c = $collection->items()->where('id', $item_id)->get();//->detach();
+
+        return Response::json($c->toArray(), 204);
+
+
+    }
+
     public function canAdminCollection(Collection $collection, User $user) {
+
+        if (!isset($collection->user_id)) {
+            throw new Exception('The collection object is missing the user_id column');
+        }
         if ($collection->user_id == $user->getAuthIdentifier()) {
             return true;
         }
@@ -236,9 +260,7 @@ class CollectionsApiController extends \BaseController
             return true;
         }
 
-        else {
-            return false;
-        }
+        return false;
 
     }
 
