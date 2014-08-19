@@ -75,6 +75,8 @@ class CollectionsApiController extends \BaseController
             $collection->user_id = $user->id;
             $collection->save();
 
+            $user->likes_collection_id = $collection->id;
+            $user->save();
         } else {
             $collection = $user->collection()->where('title', 'Likes')->first();
         }
