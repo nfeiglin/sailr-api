@@ -8,8 +8,8 @@ Route::get('{username}/collections/{id}', 'CollectionsController@show');
 
 Route::post('api/collections/favourite', 'CollectionsApiController@favourite');
 Route::post('api/collections/store', 'CollectionsApiController@store');
-Route::delete('api/collections/{id}', 'CollectionsApiController@destroyCollection');
-Route::delete('api/collections/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
+Route::delete('api/collections/destroy/{id}', 'CollectionsApiController@destroyCollection');
+Route::delete('api/collections/destroy/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
 
 Route::get('api/collections/{username}/all', 'CollectionsApiController@index');
 
@@ -71,7 +71,7 @@ View::composer('*', function(Illuminate\View\View $view) {
         $loggedInUser = User::where('id', '=', Auth::user()->id)->with(
             ['ProfileImg' => function($p) {
                 $p->where('type', '=', 'small');
-            }])->firstOrFail(['id', 'name', 'username'])->toJson();
+            }])->firstOrFail(['id', 'name', 'username', 'likes_collection_id'])->toJson();
     }
 
     catch (Exception $e) {
