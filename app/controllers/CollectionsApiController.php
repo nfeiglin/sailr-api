@@ -65,9 +65,7 @@ class CollectionsApiController extends \BaseController
 
         $user = User::findOrFail(12); //Auth::user()
         $item = Item::findOrFail($id, ['id', 'user_id', 'public']);
-
-        $collection = [];
-
+        
         if ($user->collection()->where('title', 'Likes')->count() < 1) {
             //So we better make a favourite collection
             $collection = new Collection;
@@ -173,7 +171,7 @@ class CollectionsApiController extends \BaseController
             $collection = Collection::findOrFail($id);
         }
 
-        $response['items'] = $collection->items()->get()->toArray();
+        $response['items'] = $collection->items()->where('public', 1)->get()->toArray();
         $response['followers'] = $collection->users()->count();
         $response['user'] = $collection->user()->firstOrFail(['id', 'name', 'username'])->toArray();
 
@@ -182,7 +180,7 @@ class CollectionsApiController extends \BaseController
 
     public function getLikes($user_id) {
         $c = Collection::where('title', 'Likes')->where('user_id', $user_id)->firstOrFail();
-        return $this->getCollection($c, $c->id);
+        return $this->getCollection($c->id, $c);
     }
 
     /**
