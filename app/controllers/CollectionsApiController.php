@@ -211,11 +211,11 @@ class CollectionsApiController extends \BaseController
         $collection = Collection::findOrFail($id);
 
         if (!$this->canAdminCollection($collection, $user)) {
-            return Response::json([], 403);
+            return Response::json(['message' => 'You do not have access to change this collection'], 403);
         }
 
-        $collection->delete();
-        return Response::json([], 204);
+        $deleted = $collection->delete();
+        return Response::json(['message' => 'Collection successfully deleted'], 200);
 
 
     }
@@ -240,9 +240,18 @@ class CollectionsApiController extends \BaseController
             return Response::json(['message' => 'You do not have admin privileges on this collection'], 403);
         }
 
-        $c = $collection->items()->where('id', $item_id)->get();//->detach();
+        $c = $collection->items()->where('item_id', $item_id)->detach();
+        if ($c) {
+            $res = ['message' => 'Removed from collection successfully'];
+            $code = 200;
+        }
 
-        return Response::json($c->toArray(), 204);
+        else {
+            $res = ['message' => 'Item not removed from collection. It may have already been removed, or never added'];
+            $code = 400;
+        }
+
+        return Response::json($res, $code);
 
 
     }
