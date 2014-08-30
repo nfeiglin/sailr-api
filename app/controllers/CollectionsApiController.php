@@ -65,9 +65,7 @@ class CollectionsApiController extends \BaseController
 
         $user = User::findOrFail(12); //Auth::user()
         $item = Item::findOrFail($id, ['id', 'user_id', 'public']);
-
-        $collection = [];
-
+        
         if ($user->collection()->where('title', 'Likes')->count() < 1) {
             //So we better make a favourite collection
             $collection = new Collection;
@@ -75,6 +73,8 @@ class CollectionsApiController extends \BaseController
             $collection->user_id = $user->id;
             $collection->save();
 
+            $user->likes_collection_id = $collection->id;
+            $user->save();
         } else {
             $collection = $user->collection()->where('title', 'Likes')->first();
         }
@@ -171,7 +171,7 @@ class CollectionsApiController extends \BaseController
             $collection = Collection::findOrFail($id);
         }
 
-        $response['items'] = $collection->items()->get()->toArray();
+        $response['items'] = $collection->items()->where('public', 1)->get()->toArray();
         $response['followers'] = $collection->users()->count();
         $response['user'] = $collection->user()->firstOrFail(['id', 'name', 'username'])->toArray();
 
@@ -180,7 +180,7 @@ class CollectionsApiController extends \BaseController
 
     public function getLikes($user_id) {
         $c = Collection::where('title', 'Likes')->where('user_id', $user_id)->firstOrFail();
-        return $this->getCollection($c, $c->id);
+        return $this->getCollection($c->id, $c);
     }
 
     /**
@@ -202,7 +202,7 @@ class CollectionsApiController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroyCollection($id)
     {
         /* TODO: Test this... it is faulty */
 
@@ -211,23 +211,56 @@ class CollectionsApiController extends \BaseController
         $collection = Collection::findOrFail($id);
 
         if (!$this->canAdminCollection($collection, $user)) {
-            return Response::json([], 403);
+            return Response::json(['message' => 'You do not have access to change this collection'], 403);
         }
 
-        if (Input::has('collection_item_id')) {
-            $collection->items()->where('id', Input::get('collection_item_id'))->detach();
+        $deleted = $collection->delete();
+        return Response::json(['message' => 'Collection successfully deleted'], 200);
+
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * DELETE /collections/{id}
+     *
+     * @param  int $collection_id
+     * @param int $item_id
+     * @return Response
+     */
+    public function destroyCollectionItem($collection_id, $item_id)
+    {
+        /* TODO: Test this... it is faulty */
+
+        $user = User::findOrFail(12); //Auth::user();
+
+        $collection = Collection::findOrFail($collection_id);
+
+        if (!$this->canAdminCollection($collection, $user)) {
+            return Response::json(['message' => 'You do not have admin privileges on this collection'], 403);
+        }
+
+        $c = $collection->items()->where('item_id', $item_id)->detach();
+        if ($c) {
+            $res = ['message' => 'Removed from collection successfully'];
+            $code = 200;
         }
 
         else {
-            $collection->delete();
+            $res = ['message' => 'Item not removed from collection. It may have already been removed, or never added'];
+            $code = 400;
         }
 
-        return Response::json([], 204);
+        return Response::json($res, $code);
 
 
     }
 
     public function canAdminCollection(Collection $collection, User $user) {
+
+        if (!isset($collection->user_id)) {
+            throw new Exception('The collection object is missing the user_id column');
+        }
         if ($collection->user_id == $user->getAuthIdentifier()) {
             return true;
         }
@@ -236,9 +269,7 @@ class CollectionsApiController extends \BaseController
             return true;
         }
 
-        else {
-            return false;
-        }
+        return false;
 
     }
 
