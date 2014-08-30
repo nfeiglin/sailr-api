@@ -1,21 +1,11 @@
 <?php
 use Intervention\Image\Facades;
 
-Route::resource('{username}/collections', 'CollectionsController');
 
-Route::get('{username}/collections', 'CollectionsController@index');
-Route::get('{username}/collections/{id}', 'CollectionsController@show');
 
-Route::post('api/collections/favourite', 'CollectionsApiController@favourite');
-Route::post('api/collections/store', 'CollectionsApiController@store');
-Route::delete('api/collections/destroy/{id}', 'CollectionsApiController@destroyCollection');
-Route::delete('api/collections/destroy/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
-
-Route::get('api/collections/{username}/all', 'CollectionsApiController@index');
-
-    Route::post('purchase/{id}', 'BuyController@store', ['before' => 'auth']);
-    Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
-    Route::post('payment/stripe-webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
+Route::post('purchase/{id}', 'BuyController@store', ['before' => 'auth']);
+Route::post('payment/ipn', array('uses' => 'IpnController@store', 'as' => 'ipn'));
+Route::post('payment/stripe-webhook', 'Laravel\Cashier\WebhookController@handleWebhook');
 
 /*
 |--------------------------------------------------------------------------
@@ -128,10 +118,6 @@ Route::group(['prefix' => 'legal'], function() {
 Route::get('/s/{query}', 'SearchesController@show');
 
 Route::group(['before' => 'csrf'], function () {
-    Route::get('test', function () {
-        return View::make('test')->with('title', 'Test title')->with('hasNavbar', 1);
-    });
-
 
     Route::get('/@{username}', function ($username) {
         return Redirect::to(action('UsersController@show', $username));
@@ -153,6 +139,12 @@ Route::group(['before' => 'csrf'], function () {
 
 
     Route::get('/{username}/product/{id}', 'BuyController@create');
+    
+    Route::resource('{username}/collections', 'CollectionsController');
+    Route::get('{username}/collections', 'CollectionsController@index');
+    Route::get('{username}/collections/{id}', 'CollectionsController@show');
+    Route::get('api/collections/{username}/all', 'CollectionsApiController@index');
+
 
 
     Route::group(['before' => ['auth']], function () {
@@ -199,6 +191,11 @@ Route::group(['before' => 'csrf'], function () {
         Route::post('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
         Route::resource('me/notifications', 'NotificationsController');
         Route::get('me/notification/{id}', 'NotificationsController@show');
+
+        Route::post('api/collections/favourite', 'CollectionsApiController@favourite');
+        Route::post('api/collections/store', 'CollectionsApiController@store');
+        Route::delete('api/collections/destroy/{id}', 'CollectionsApiController@destroyCollection');
+        Route::delete('api/collections/destroy/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
     });
 
 
@@ -216,6 +213,8 @@ Route::group(['before' => 'csrf'], function () {
           Route::get('products/{offset?}/{limit?}', 'OnboardController@getRecentProducts');
        });
     });
+
+
 });
 
 
