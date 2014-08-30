@@ -1,1 +1,0 @@
-C:\Users\Nathan\Documents\sailr-api\sailr-api\app/views/Relationships/index.blade.php
