@@ -2,6 +2,17 @@
 
 class BaseController extends Controller
 {
+    /**
+     * @var \User $loggedInUser The currently logged in user to the application.
+     */
+    protected $loggedInUser;
+
+    public function ____construct() {
+        if (Auth::check()) {
+            $this->loggedInUser = Auth::user();
+        }
+
+    }
 
     /**
      * Setup the layout used by the controller.
