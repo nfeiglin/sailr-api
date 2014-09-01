@@ -20,8 +20,12 @@ class BaseRepository {
      */
     protected $model;
 
-    public function ___construct(\Model $model) {
+    public function __construct(\Model $model) {
         $this->model = $model;
+    }
+
+    public function setQueryBuilderInstance($queryBuilder) {
+        $this->model = $queryBuilder;
     }
 
     /**
@@ -50,11 +54,25 @@ class BaseRepository {
      *
      * @param string $key
      * @param string $value
+     * @param array $fields
      * @param array $with
      */
-    public function getFirstBy($key, $value, array $with = array())
+    public function getFirstBy($key, $value, array $fields = ['*'], array $with = array())
     {
-        $this->make($with)->where($key, '=', $value)->first();
+        return $this->make($with)->where($key, '=', $value)->first($fields);
+    }
+
+    /**
+     * Find a single entity by key value or throw an error if it doesn't exist
+     *
+     * @param string $key
+     * @param string $value
+     * @param array $fields
+     * @param array $with
+     */
+    public function getFirstOrFailBy($key, $value, array $fields = ['*'], array $with = array())
+    {
+        return $this->make($with)->where($key, '=', $value)->firstOrFail();
     }
 
     /**
@@ -66,7 +84,7 @@ class BaseRepository {
      */
     public function getManyBy($key, $value, array $with = array())
     {
-        $this->make($with)->where($key, '=', $value)->get();
+        return $this->make($with)->where($key, '=', $value)->get();
     }
 
     /**
