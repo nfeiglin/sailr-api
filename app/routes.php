@@ -1,5 +1,5 @@
 <?php
-use Intervention\Image\Facades;
+
 
 
 
@@ -35,85 +35,10 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 //Route::get('asset/show/{path?}', 'Sailr\TestPipe\TestPipeController@showAsset')->where('path', '(.*)');
 //\Sailr\TestPipe\TestPipe::make()->tags('css')
 
-View::composer('*', function ($view) {
-    if (!array_key_exists('hasNavbar', $view->getData())) {
-        $view->with('hasNavbar', 1);
-    }
-
-
-    if (Auth::check()) {
-        if (!array_key_exists('unread_notifications_count', $view->getData())) {
-            $count = Notification::where('user_id', '=', Auth::user()->id)->where('viewed', '=', false)->count();
-            $view->with('unread_notifications_count', $count);
-        }
-
-
-    }
+Route::get('/', function(){
+    return Response::json('hhhh');
 });
-
-View::composer('index', function($view){
-    $view->with('purpleBG', false);
-});
-
-View::composer('*', function(Illuminate\View\View $view) {
-    /* Enclosing this in a try / catch because user may not be logged in! */
-    try {
-        $loggedInUser = User::where('id', '=', Auth::user()->id)->with(
-            ['ProfileImg' => function($p) {
-                $p->where('type', '=', 'small');
-            }])->firstOrFail(['id', 'name', 'username', 'likes_collection_id'])->toJson();
-    }
-
-    catch (Exception $e) {
-        $loggedInUser = 'false';
-    }
-
-   $view->with('loggedInUser', $loggedInUser);
-});
-
-View::composer('users.create', function($view){
-    $view->with('purpleBG', true);
-});
-
-View::composer('users.show', function($view){
-    $view->with('purpleBG', true);
-});
-
-View::composer('password.remind', function($view){
-    $view->with('purpleBG', true);
-});
-
-View::composer('password.reset', function($view){
-    $view->with('purpleBG', true);
-});
-
-
-if (Auth::check()) {
-    Route::get('/', 'UsersController@self_feed');
-
-    Route::get('/i/homepage', function () {
-        return View::make('index');
-    });
-} else {
-    Route::get('/', function () {
-        return View::make('index');
-    });
-}
-
-Route::get('support/contact', ['as' => 'contact', function() {
-    return View::make('support.contact')->with('title', "We're here for you");
-}]);
-
-Route::group(['prefix' => 'legal'], function() {
-    Route::get('terms', ['as' => 'termsOfService', function() {
-       return View::make('legal.termsOfService');
-    }]);
-
-    Route::get('privacy-policy', ['as' => 'privacyPolicy', function() {
-        return View::make('legal.privacyPolicy');
-    }]);
-
-});
+Route::resource('users', 'UsersController');
 
 Route::get('/s/{query}', 'SearchesController@show');
 
@@ -172,12 +97,6 @@ Route::group(['before' => 'csrf'], function () {
             });
 
         });
-
-        Route::get('plans/choose', ['before' => 'not-subscribed', 'as' => 'choose-plan', function() {
-            return View::make('subscriptions.pick')->with('title', 'Welcome to Sailr | Choose a plan');
-        }]);
-
-
 
         Route::delete('relationship', 'RelationshipsController@destroy');
         Route::resource('relationship', 'RelationshipsController');

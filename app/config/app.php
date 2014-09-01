@@ -13,7 +13,7 @@ return array(
     |
     */
 
-    'debug' => false,
+    'debug' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'url' => 'https://sailr.co',
+    'url' => 'https://api.sailr.co',
 
     /*
     |--------------------------------------------------------------------------
@@ -117,6 +117,7 @@ return array(
         'Laravel\Cashier\CashierServiceProvider',
         'Sailr\IocBinds\IocBindsServiceProvider',
         'Sailr\Validators\ValidatorsServiceProvider',
+        'Sailr\Repository\RepositoryServiceProvider'
 
     ),
 
