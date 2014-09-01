@@ -2,7 +2,11 @@
 
 class UsersController extends \BaseController
 {
+    protected $repository;
 
+    public function __construct(\Sailr\Repository\UsersRepository $repository) {
+        $this->repository = $repository;
+    }
 
     /**
      * Show the form for creating a new user
@@ -72,12 +76,20 @@ class UsersController extends \BaseController
         //How many results per page?
         $resultsPerPage = 30;
 
-        $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
+        $user = $this->repository->getFirstOrFailBy('username', $username, ['id', 'name', 'username', 'bio'], ['ProfileImg']);
+        //dd($user->toJson());
 
-        $items = Item::where('user_id', '=', $user->id)->where('public', '=', 1)->with(['User', 'Photos' => function($y) {
+        $items = $user->items()->where('public', '=', 1)->with(['User', 'Photos' => function($y) {
           $y->where('type', '=', 'full_res');
           $y->select(['url', 'id', 'item_id']);
         }]);
+
+        $feedCollectionBuilder = new \Sailr\ApiFeed\FeedCollectionBuilder;
+        $feedCollectionBuilder->createItemsFeed($items->get()->toArray());
+
+        return Response::json($feedCollectionBuilder->getFeedCollection());
+
+        //return Response::json($items->get());
 
 
         $paginator = $items->paginate($resultsPerPage);
