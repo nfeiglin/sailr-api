@@ -14,7 +14,8 @@
         "guzzlehttp/guzzle": "~4.0",
         "logicalgrape/paypal-ipn-laravel": "dev-master",
         "laravel/cashier": "~2.0",
-		"pda/pheanstalk": "~2.0"
+		"pda/pheanstalk": "~2.0",
+		"laracasts/commander": "1.1.*"
 
 	},
 	"autoload": {
