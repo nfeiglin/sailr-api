@@ -4,7 +4,8 @@
 namespace Sailr\Validators;
 
 use Illuminate\Support\ServiceProvider;
-
+use Sailr\Validators\Exceptions\ValidatorException;
+use Sailr\Api\Responses\ApiResponse;
 
 class ValidatorsServiceProvider extends ServiceProvider {
 
@@ -17,6 +18,12 @@ class ValidatorsServiceProvider extends ServiceProvider {
     {
         $this->app->bind('Sailr\Validators\PurchaseValidator', function() {
             return new PurchaseValidator;
+        });
+
+        $this->app->error(function(ValidatorException $validatorException){
+            $errors = $validatorException->getValidator()->errors();
+            //Now, lets tell the user
+           return ApiResponse::make()->validationErrorResponse(new \ErrorCollection($errors->first(), $errors->toArray()));
         });
 
     }
