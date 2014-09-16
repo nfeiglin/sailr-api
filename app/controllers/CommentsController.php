@@ -1,8 +1,16 @@
 <?php
 
+use Sailr\Validators\CommentsValidator;
 class CommentsController extends \BaseController
 {
+    /**
+     * @var CommentsValidator
+     */
+    protected $commentsValidator;
 
+    public function __construct(CommentsValidator $commentsValidator) {
+
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -18,12 +26,9 @@ class CommentsController extends \BaseController
             //throw new \Sailr\Emporium\Merchant\Exceptions\ProductNotPublicException;
             return Response::json([], 403);
         }
-        $validator = Validator::make($input, Comment::$rules);
 
-        if ($validator->fails()) {
-            return Response::json($validator->getMessageBag()->toArray(), 400);
-        }
-
+        $this->commentsValidator->validate($input, 'create');
+        //TODO: Check that throwing the validator exception in the validator class stops the app before it creates new record in DB
 
         $comment = Comment::create([
                 'user_id' => Auth::user()->id,
