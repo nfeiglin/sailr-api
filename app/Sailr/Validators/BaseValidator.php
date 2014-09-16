@@ -1,6 +1,7 @@
 <?php namespace Sailr\Validators;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use Sailr\Validators\Exceptions\ValidatorException;
 
 class BaseValidator implements ValidatorInterface {
 
@@ -30,6 +31,8 @@ class BaseValidator implements ValidatorInterface {
         $validator = Validator::make($data, $rules, $messages);
         if (!$result = $validator->passes()) {
             $this->errors = $validator->messages();
+            $this->validator = $validator;
+            throw new ValidatorException($validator, "Validation error");
         }
         $this->validator = $validator;
 
