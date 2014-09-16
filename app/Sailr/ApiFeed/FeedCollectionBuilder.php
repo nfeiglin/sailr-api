@@ -10,6 +10,7 @@ namespace Sailr\ApiFeed;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class FeedCollectionBuilder {
 
@@ -22,7 +23,7 @@ class FeedCollectionBuilder {
         $this->feedCollection = new FeedCollection;
     }
 
-    public function addObjectToFeedCollection(FeedItem $feedItem) {
+    public function addObjectToFeedCollection(FeedItemInterface $feedItem) {
         $this->feedCollection->push($feedItem);
     }
 
@@ -47,9 +48,13 @@ class FeedCollectionBuilder {
 
     public function createItemsFeed($modelCollection) {
 
+        if ($modelCollection instanceof Collection) {
+            $modelCollection = $modelCollection->toArray();
+        }
         foreach($modelCollection as $model) {
 
             $dt = new \DateTime($model['created_at']);
+
             $carbon = Carbon::createFromTimestamp($dt->getTimestamp());
 
             $action = new FeedItemAction('item.create', 'added new item', $carbon);
@@ -58,8 +63,6 @@ class FeedCollectionBuilder {
             $object = new FeedItemObject('item', $model);
 
             $feedItem = new FeedItem($action, $actor, $object);
-            //print_r($feedItem);
-            //dd();
 
             $this->addObjectToFeedCollection($feedItem);
         }

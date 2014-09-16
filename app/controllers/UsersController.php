@@ -85,7 +85,7 @@ class UsersController extends \BaseController
         }]);
 
         $feedCollectionBuilder = new \Sailr\ApiFeed\FeedCollectionBuilder;
-        $feedCollectionBuilder->createItemsFeed($items->get()->toArray());
+        $feedCollectionBuilder->createItemsFeed($items->get());
 
         return Response::json($feedCollectionBuilder->getFeedCollection());
 
