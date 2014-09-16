@@ -31,22 +31,25 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
-//App::register('Sailr\TestPipe\TestPipeServiceProvider')
-//Route::get('asset/show/{path?}', 'Sailr\TestPipe\TestPipeController@showAsset')->where('path', '(.*)');
-//\Sailr\TestPipe\TestPipe::make()->tags('css')
+
+Route::bind('user', function($value, $route)
+{
+    $repo = new \Sailr\Repository\UsersRepository(new \User);
+    $repo->make(['ProfileImg']);
+
+    return $repo->getFirstOrFailBy('id', $value);
+});
 
 Route::get('/', function(){
     return Response::json('hhhh');
 });
+
 Route::resource('users', 'UsersController');
+Route::get('users/{user}', 'UsersController@show');
 
 Route::get('/s/{query}', 'SearchesController@show');
 
 Route::group(['before' => 'csrf'], function () {
-
-    Route::get('/@{username}', function ($username) {
-        return Redirect::to(action('UsersController@show', $username));
-    });
     Route::get('/{username}', 'UsersController@show');
     Route::get('{username}/following', 'UsersController@following');
     Route::get('{username}/followers', 'UsersController@followers');
@@ -89,7 +92,6 @@ Route::group(['before' => 'csrf'], function () {
             Route::put('account', 'SettingsController@putAccount');
             Route::resource('subscription', 'SubscriptionsController', ['only' => ['index', 'destroy', 'store']]);
             Route::post('subscription/delete', 'SubscriptionsController@destroy');
-            //Route::delete('subscription/delete', 'SubscriptionsController@destroy');
 
             Route::group(['before' => ['subscribed']], function() {
                 Route::resource('billing', 'BillingsController');
@@ -98,7 +100,6 @@ Route::group(['before' => 'csrf'], function () {
 
         });
 
-        Route::delete('relationship', 'RelationshipsController@destroy');
         Route::resource('relationship', 'RelationshipsController');
 
         Route::get('/{username}/product/{id}/comments', 'CommentsController@item_comments');
