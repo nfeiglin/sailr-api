@@ -27,7 +27,6 @@ class FeedItemObject implements ArrayableInterface {
     }
 
     public function toArray() {
-       // $this->objectItem['object'] = $this->objectType;
 
         if ($this->objectItem instanceof Collection) {
             $this->objectItem->toArray();

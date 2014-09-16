@@ -12,11 +12,11 @@ namespace Sailr\ApiFeed;
 use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Contracts\JsonableInterface;
 
-class FeedItem implements ArrayableInterface, JsonableInterface {
+class FeedItem implements FeedItemInterface, ArrayableInterface, JsonableInterface {
 
     /**
      * @var $action FeedItemAction
-     * @var $actor FeedItemAction
+     * @var $actor FeedItemActor
      * @var $object FeedItemObject
      */
     public $action;
@@ -29,11 +29,35 @@ class FeedItem implements ArrayableInterface, JsonableInterface {
         $this->object = $object;
     }
 
+    /**
+     * @return FeedItemAction
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * @return FeedItemActor
+     */
+    public function getActor()
+    {
+        return $this->actor;
+    }
+
+    /**
+     * @return FeedItemObject
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
     public function toArray() {
         return [
-            'action' => $this->action->toArray(),
-            'actor' => $this->actor->toArray(),
-            'object' => $this->object->toArray()
+            'action' => $this->getAction()->toArray(),
+            'actor' => $this->getActor()->toArray(),
+            'object' => $this->getObject()->toArray()
         ];
     }
 

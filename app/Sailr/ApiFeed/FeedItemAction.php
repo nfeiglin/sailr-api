@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Contracts\ArrayableInterface;
 
 
-class FeedItemAction implements ArrayableInterface {
+class FeedItemAction implements FeedItemActionInterface, ArrayableInterface {
 
     /**
      * @var $code string The code of the action (i.e item.create)
@@ -29,11 +29,37 @@ class FeedItemAction implements ArrayableInterface {
         $this->time = $time;
     }
 
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+
+
     public function toArray() {
         return [
-            'code' => $this->code,
-            'title' => $this->title,
-            'time' => $this->time->toISO8601String()
+            'code' => $this->getCode(),
+            'title' => $this->getTitle(),
+            'time' => $this->getTime()->toISO8601String()
         ];
     }
 } 

@@ -11,7 +11,7 @@ namespace Sailr\ApiFeed;
 
 use Illuminate\Support\Contracts\ArrayableInterface;
 
-class FeedItemActor implements ArrayableInterface {
+class FeedItemActor implements FeedItemActorInterface, ArrayableInterface {
 
     /**
      * @var $title string The title used to actor (i.e Nathan Feiglin)
@@ -28,10 +28,34 @@ class FeedItemActor implements ArrayableInterface {
         $this->actorObject = $actorObject;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getActorObject()
+    {
+        return $this->actorObject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObjectType()
+    {
+        return $this->objectType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
     public function toArray() {
         $meta =  [
-            'title' => $this->title,
-            'object' => $this->objectType,
+            'title' => $this->getTitle(),
+            'object' => $this->getObjectType()
         ];
 
         $returnArray = $meta + $this->actorObject;
