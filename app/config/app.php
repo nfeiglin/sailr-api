@@ -117,6 +117,7 @@ return array(
         'Laravel\Cashier\CashierServiceProvider',
         'Sailr\IocBinds\IocBindsServiceProvider',
         'Sailr\Validators\ValidatorsServiceProvider',
+        'Laracasts\Commander\CommanderServiceProvider'
 
     ),
 
