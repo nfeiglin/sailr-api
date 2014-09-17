@@ -25,7 +25,7 @@ class ValidatorServiceProvider extends ServiceProvider {
 
     public function boot() {
         $this->package('sailr/validator');
-        $this->app->validator->resolver(function($translator, $data, $rules, $messages)
+        $this->app['validator']->resolver(function($translator, $data, $rules, $messages)
         {
             return new SailrValidator($translator, $data, $rules, $messages);
         });

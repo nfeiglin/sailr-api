@@ -6,16 +6,16 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"doctrine/dbal": "dev-master",
-		"way/generators": "dev-master",
+		"way/generators": "2.6.*",
         "fzaninotto/faker": "v1.3.0",
         "intervention/image":"2.*",
         "paypal/merchant-sdk-php": "v3.6.106",
         "jenssegers/mongodb": "v1.4",
         "guzzlehttp/guzzle": "~4.0",
-        "logicalgrape/paypal-ipn-laravel": "dev-master",
+        "logicalgrape/paypal-ipn-laravel": "1.0.*",
         "laravel/cashier": "~2.0",
 		"pda/pheanstalk": "~2.0",
-		"laracasts/commander": "1.1.*"
+		"laracasts/commander": "~1.0"
 
 	},
 	"autoload": {
