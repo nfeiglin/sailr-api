@@ -10,7 +10,10 @@ namespace Sailr\Api\Responses;
 
 use Illuminate\Support\Collection;
 use Illuminate\Http\JsonResponse;
-use ErrorCollection;
+use Illuminate\Support\Contracts\ArrayableInterface;
+use ReflectionClass;
+use Sailr\Api\Support\ErrorCollection;
+use Sailr\Api\Transformer\Transformable;
 
 /**
  * Class Response
@@ -62,8 +65,10 @@ class ApiResponse {
 
     public function respond($statusCode = 200) {
 
-        $this->responseBody['meta'] = $this->metaContent->toArray();
-        $this->responseBody['data'] = $this->dataContent->toArray();
+        ///dd($this->getMetaContent()->toArray());
+
+        $this->responseBody['meta'] = $this->getMetaContent()->toArray();
+        $this->responseBody['data'] = $this->getDataContent()->toArray();
 
 
         return $this->JsonResponse->create($this->responseBody, $statusCode, $this->headers);
@@ -85,12 +90,27 @@ class ApiResponse {
         return $this->respond($statusCode);
     }
 
+    public function singleObjectResponse($model, $statusCode = 200) {
+        if (!$model instanceof Collection && $model instanceof ArrayableInterface) {
+            $model = new Collection($model->toArray());
+        }
+        return $this->content($model)->respond($statusCode);
+    }
+
     public function content($content = null) {
         if (is_null($content)) {
             return $this->getDataContent();
         }
 
         $this->setDataContent($content);
+        return $this;
+    }
+
+    public function meta($meta = null) {
+        if (is_null($meta)) {
+            return $this->getMetaContent();
+        }
+        $this->setMetaContent($meta);
         return $this;
     }
 

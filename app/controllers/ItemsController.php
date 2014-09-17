@@ -1,14 +1,22 @@
 <?php
 
+use Laracasts\Commander\CommanderTrait;
+use Sailr\Item\PostNewItemCommand;
+
 class ItemsController extends BaseController
 {
+    use CommanderTrait;
 
     /**
      * @var $validator \Sailr\Validators\ItemsValidator
      */
     protected $validator;
-    public function ____construct(\Sailr\Validators\ItemsValidator $validator) {
+    protected $commandBus;
+
+    public function __construct(\Sailr\Validators\ItemsValidator $validator, \Laracasts\Commander\CommandBus $commandBus) {
         $this->validator = $validator;
+        $this->commandBus = $commandBus;
+
     }
     /**
      * Display a listing of the resource.
@@ -44,36 +52,8 @@ class ItemsController extends BaseController
 
     public function store()
     {
-        $u = Auth::user();
-
-        if ($u->canPerformActionOnPlan('product.create') != true) {
-            $upgradeURL = URL::action('choose-plan');
-            $message = "Please upgrade your plan to add more products <a href='$upgradeURL' class='btn btn-md btn-turq'>Upgrade</a>";
-            return Response::json(['message' => $message]);
-        }
-
-
-        $input = Input::all();
-
-
-        $v = $this->validator->validate($input, 'create');
-
-        $item = new Item();
-        $item->title = $input['title'];
-        $item->currency = $input['currency'];
-        $item->price = $input['price'];
-        $item->user_id = Auth::user()->id;
-        $item->initial_units = 1; //A safe bet ;)
-
-        $item->save();
-
-        $res = [
-            'message' => 'Success',
-            'id' => $item->id,
-            'redirect_url' => URL::action('ItemsController@edit', $item->id)
-        ];
-
-        return Response::json($res, 201);
+        $command = new PostNewItemCommand(Input::get('title'), Input::get('currency'), Input::get('price'), Auth::user()->getAuthIdentifier());
+        return $this->commandBus->execute($command);
 
     }
 

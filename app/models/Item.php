@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Sailr\Api\Transformer\Transformable;
 
-class Item extends Eloquent
+class Item extends Eloquent implements Transformable
 {
     use SoftDeletingTrait;
 
@@ -46,5 +47,9 @@ class Item extends Eloquent
 
     public function scopeOrWhereLike($query, $column, $value) {
         return $query->orWhere($column, 'LIKE', '%' . $value . '%');
+    }
+
+    public function transform() {
+        return new \Sailr\Item\ItemTransformer($this);
     }
 }

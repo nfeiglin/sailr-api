@@ -1,4 +1,4 @@
-<?php
+<?php namespace Sailr\Api\Support;
 /**
  * Created by PhpStorm.
  * User: nathan

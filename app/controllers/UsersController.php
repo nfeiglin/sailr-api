@@ -4,7 +4,7 @@ class UsersController extends \BaseController
 {
     protected $repository;
 
-    public function __construct(\Sailr\Repository\UsersRepository $repository) {
+    public function __construct(Sailr\Repository\UsersRepository $repository) {
         $this->repository = $repository;
     }
 
