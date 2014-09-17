@@ -6,7 +6,7 @@ namespace Sailr\Validators;
 use Illuminate\Support\ServiceProvider;
 use Sailr\Validators\Exceptions\ValidatorException;
 use Sailr\Api\Responses\ApiResponse;
-
+use Sailr\Api\Support\ErrorCollection;
 class ValidatorsServiceProvider extends ServiceProvider {
 
     /**
@@ -23,7 +23,9 @@ class ValidatorsServiceProvider extends ServiceProvider {
         $this->app->error(function(ValidatorException $validatorException){
             $errors = $validatorException->getValidator()->errors();
             //Now, lets tell the user
-           return ApiResponse::make()->validationErrorResponse(new \ErrorCollection($errors->first(), $errors->toArray()));
+
+            $errorCollection = new ErrorCollection($errors->first(), $errors->toArray());
+           return ApiResponse::make()->validationErrorResponse($errorCollection);
         });
 
     }

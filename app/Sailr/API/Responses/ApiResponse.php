@@ -71,9 +71,14 @@ class ApiResponse {
 
     public function validationErrorResponse(ErrorCollection $errorCollection, $statusCode = 400) {
 
+
         $meta = $this->getMetaContent();
-        $meta['error']['message'] = $errorCollection->getMessage();
-        $meta['error']['errors'] = $errorCollection->getErrors();
+
+        $meta['error'] = new Collection([
+            'message' => $errorCollection->getMessage(),
+            'errors' => $errorCollection->getErrors()
+
+        ]);
 
         $this->setMetaContent($meta);
 
