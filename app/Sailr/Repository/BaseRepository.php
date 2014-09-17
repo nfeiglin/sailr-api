@@ -7,8 +7,9 @@
  */
 
 namespace Sailr\Repository;
-
+use Laracasts\Commander\Events\EventGenerator;
 class BaseRepository {
+    use EventGenerator;
 
     /**
      * Class BaseRepository
