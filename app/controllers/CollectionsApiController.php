@@ -4,6 +4,15 @@ class CollectionsApiController extends \BaseController
 {
 
     /**
+     * @var $validator \Sailr\Validators\CollectionsValidator
+     */
+    protected $validator;
+
+    public function ____construct(\Sailr\Validators\CollectionsValidator $validator) {
+        $this->validator = $validator;
+    }
+
+    /**
      * Display a listing of the resource.
      * GET /collections
      * @param string $username
@@ -108,7 +117,7 @@ class CollectionsApiController extends \BaseController
         $item = Item::findOrFail(Input::get('item_id'), ['id', 'user_id', 'public']);
 
         $input = Input::all();
-        $validator = \Sailr\Validators\CollectionsValidator::make();
+        $validator = $this->validator;
 
         $result = $validator->validate($input, 'update');
         if (!$result) {

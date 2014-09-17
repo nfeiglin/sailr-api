@@ -4,6 +4,13 @@ class ItemsController extends BaseController
 {
 
     /**
+     * @var $validator \Sailr\Validators\ItemsValidator
+     */
+    protected $validator;
+    public function ____construct(\Sailr\Validators\ItemsValidator $validator) {
+        $this->validator = $validator;
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return Response
@@ -46,22 +53,10 @@ class ItemsController extends BaseController
         }
 
 
-        $input = Input::json()->all();
-
-        $rules = [
-            'title' => 'required|max:255',
-            'currency' => 'required|currency',
-            'price' => 'required|numeric|max:999999'
-        ];
+        $input = Input::all();
 
 
-        $v = Validator::make($input, $rules);
-
-        if ($v->fails()) {
-
-            //Kill it!
-            return Response::json($v->messages(), 400);
-        }
+        $v = $this->validator->validate($input, 'create');
 
         $item = new Item();
         $item->title = $input['title'];
@@ -115,7 +110,7 @@ class ItemsController extends BaseController
 
         $input  = array_filter($input);
 
-        $v = Validator::make($input, Item::$updateRules);
+        $v = $this->validator->validate($input, 'update');
 
         if($v->fails()) {
             $res = ['errors' => $v->errors()];
@@ -161,7 +156,7 @@ class ItemsController extends BaseController
                 return Response::json($res, 400);
             }
 
-            $v = Validator::make($item->toArray(), Item::$publishRules);
+            $v = $this->validator->validate($item->toArray(), 'publish');
 
             if ($v->fails()) {
                 $res = ['errors' => $v->errors()->first()];

@@ -30,24 +30,6 @@ class Item extends Eloquent
         return $this->belongsToMany('Collection')->withTimestamps();
     }
 
-    public static $updateRules = [
-        'title' => ['sometimes', 'max:255'],
-        'price' => ['sometimes', 'min:0', 'max:999999', 'numeric'],
-        'ship_price' => ['sometimes', 'min:0', 'max:999999', 'numeric'],
-        'currency' => ['sometimes', 'currency'],
-        'ships_to' => ['sometimes', 'countryCode'],
-
-    ];
-
-    public static $publishRules = [
-        'title' => ['required', 'max:255'],
-        'price' => ['required', 'min:0', 'max:999999', 'numeric'],
-        'ship_price' => ['required', 'min:0', 'max:999999', 'numeric'],
-        'currency' => ['required', 'currency'],
-        'ships_to' => ['required', 'countryCode'],
-
-    ];
-
     public function getCommentsAttribute() {
         $comments = Comment::where('item_id', '=', $this->id);
 
