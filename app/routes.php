@@ -31,14 +31,15 @@ Event::listen('illuminate.query', function($sql, $bindings, $time){
 });
 */
 
-
+/*
 Route::bind('user', function($value, $route)
 {
-    $repo = new \Sailr\Repository\UsersRepository(new \User);
+    $repo = new Sailr\Repository\UsersRepository(new \User);
     $repo->make(['ProfileImg']);
 
     return $repo->getFirstOrFailBy('id', $value);
 });
+*/
 
 Route::get('/', function(){
     return Response::json('hhhh');
@@ -49,14 +50,13 @@ Route::get('users/{user}', 'UsersController@show');
 
 Route::get('/s/{query}', 'SearchesController@show');
 
-Route::group(['before' => 'csrf'], function () {
     Route::get('/{username}', 'UsersController@show');
     Route::get('{username}/following', 'UsersController@following');
     Route::get('{username}/followers', 'UsersController@followers');
 
     Route::resource('purchase', 'BuyController', ['only' => ['store', 'show']]);
 
-    Route::resource('products', 'ItemsController', ['only' => ['store', 'show', 'edit', 'update']]);
+    Route::resource('items', 'ItemsController', ['only' => ['store', 'show', 'edit', 'update']]);
 
     Route::group(['before' => 'guest'], function () {
         Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
@@ -134,8 +134,6 @@ Route::group(['before' => 'csrf'], function () {
        });
     });
 
-
-});
 
 
 
