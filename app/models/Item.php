@@ -50,6 +50,7 @@ class Item extends Eloquent implements Transformable
     }
 
     public function transform() {
-        return new \Sailr\Item\ItemTransformer($this);
+        $transformer = new \Sailr\Item\ItemTransformer($this);
+        return $transformer->transform();
     }
 }

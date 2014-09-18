@@ -10,16 +10,21 @@ namespace Sailr\Item;
 
 
 use Illuminate\Support\Collection;
-use Sailr\Api\Transformer\Transformer;
+use Carbon\Carbon;
+use DateTime;
 
 class ItemTransformer {
 
+    /**
+     * @var Collection
+     */
+    public $model;
+
     public function __construct($model) {
-        return $this->transform($model);
+        $this->model = $model;
     }
 
-    public function transform(Collection $model) {
-        //Leaving this here for future implementation
-        return $model;
+    public function transform() {
+        return $this->model;
     }
 } 
