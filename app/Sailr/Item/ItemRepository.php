@@ -10,6 +10,7 @@ namespace Sailr\Item;
 
 
 use Laracasts\Commander\Events\DispatchableTrait;
+use Sailr\Item\Events\ItemWasViewed;
 use Sailr\Repository\BaseRepository;
 use Laracasts\Commander\Events\EventGenerator;
 use Sailr\Item\Events\ItemWasAdded;
@@ -34,5 +35,25 @@ class ItemRepository extends BaseRepository {
         $this->raise(new ItemWasAdded($this->model));
 
         return $this->model;
+    }
+
+
+    public function findOneWithPhotosAndUser($id) {
+       $item = $this->model->with(array(
+            'Photos' => function ($y) {
+                $y->where('type', '=', 'full_res');
+                $y->select(['item_id', 'set_id', 'type', 'url']);
+            },
+            'User' => function ($x) {
+                $x->with(['ProfileImg' => function($p){
+                    $p->where('type', 'medium');
+                }]);
+                $x->select(['id', 'name', 'username']);
+            },
+        ))->where('id', '=', $id)->firstOrFail();
+
+        $this->raise(new ItemWasViewed($item));
+
+        return $item;
     }
 } 
