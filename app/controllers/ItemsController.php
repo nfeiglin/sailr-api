@@ -11,6 +11,10 @@ class ItemsController extends BaseController
      * @var $validator \Sailr\Validators\ItemsValidator
      */
     protected $validator;
+
+    /**
+     * @var \Laracasts\Commander\CommandBus
+     */
     protected $commandBus;
 
     public function __construct(\Sailr\Validators\ItemsValidator $validator, \Laracasts\Commander\CommandBus $commandBus) {
@@ -166,31 +170,7 @@ class ItemsController extends BaseController
      */
     public function show($id)
     {
-        /*
-         * Find the item listing from the DB
-         */
-        $item = Item::with(array(
-            'Photos' => function ($y) {
-                $y->select(['item_id', 'type', 'url']);
-            },
-            'User' => function ($x) {
-                $x->with('ProfileImg');
-                $x->select(['id', 'name', 'username']);
-            },
-        ))->where('id', '=', $id)->firstOrFail();
-
-        /*
-         * Generate and output the JSON response
-         */
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200
-            ),
-
-            'data' => $item->toArray()
-        );
-
-        return Response::json($res);
+       return $this->commandBus->execute(new \Sailr\Item\GetSingleItemCommand($id));
     }
 
 

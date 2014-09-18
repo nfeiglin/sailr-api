@@ -1,28 +1,22 @@
 <?php
 
+use Sailr\Validators\PhotosValidator;
+use Sailr\Api\Responses\Responder;
+
 class PhotosController extends \BaseController
 {
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @var PhotosValidator
+     * @var Responder
      */
-    public function index()
-    {
-        //
-    }
+    protected $photosValidator;
+    protected $responder;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
+    public function __construct(PhotosValidator $validator, Responder $responder) {
+        $this->photosValidator = $validator;
+        $this->responder = $responder;
     }
-
     /**
      * Store a newly created resource in storage.
      * @params int $iteminteger the Item ID
@@ -34,7 +28,6 @@ class PhotosController extends \BaseController
         $filePostedKeyName = 'file';
 
         $input = Input::json()->all();
-        $headers = Request::header();
 
         if (!is_array($input)) {
             $input = Input::all();
@@ -42,11 +35,10 @@ class PhotosController extends \BaseController
         $item = Item::where('user_id', '=', Auth::user()->id)->where('id', '=', $item_id)->firstOrFail(['id', 'title', 'user_id']);
         $files = Input::file($filePostedKeyName);
 
-        $v = Validator::make(['photo' => $files], ['photo' => 'image|max:7168']); //7MB
-        if ($v->fails()) {
-            return Response::json('Your file is too large.', 400);
+        $validationData = ['photo' => $files];
+        $this->photosValidator->validate($validationData, 'create');
 
-        }
+
         $filesArray = $files;
 
         if (!is_array($files)) {
@@ -58,45 +50,17 @@ class PhotosController extends \BaseController
 
         if($p) {
             $setID = Photo::$setIDs[0];
-            $thumbailURL = Photo::$thumbURLs[0];
+            $thumbnailURL = Photo::$thumbURLs[0];
 
-            $res = ['set_id' => $setID, 'url' => $thumbailURL];
-            return Response::json($res, 201);
+
+            $photo = new Photo();
+            $photo['set_id'] = $setID;
+            $photo['url'] = $thumbnailURL;
+
+
+            return $this->responder->createdModelResponse($photo);
         }
-        return Response::json('There was an error uploading the photo', 400);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        //
+        return $this->responder->errorMessageResponse(Lang::get('photo.error-upload'));
     }
 
     /**
@@ -123,12 +87,9 @@ class PhotosController extends \BaseController
         }
 
         if ($itemChanged) {
-            return Response::json(['item' => $item,
-                'number_of_photos' => $numberOfPhotos,
-                'message' => 'Product unpublished due to no photos. Please add a photo and republish'], 200
-            );
+            return $this->responder->errorMessageResponse(Lang::get('photo.no-photos'));
         } else {
-            return Response::make(null,204);
+            return $this->responder->noContentSuccess();
         }
 
 

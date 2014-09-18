@@ -2,6 +2,19 @@
 
 class RelationshipsController extends \BaseController
 {
+    /**
+     * @var \Sailr\Api\Responses\Responder
+     */
+
+    protected $responder;
+
+    /**
+     * @param \Sailr\Api\Responses\Responder $responder
+     */
+
+    public function __construct(\Sailr\Api\Responses\Responder $responder) {
+        $this->responder = $responder;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -17,34 +30,16 @@ class RelationshipsController extends \BaseController
         } else if (array_key_exists('user_id', $input)) {
             $followUser = User::where('id', '=', $input['user_id'])->firstOrFail(array('id', 'name', 'username'));
         } else {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Correct identification for user to follow was not provided'
-                )
-            );
+           return $this->responder->errorMessageResponse(Lang::get('relationship.insufficient'));
 
-            if (Request::ajax()) {
-                return Response::json($res, 400);
-            }
-
-            return Redirect::back()->with('fail', $res['meta']['message']);
         }
 
         $doesExist = DB::table('relationships')->where('user_id', '=', $user->id)->where('follows_user_id', '=', $followUser->id)->count();
 
         if ($doesExist | $followUser->id == $user->id) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 403,
-                    'message' => 'You already follow ' . $followUser->username
-                )
-            );
-            if (Request::ajax()) {
-                return Response::json($res, 403);
-            }
 
-            return Redirect::back()->with('fail', $res['meta']['message']);
+            $message = str_replace('{username}', $user->username, Lang::get('relationship.already-follow'));
+            return $this->responder->errorMessageResponse($message);
         }
 
         $relationship = new Relationship();
@@ -54,19 +49,7 @@ class RelationshipsController extends \BaseController
         $relationship->save();
         Event::fire('relationship.create', $relationship);
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 201,
-                'message' => 'Successfully followed ' . $followUser->username
-            )
-        );
-
-        if (Request::ajax()) {
-            return Response::json($res, 201);
-        }
-
-        return Redirect::back()->with('success', $res['meta']['message']);
-
+        return $this->responder->noContentSuccess();
     }
 
     /**
@@ -91,50 +74,18 @@ class RelationshipsController extends \BaseController
         } else if (array_key_exists('user_id', $input)) {
             $followUser = User::where('id', '=', $input['user_id'])->firstOrFail(array('id', 'name', 'username'));
         } else {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Correct identification for user to unfollow was not provided'
-                )
-            );
-
-            if (Request::ajax()) {
-                return Response::json($res, 400);
-            }
-
-            return Redirect::back()->with('fail', $res['meta']['message']);
+            return $this->responder->errorMessageResponse(Lang::get('relationship.insufficient'));
         }
 
         $doesExist = DB::table('relationships')->where('user_id', '=', $user->id)->where('follows_user_id', '=', $followUser->id)->count();
 
         if (!$doesExist) {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 403,
-                    'message' => "You don't follow" . $followUser->username . " so you can't unfollow them"
-                )
-            );
-            if (Request::ajax()) {
-                return Response::json($res, 403);
-            }
-
-            return Redirect::back()->with('fail', $res['meta']['message']);
+            return $this->responder->errorMessageResponse(Lang::get('relationship.cant-unfollow'));
         }
 
         $relationship = Relationship::where('user_id', '=', $user->id)->where('follows_user_id', '=', $followUser->id);
         $relationship->delete();
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-                'message' => 'Successfully unfollowed ' . $followUser->username
-            )
-        );
-
-        if (Request::ajax()) {
-            return Response::json($res, 200);
-        }
-
-        return Redirect::back()->with('success', $res['meta']['message']);
+        return $this->responder->noContentSuccess();
     }
 
     /**
@@ -151,40 +102,16 @@ class RelationshipsController extends \BaseController
         } else if (array_key_exists('user_id', $input)) {
             $checkUser = User::where('id', '=', $input['user_id'])->firstOrFail(array('id', 'name', 'username'));
         } else {
-            $res = array(
-                'meta' => array(
-                    'statuscode' => 400,
-                    'message' => 'Correct identification for relationship to show was not provided'
-                )
-            );
-
-            return Response::json($res, 400);
+            return $this->responder->errorMessageResponse(Lang::get('relationship.insufficient'));
         }
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-            ),
+        $relationship = new Relationship();
+        $relationship['follows_you'] = RelationshipHelpers::follows_you($checkUser);
+        $relationship['you_follow'] = RelationshipHelpers::you_follow($checkUser);
 
-            'data' => array(
-                'follows_you' => RelationshipHelpers::follows_you($checkUser),
-                'you_follow' => RelationshipHelpers::you_follow($checkUser)
-            )
-        );
-
-        return Response::json($res, 200);
+        return $this->responder->showSingleModel($relationship);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        //
-    }
 
 
 }

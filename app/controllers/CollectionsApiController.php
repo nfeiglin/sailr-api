@@ -1,5 +1,7 @@
 <?php
 
+use Sailr\Validators\CollectionsValidator;
+use Sailr\Api\Responses\Responder;
 class CollectionsApiController extends \BaseController
 {
 
@@ -7,8 +9,12 @@ class CollectionsApiController extends \BaseController
      * @var $validator \Sailr\Validators\CollectionsValidator
      */
     protected $validator;
+    /**
+     * @var Responder
+     */
+    protected $responder;
 
-    public function ____construct(\Sailr\Validators\CollectionsValidator $validator) {
+    public function ____construct(\Sailr\Validators\CollectionsValidator $validator, Responder $responder) {
         $this->validator = $validator;
     }
 
@@ -131,9 +137,6 @@ class CollectionsApiController extends \BaseController
         if ($createNewCollection) {
 
             $result = $validator->validate($input, 'create');
-            if (!$result) {
-                return Response::json(['message' => $validator->getErrorMessages()->first()], 400);
-            }
 
             $collection = new Collection;
             $collection->title = $input['collection_title'];
@@ -143,27 +146,24 @@ class CollectionsApiController extends \BaseController
 
         else {
             $result = $validator->validate($input, 'update');
-            if (!$result) {
-                return Response::json(['message' => $validator->getErrorMessages()->first()], 400);
-            }
 
             try {
                 $collection = Collection::findOrFail(Input::get('collection_id'));
             }
 
             catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                return Response::json(['message' => "Sorry, we couldn't find a collection to add the product to"], 404);
+                return $this->responder->notFoundResponse();
             }
         }
 
         if ($this->doesItemExistInCollection($item->id, $collection->id)) {
-            $res = Response::json(['message' => 'You already have this product in your collection'], 400);
+            return $this->responder->errorMessageResponse(Lang::get('collection.already-in-collection'));
         } else {
 
             $collection->items()->save($item);
             $this->updateCollectionPreviewImage($collection, $item);
 
-            $res = Response::json($collection->toArray(), 201);
+            return $this->responder->createdModelResponse($collection);
         }
 
         return $res;
@@ -215,16 +215,16 @@ class CollectionsApiController extends \BaseController
     {
         /* TODO: Test this... it is faulty */
 
-        $user = User::findOrFail(12); //Auth::user();
+        $user = Auth::user();
 
         $collection = Collection::findOrFail($id);
 
         if (!$this->canAdminCollection($collection, $user)) {
-            return Response::json(['message' => 'You do not have access to change this collection'], 403);
+            return $this->responder->unauthorisedResponse(Lang::get('collection.un-auth'));
         }
 
         $deleted = $collection->delete();
-        return Response::json(['message' => 'Collection successfully deleted'], 200);
+        return $this->responder->noContentSuccess();
 
 
     }
@@ -241,26 +241,23 @@ class CollectionsApiController extends \BaseController
     {
         /* TODO: Test this... it is faulty */
 
-        $user = User::findOrFail(12); //Auth::user();
+        $user = Auth::user();
 
         $collection = Collection::findOrFail($collection_id);
 
         if (!$this->canAdminCollection($collection, $user)) {
-            return Response::json(['message' => 'You do not have admin privileges on this collection'], 403);
+            return $this->responder->unauthorisedResponse(Lang::get('collection.un-auth'));
         }
 
         $c = $collection->items()->where('item_id', $item_id)->detach();
         if ($c) {
-            $res = ['message' => 'Removed from collection successfully'];
-            $code = 200;
+            return $this->responder->noContentSuccess();
         }
 
         else {
-            $res = ['message' => 'Item not removed from collection. It may have already been removed, or never added'];
-            $code = 400;
+            return $this->responder->errorMessageResponse(Lang::get('collection.item-not-removed'));
         }
 
-        return Response::json($res, $code);
 
 
     }
@@ -268,7 +265,7 @@ class CollectionsApiController extends \BaseController
     public function canAdminCollection(Collection $collection, User $user) {
 
         if (!isset($collection->user_id)) {
-            throw new Exception('The collection object is missing the user_id column');
+            throw new Exception('The collection object is missing the user_id field');
         }
         if ($collection->user_id == $user->getAuthIdentifier()) {
             return true;

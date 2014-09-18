@@ -2,6 +2,20 @@
 
 class NotificationsController extends \BaseController {
 
+    /**
+     * @var \Sailr\Api\Responses\Responder
+     */
+
+    protected $responder;
+
+    /**
+     * @param \Sailr\Api\Responses\Responder $responder
+     */
+
+    public function __construct(\Sailr\Api\Responses\Responder $responder) {
+        $this->responder = $responder;
+    }
+
 	/**
 	 * Display a listing of the resource.
 	 * GET /notifications
@@ -13,9 +27,7 @@ class NotificationsController extends \BaseController {
 	    $notifications = Notification::where('user_id', '=', Auth::user()->id)->orderBy('created_at', 'dsc')->get(['_id', 'short_text', 'data']);
         Event::fire('notification.index', Auth::user()->id);
 
-        return View::make('notifications.index')
-            ->with('title', 'Notifications')
-            ->with('notifications', $notifications->toJSON());
+        return $this->responder->showSingleModel($notifications);
 
 	}
 
@@ -49,9 +61,7 @@ class NotificationsController extends \BaseController {
        // $notification->viewed = 1;
         //$notification->save();
 
-        return View::make('notifications.show')
-            ->with('title', $notification->short_text)
-            ->with('notifications', $notification->toJSON());
+        return $this->responder->showSingleModel($notification);
 	}
 
 

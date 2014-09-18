@@ -2,6 +2,19 @@
 
 class SearchesController extends \BaseController {
 
+    /**
+     * @var \Sailr\Api\Responses\Responder
+     */
+
+    protected $responder;
+
+    /**
+     * @param \Sailr\Api\Responses\Responder $responder
+     */
+
+    public function __construct(\Sailr\Api\Responses\Responder $responder) {
+        $this->responder = $responder;
+    }
 
 	/**
 	 * Display the specified resource.
@@ -49,11 +62,8 @@ class SearchesController extends \BaseController {
            $index++;
        }
 
-        $res = json_encode(['users' => $userResults, 'items' => $itemResults]);
-
-       return View::make('searches.show')
-           ->with('results', $res)->
-           with('title', 'Search / ' . htmlentities($initialQuery));
+        $results = new \Sailr\Search\Results($itemResults, $userResults);
+       return $this->responder->showSingleModel($results);
 
 
 	}

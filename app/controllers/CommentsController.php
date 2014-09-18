@@ -1,15 +1,20 @@
 <?php
 
 use Sailr\Validators\CommentsValidator;
+use Sailr\Api\Responses\Responder;
+
 class CommentsController extends \BaseController
 {
     /**
      * @var CommentsValidator
+     * @var Responder
      */
     protected $commentsValidator;
+    protected $responder;
 
-    public function __construct(CommentsValidator $commentsValidator) {
-
+    public function __construct(CommentsValidator $commentsValidator, Responder $responder) {
+        $this->commentsValidator = $commentsValidator;
+        $this->responder = $responder;
     }
     /**
      * Store a newly created resource in storage.
@@ -23,12 +28,10 @@ class CommentsController extends \BaseController
         $item = Item::where('id', '=', Input::get('item_id'))->firstOrFail(['id', 'public']);
 
         if ($item->public != 1) {
-            //throw new \Sailr\Emporium\Merchant\Exceptions\ProductNotPublicException;
-            return Response::json([], 403);
+            return $this->responder->unauthorisedResponse("Can't comment on unpublished item");
         }
 
         $this->commentsValidator->validate($input, 'create');
-        //TODO: Check that throwing the validator exception in the validator class stops the app before it creates new record in DB
 
         $comment = Comment::create([
                 'user_id' => Auth::user()->id,
@@ -39,7 +42,7 @@ class CommentsController extends \BaseController
 
         Event::fire('comment.store', $comment);
 
-        return Response::json($comment->toArray(), 201);
+        return $this->responder->createdModelResponse($comment);
     }
 
     /**
@@ -50,26 +53,18 @@ class CommentsController extends \BaseController
      */
     public function show($id)
     {
-        $comment = Comment::findOrFail($id)->with('User');
-
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-            ),
-            'data' => $comment->toArray()
-        );
-        return Response::json($res, 200);
+        $comment = Comment::with('User')->where('id', $id)->firstOrFail();
+        return $this->responder->showSingleModel($comment);
     }
 
 
     /**
      * Display comments for the specified item.
      *
-     * @param string $username
-     * @param int $id
+     * @param int $item_id
      * @return Response
      */
-    public function item_comments($username, $id) {
+    public function item_comments($item_id) {
 
         $comments = Comment::where('item_id', '=', $id)->orderBy('created_at', 'dsc')->with([
             'User' => function($u) {
@@ -81,13 +76,7 @@ class CommentsController extends \BaseController
             },
         ])->get();
 
-        $res = array(
-            'meta' => array(
-                'statuscode' => 200,
-            ),
-            'data' => $comments->toArray()
-        );
-        return Response::json($res, 200);
+        return $this->responder->showSingleModel($comments);
     }
     /**
      * Remove the specified resource from storage.

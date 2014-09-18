@@ -1,11 +1,29 @@
 <?php
 
+use Sailr\Repository\UsersRepository;
+use Sailr\Validators\UsersValidator;
+use Sailr\Api\Responses\Responder;
 class UsersController extends \BaseController
 {
+    /**
+     * @var \Sailr\Repository\UsersRepository
+     */
     protected $repository;
+    /**
+     * @var \Sailr\Validators\UsersValidator
+     */
+    protected $usersValidator;
 
-    public function __construct(Sailr\Repository\UsersRepository $repository) {
+    /**
+     * @var Responder
+     */
+    protected $responder;
+
+    public function __construct(Sailr\Repository\UsersRepository $repository, \Sailr\Validators\UsersValidator $usersValidator, Responder $responder) {
         $this->repository = $repository;
+        $this->usersValidator = $usersValidator;
+        $this->responder = $responder;
+
     }
 
     /**
@@ -28,10 +46,7 @@ class UsersController extends \BaseController
         $input = Input::all();
         Input::flash();
 
-        $validator = Validator::make($input, User::$rules);
-        if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator);
-        }
+        $this->usersValidator->validate($input, 'create');
 
         $input['password'] = Hash::make($input['password']);
 
@@ -41,7 +56,8 @@ class UsersController extends \BaseController
             $input['bio'] = e($input['bio']);
         }
         $user = User::create($input);
-        $user_id = $user->id;
+        $user_id = $user->getAuthIdentifier();
+
         Queue::push(function($job) use ($user_id){
             $user = User::find($user_id);
             ProfileImg::setDefaultProfileImages($user);
@@ -60,8 +76,7 @@ class UsersController extends \BaseController
 
         Event::fire('user.create', $user);
 
-        //Take them to the choose plan page!
-        return Redirect::action('choose-plan')->with('message', "Signed up! Welcome to Sailr <script>ga('send', 'event', 'user', 'create', 'signed up', 1);</script>");
+        return $this->responder->createdModelResponse($user);
     }
 
     /**
@@ -259,9 +274,40 @@ class UsersController extends \BaseController
         //return Redirect::route('users.index');
     }
 
-    public function update($id)
+    public function update()
     {
+        $forgetKeys = [];
+        $input = Input::all();
 
+        $user = User::findOrFail(Auth::user()->id);
+
+        if ($input['username'] == $user->username) {
+            $forgetKeys[0] = 'username';
+        }
+
+        if ($input['email'] == $user->email) {
+            $forgetKeys[1] = 'email';
+        }
+
+        $newInput = Input::except($forgetKeys);
+
+        $this->usersValidator->validate($newInput, 'update');
+
+        if (array_key_exists('bio', $input)) {
+            $input['bio'] = e($input['bio']);
+
+        }
+
+        if (array_key_exists('name', $input)) {
+            $input['name'] = e($input['name']);
+
+        }
+
+        $newInput = array_filter($newInput);
+        $user->fill($newInput);
+        $user->save();
+
+        return $this->responder->showSingleModel($user);
     }
 
     /*
@@ -355,5 +401,8 @@ class UsersController extends \BaseController
             ->with('title', 'Home')
             ->with('paginator', $paginator);
     }
+
+
+
 
 }
