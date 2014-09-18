@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Sailr\Observers\CommentObserver;
 
 class Comment extends \Eloquent {
     use SoftDeletingTrait;
 
     public static function boot() {
         parent::boot();
-        Comment::observe(new \Sailr\Observers\CommentObserver);
+        Comment::observe(new CommentObserver);
     }
 
 	protected $fillable = ['user_id', 'item_id', 'comment'];
