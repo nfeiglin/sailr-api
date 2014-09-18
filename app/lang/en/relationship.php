@@ -1,7 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nathan
- * Date: 18/09/2014
- * Time: 9:01 PM
- */ 
+return [
+    'already-follow'  => 'You already follow {username}',
+    'insufficient' => 'Correct identification for user to follow was not provided',
+    'cant-unfollow' => "You don't follow the user, so you can't unfollow them"
+];
