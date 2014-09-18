@@ -35,24 +35,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Billa
     public $guarded = array('id', 'created_at', 'updated_at', 'terms_of_service', 'deleted_at', 'remember_token', 'stripe_id', 'stripe_subscription', 'last4', 'last_four', 'trial_ends_at', 'likes_collection_id', 'subscription_ends_at', 'password');
     //protected $appends = ['counts'];
 
-    public static $rules = array(
-        'terms_of_service' => 'accepted',
-        'name' => 'required|min:2|max:99',
-        'email' => 'required|email|max:99|unique:users,email',
-        'username' => 'required|alpha_dash|max:99|unique:users,username',
-        'password' => 'required|min:6',
-        'bio' => 'sometimes|max:240'
-    );
-
-    public static $updateRules = array(
-        'name' => 'sometimes|min:2|max:99',
-        'email' => 'sometimes|email|max:99|unique:users,email',
-        'username' => 'sometimes|alpha_dash|max:99|unique:users,username',
-        'password' => 'sometimes|min:6',
-        'bio' => 'sometimes|max:240'
-
-    );
-
     protected static $stripePublishableKey = '';
     public static function setStripePublishableKey($key) {
         self::$stripePublishableKey = $key;
