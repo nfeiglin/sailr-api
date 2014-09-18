@@ -42,19 +42,16 @@ Route::bind('user', function($value, $route)
 */
 
 Route::get('/', function(){
-    return Response::json('hhhh');
+    return Response::json('API Base URL');
 });
 
 Route::resource('users', 'UsersController');
 Route::get('users/{user}', 'UsersController@show');
 
 Route::get('/s/{query}', 'SearchesController@show');
-
-    Route::get('/{username}', 'UsersController@show');
     Route::get('{username}/following', 'UsersController@following');
     Route::get('{username}/followers', 'UsersController@followers');
 
-    Route::resource('purchase', 'BuyController', ['only' => ['store', 'show']]);
 
     Route::resource('items', 'ItemsController', ['only' => ['store', 'show', 'edit', 'update']]);
 
@@ -82,23 +79,6 @@ Route::get('/s/{query}', 'SearchesController@show');
         Route::delete('photo/{item_id}', 'PhotosController@destroy');
         Route::put('photo/{item_id}', 'PhotosController@destroy');
 
-        Route::post('buy/{id}', 'BuyController@store');
-        Route::any('buy/{id}/cancel', 'BuyController@cancel');
-        Route::get('buy/{id}/confirm', 'BuyController@showConfirm');
-        Route::post('buy/{id}/confirm', 'BuyController@doConfirm');
-
-        Route::group(['prefix' => 'settings'], function() {
-            Route::get('account', 'SettingsController@getAccount');
-            Route::put('account', 'SettingsController@putAccount');
-            Route::resource('subscription', 'SubscriptionsController', ['only' => ['index', 'destroy', 'store']]);
-            Route::post('subscription/delete', 'SubscriptionsController@destroy');
-
-            Route::group(['before' => ['subscribed']], function() {
-                Route::resource('billing', 'BillingsController');
-                Route::put('billing', 'BillingsController@update');
-            });
-
-        });
 
         Route::resource('relationship', 'RelationshipsController');
 
@@ -109,13 +89,12 @@ Route::get('/s/{query}', 'SearchesController@show');
 
         Route::put('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
         Route::post('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
-        Route::resource('me/notifications', 'NotificationsController');
-        Route::get('me/notification/{id}', 'NotificationsController@show');
+        Route::resource('notifications', 'NotificationsController');
 
-        Route::post('api/collections/favourite', 'CollectionsApiController@favourite');
-        Route::post('api/collections/store', 'CollectionsApiController@store');
-        Route::delete('api/collections/destroy/{id}', 'CollectionsApiController@destroyCollection');
-        Route::delete('api/collections/destroy/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
+        Route::post('collections/favourite', 'CollectionsApiController@favourite');
+        Route::post('collections/store', 'CollectionsApiController@store');
+        Route::delete('collections/destroy/{id}', 'CollectionsApiController@destroyCollection');
+        Route::delete('collections/destroy/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
     });
 
 
