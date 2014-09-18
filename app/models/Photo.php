@@ -84,7 +84,7 @@ class Photo extends \Eloquent
                 ]);
 
 
-                if ($type == 'thumbnail') {
+                if ($type == 'full_res') {
                     Photo::$thumbURLs[$i] = $savedURL;
                     Photo::$setIDs[$i] = $set_id;
                 }
