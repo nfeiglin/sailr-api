@@ -23,6 +23,7 @@
 			"app/commands",
 			"app/controllers",
 			"app/models",
+            "app/Sailr/Observer",
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php"
