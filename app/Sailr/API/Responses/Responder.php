@@ -10,6 +10,7 @@ namespace Sailr\Api\Responses;
 
 use Illuminate\Support\Collection;
 use Sailr\Api\Responses\ApiResponse;
+use Sailr\Api\Transformer\Transformable;
 use Sailr\ApiFeed\FeedCollection;
 use ReflectionClass;
 
@@ -27,7 +28,44 @@ class Responder {
 
     public function createdModelResponse($model) {
 
-        if (is_null($model['object'])){
+        return $this->responder->singleObjectResponse($this->transform($model), 201);
+    }
+
+    public function showSingleModel($model) {
+
+        $model = $this->transform($model);
+
+
+       return $this->responder->singleObjectResponse($model);
+    }
+
+    public function feedResponse(FeedCollection $feedCollection, $paginator = []) {
+        $response = $this->responder->content($feedCollection);
+        $response->meta(new Collection(['pagination' => $paginator]));
+        return $response->respond();
+    }
+
+    public function errorMessageResponse($message = '') {
+        return $this->responder->respondWithErrorMessage($message, 400);
+    }
+
+    public function notFoundResponse($message = '') {
+        return $this->responder->respondWithErrorMessage($message, 404);
+    }
+
+    public function unauthorisedResponse($message = '') {
+        return $this->responder->respondWithErrorMessage($message, 403);
+    }
+
+    public function noContentSuccess(){
+        return $this->responder->respond(204);
+    }
+
+
+    protected function transform($model) {
+
+
+        if (!array_key_exists('object', $model)){
             $model['object'] = strtolower((new ReflectionClass($model))->getShortName());
         }
 
@@ -35,13 +73,7 @@ class Responder {
             $model = $model->transform();
         }
 
-        return $this->responder->singleObjectResponse($model, 201);
-    }
-
-    public function feedResponse(FeedCollection $feedCollection, $paginator = []) {
-        $response = $this->responder->content($feedCollection);
-        $response->meta(new Collection(['pagination' => $paginator]));
-        return $response->respond();
+        return $model;
     }
 
 } 

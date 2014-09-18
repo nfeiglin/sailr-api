@@ -65,6 +65,9 @@ class ApiResponse {
 
     public function respond($statusCode = 200) {
 
+        if ($statusCode === 204) {
+            return $this->JsonResponse->create(null, 204);
+        }
         ///dd($this->getMetaContent()->toArray());
 
         $this->responseBody['meta'] = $this->getMetaContent()->toArray();
@@ -76,6 +79,23 @@ class ApiResponse {
 
     public function validationErrorResponse(ErrorCollection $errorCollection, $statusCode = 400) {
 
+
+        $meta = $this->getMetaContent();
+
+        $meta['error'] = new Collection([
+            'message' => $errorCollection->getMessage(),
+            'errors' => $errorCollection->getErrors()
+
+        ]);
+
+        $this->setMetaContent($meta);
+
+        return $this->respond($statusCode);
+    }
+
+    public function respondWithErrorMessage($message, $statusCode = 400) {
+
+        $errorCollection = new ErrorCollection($message, []);
 
         $meta = $this->getMetaContent();
 
