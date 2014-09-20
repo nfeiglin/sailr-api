@@ -59,7 +59,7 @@ class FeedItemAction implements FeedItemActionInterface, ArrayableInterface {
         return [
             'code' => $this->getCode(),
             'title' => $this->getTitle(),
-            'time' => $this->getTime()->toISO8601String()
+            'time' => $this->getTime()->toDateTimeString()
         ];
     }
 } 
