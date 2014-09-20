@@ -48,12 +48,12 @@ Route::get('/', function(){
 Route::resource('users', 'UsersController');
 Route::get('users/{user}', 'UsersController@show');
 
-Route::get('/s/{query}', 'SearchesController@show');
-    Route::get('{username}/following', 'UsersController@following');
-    Route::get('{username}/followers', 'UsersController@followers');
+Route::get('/searches/{query}', 'SearchesController@show');
+Route::get('{username}/following', 'UsersController@following');
+Route::get('{username}/followers', 'UsersController@followers');
 
 
-    Route::resource('items', 'ItemsController', ['only' => ['store', 'show', 'edit', 'update']]);
+    Route::resource('items', 'ItemsController', ['only' => ['store', 'show', 'edit', 'update', 'index']]);
 
     Route::group(['before' => 'guest'], function () {
         Route::resource('session', 'SessionController', ['only' => ['create', 'store']]);
@@ -68,7 +68,7 @@ Route::get('/s/{query}', 'SearchesController@show');
     Route::resource('{username}/collections', 'CollectionsController');
     Route::get('{username}/collections', 'CollectionsController@index');
     Route::get('{username}/collections/{id}', 'CollectionsController@show');
-    Route::get('api/collections/{username}/all', 'CollectionsApiController@index');
+    Route::get('api/collections/{username}/all', 'CollectionsController@index');
 
 
 
@@ -85,16 +85,15 @@ Route::get('/s/{query}', 'SearchesController@show');
         Route::get('/{username}/product/{id}/comments', 'CommentsController@item_comments');
         Route::resource('comments', 'CommentsController', ['only' => ['create', 'store', 'show', 'destroy']]);
 
-        Route::get('dashboard/products', 'ItemsController@index');
 
         Route::put('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
         Route::post('products/{id}/toggle-visibility', 'ItemsController@toggleVisibility');
         Route::resource('notifications', 'NotificationsController');
 
-        Route::post('collections/favourite', 'CollectionsApiController@favourite');
-        Route::post('collections/store', 'CollectionsApiController@store');
-        Route::delete('collections/destroy/{id}', 'CollectionsApiController@destroyCollection');
-        Route::delete('collections/destroy/{collection_id}/item/{item_id}', 'CollectionsApiController@destroyCollectionItem');
+        Route::post('collections/favourite', 'CollectionsController@favourite');
+        Route::post('collections/store', 'CollectionsController@store');
+        Route::delete('collections/destroy/{id}', 'CollectionsController@destroyCollection');
+        Route::delete('collections/destroy/{collection_id}/item/{item_id}', 'CollectionsController@destroyCollectionItem');
     });
 
 

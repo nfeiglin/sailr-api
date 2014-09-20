@@ -2,7 +2,7 @@
 
 use Sailr\Validators\CollectionsValidator;
 use Sailr\Api\Responses\Responder;
-class CollectionsApiController extends \BaseController
+class CollectionsController extends \BaseController
 {
 
     /**
