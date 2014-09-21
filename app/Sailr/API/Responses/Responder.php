@@ -13,6 +13,7 @@ use Sailr\Api\Responses\ApiResponse;
 use Sailr\Api\Transformer\Transformable;
 use Sailr\ApiFeed\FeedCollection;
 use ReflectionClass;
+use Sailr\Paginator\SailrPaginator;
 
 class Responder {
 
@@ -40,9 +41,21 @@ class Responder {
     }
 
     public function feedResponse(FeedCollection $feedCollection, $paginator = []) {
-        $response = $this->responder->content($feedCollection);
-        $response->meta(new Collection(['pagination' => $paginator]));
-        return $response->respond();
+        return
+            $this->responder
+                ->content($feedCollection)
+                ->meta(new Collection(['pagination' => $paginator]))
+                ->respond();
+    }
+
+    public function paginatedResponse(SailrPaginator $paginator, $data, $meta = []) {
+        $meta = ['pagination' => $paginator->toArray()] + $meta;
+
+        return
+            $this->responder
+                ->content($this->transform($data))
+                ->meta(new Collection($meta))
+                ->respond();
     }
 
     public function errorMessageResponse($message = '') {
