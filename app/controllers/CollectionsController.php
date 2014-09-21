@@ -2,6 +2,8 @@
 
 use Sailr\Validators\CollectionsValidator;
 use Sailr\Api\Responses\Responder;
+use Sailr\Repository\UsersRepository;
+
 class CollectionsController extends \BaseController
 {
 
@@ -14,39 +16,22 @@ class CollectionsController extends \BaseController
      */
     protected $responder;
 
+
     public function ____construct(\Sailr\Validators\CollectionsValidator $validator, Responder $responder) {
         $this->validator = $validator;
+        $this->responder = $responder;
     }
 
     /**
      * Display a listing of the resource.
      * GET /collections
-     * @param string $username
+     * @param int $id
      * @return Response
      */
-    public function index($username)
+    public function index($id)
     {
-        try {
-
-            $user = User::where('username', $username)->firstOrFail(['id', 'name', 'username']);
-
-            $collections = $user->collection()->where('public', 1)->get(['title', 'id', 'user_id', 'created_at']);
-
-            if (count($collections) < 1) {
-                throw new \Illuminate\Database\Eloquent\ModelNotFoundException('no results returned for collections');
-            }
-
-            $results = [
-                'user' => $user->toArray(),
-                'collections' => $collections->toArray()
-            ];
-
-            return Response::json($results, 200);
-        }
-
-        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return Response::json(['error' => 'No collections found']);
-        }
+            $collections = Collection::where('user_id', $id)->where('public', 1)->get(['title', 'id', 'user_id', 'preview_image', 'created_at']);
+            return $this->responder->showSingleModel($collections);
     }
 
     public function doesItemExistInCollection($item_id, $collection_id)
@@ -60,7 +45,7 @@ class CollectionsController extends \BaseController
     }
 
     public function updateCollectionPreviewImage(Collection $collection, Item $item) {
-        $url = $item->photos()->where('type', 'full_res')->orderBy('created_at', 'dsc')->first(['url']);
+        $url = $item->photos()->where('type', 'full_res')->orderBy('created_at', 'DESC')->first(['url']);
 
         if (!isset($url)) {
             $url = ['url' => 'https://sailr.co/img/default-lg.jpg'];
@@ -78,7 +63,7 @@ class CollectionsController extends \BaseController
 
         $id = Input::get('item_id');
 
-        $user = User::findOrFail(12); //Auth::user()
+        $user = Auth::user();
         $item = Item::findOrFail($id, ['id', 'user_id', 'public']);
         
         if ($user->collection()->where('title', 'Likes')->count() < 1) {
@@ -119,7 +104,7 @@ class CollectionsController extends \BaseController
     public function store()
     {
 
-        $user = User::findOrFail(12); //Auth::user()
+        $user = Auth::user();
         $item = Item::findOrFail(Input::get('item_id'), ['id', 'user_id', 'public']);
 
         $input = Input::all();
@@ -166,7 +151,6 @@ class CollectionsController extends \BaseController
             return $this->responder->createdModelResponse($collection);
         }
 
-        return $res;
     }
 
     public function getCollection($id, $currentCollection = null) {
@@ -184,7 +168,7 @@ class CollectionsController extends \BaseController
         $response['followers'] = $collection->users()->count();
         $response['user'] = $collection->user()->firstOrFail(['id', 'name', 'username'])->toArray();
 
-        return Response::json($response);
+        return $this->responder->showSingleModel(new \Illuminate\Support\Collection($response));
     }
 
     public function getLikes($user_id) {
@@ -192,17 +176,6 @@ class CollectionsController extends \BaseController
         return $this->getCollection($c->id, $c);
     }
 
-    /**
-     * Update the specified resource in storage.
-     * PUT /collections/{id}
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
