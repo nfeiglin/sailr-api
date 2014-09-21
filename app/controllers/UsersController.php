@@ -3,6 +3,7 @@
 use Sailr\Repository\UsersRepository;
 use Sailr\Validators\UsersValidator;
 use Sailr\Api\Responses\Responder;
+use Sailr\Users\DTO\BasicRelationship;
 class UsersController extends \BaseController
 {
     /**
@@ -56,6 +57,7 @@ class UsersController extends \BaseController
             $input['bio'] = e($input['bio']);
         }
         $user = $this->repository->create($input);
+
         $user_id = $user->getAuthIdentifier();
 
         Queue::push(function($job) use ($user_id){
@@ -82,13 +84,26 @@ class UsersController extends \BaseController
     /**
      * Display the specified user.
      *
-     * @param  string $username
+     * @param  int $id
      * @return Response
      */
-    public function show($username)
+    public function show($id)
     {
 
-        $user = $this->repository->getFirstOrFailBy('username', $username, ['id', 'name', 'username', 'bio'], ['ProfileImg']);
+        $user = $this->repository->getFirstOrFailBy('id', $id, ['id', 'name', 'username', 'bio'], ['ProfileImg']);
+
+        $follow_you = '';
+        $you_follow = '';
+
+        if (Auth::check()) {
+            $follow_you = RelationshipHelpers::follows_you($user);
+            $you_follow = RelationshipHelpers::you_follow($user);
+        }
+        $no_of_followers = RelationshipHelpers::count_follows_user($user);
+        $no_of_following = RelationshipHelpers::count_user_following($user);
+
+        $user['relationship'] = (new BasicRelationship($no_of_followers, $no_of_following, $follow_you, $you_follow))->toArray();
+
         return $this->responder->showSingleModel($user);
 
     }
@@ -96,106 +111,65 @@ class UsersController extends \BaseController
     /**
      * Display the specified user's follower.
      *
-     * @param  string $username
+     * @param  int $id
      * @return Response
      */
-    public function followers($username)
+    public function followers($id)
     {
 
-        //How many results per page?
-        $resultsPerPage = 30;
+        $user = new User;
+        $user->id = $id;
 
-        $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
+        //TODO: Paginate
         $followers = RelationshipHelpers::get_follows_user($user)->toArray();
 
-        $userArray = $user->toArray();
-
-        $isSelf = false;
-        $follow_you = false;
-        $you_follow = false;
+        $follow_you = null;
+        $you_follow = null;
         if (Auth::check()) {
-            if (Auth::user()->username == $username) {
-                $isSelf = true;
-            }
 
             $follow_you = RelationshipHelpers::follows_you($user);
             $you_follow = RelationshipHelpers::you_follow($user);
         }
 
-
         $no_of_followers = RelationshipHelpers::count_follows_user($user);
         $no_of_following = RelationshipHelpers::count_user_following($user);
 
-        $mutual = false;
 
-        if ($follow_you && $you_follow) {
-            $mutual = true;
-        }
-        return View::make('users.followers')
-            ->with('title', $user['username'])
-            ->with('user', $userArray)
-            ->with('followers', $followers)
-            ->with('follows_you', $follow_you)
-            ->with('you_follow', $you_follow)
-            ->with('mutual', $mutual)
-            ->with('is_self', $isSelf)
-            ->with('no_of_followers', $no_of_followers)
-            ->with('no_of_following', $no_of_following)
-            ->with('page_type', 'Followers')
-            ;
+        $relationship = new BasicRelationship($no_of_followers, $no_of_following, $follow_you, $you_follow);
+
+        return $this->responder->showSingleModel(new \Illuminate\Support\Collection(['relationship' => $relationship, 'followers' => $followers]));
     }
 
 
     /**
      * Display the people that the specified user follows.
      *
-     * @param  string $username
+     * @param  int $id
      * @return Response
      */
-    public function following($username)
+    public function following($id)
     {
+        $user = new User;
+        $user->id = $id;
 
-        //How many results per page?
-        $resultsPerPage = 30;
+        //TODO: Paginate
+        $following = RelationshipHelpers::get_user_following($user)->toArray();
 
-        $user = User::where('username', '=', $username)->with('ProfileImg')->firstOrFail(array('id', 'name', 'username', 'bio'));
-        $followers = RelationshipHelpers::get_user_following($user)->toArray();
-
-        $userArray = $user->toArray();
-
-        $isSelf = false;
-        $follow_you = false;
-        $you_follow = false;
+        $follow_you = null;
+        $you_follow = null;
         if (Auth::check()) {
-            if (Auth::user()->username == $username) {
-                $isSelf = true;
-            }
 
             $follow_you = RelationshipHelpers::follows_you($user);
             $you_follow = RelationshipHelpers::you_follow($user);
         }
 
-
         $no_of_followers = RelationshipHelpers::count_follows_user($user);
         $no_of_following = RelationshipHelpers::count_user_following($user);
 
-        $mutual = false;
 
-        if ($follow_you && $you_follow) {
-            $mutual = true;
-        }
-        return View::make('users.followers')
-            ->with('title', $user['username'])
-            ->with('user', $userArray)
-            ->with('followers', $followers)
-            ->with('follows_you', $follow_you)
-            ->with('you_follow', $you_follow)
-            ->with('mutual', $mutual)
-            ->with('is_self', $isSelf)
-            ->with('no_of_followers', $no_of_followers)
-            ->with('no_of_following', $no_of_following)
-            ->with('page_type', 'Following')
-            ;
+        $relationship = new BasicRelationship($no_of_followers, $no_of_following, $follow_you, $you_follow);
+
+        return $this->responder->showSingleModel(new \Illuminate\Support\Collection(['relationship' => $relationship, 'following' => $following]));
     }
 
     /**
