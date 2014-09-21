@@ -167,6 +167,16 @@ class ApiResponse {
         $this->headers = $headers;
     }
 
+    public function headers($headers = null) {
+        if (is_null($headers)) {
+            return $this->getHeaders();
+        }
+
+        else {
+            $this->setHeaders($headers);
+            return $this;
+        }
+    }
     /**
      * @return Collection
      */
