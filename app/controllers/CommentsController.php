@@ -66,12 +66,11 @@ class CommentsController extends \BaseController
      */
     public function item_comments($item_id) {
 
-        $comments = Comment::where('item_id', '=', $id)->orderBy('created_at', 'dsc')->with([
+        $comments = Comment::where('item_id', '=', $item_id)->orderBy('created_at', 'dsc')->with([
             'User' => function($u) {
               $u->select(['id', 'name', 'username']);
               $u->with(['ProfileImg' => function($p) {
                   $p->where('type', '=', 'small');
-
               }]);
             },
         ])->get();
@@ -90,7 +89,7 @@ class CommentsController extends \BaseController
         Event::fire('comment.destroy', $comment);
         $comment->delete();
 
-        return Redirect::back()->with('success', 'Comment successfully deleted.');
+        return $this->responder->noContentSuccess();
     }
 
 }
