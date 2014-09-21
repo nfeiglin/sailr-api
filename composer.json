@@ -31,7 +31,11 @@
 
         "psr-4": {
             "Sailr\\": "app/Sailr"
-        }
+        },
+
+        "files": [
+            "app/Sailr/Helpers/helpers.php"
+        ]
 	},
 	"scripts": {
 		"post-install-cmd": [
