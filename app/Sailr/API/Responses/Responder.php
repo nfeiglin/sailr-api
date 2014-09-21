@@ -77,6 +77,26 @@ class Responder {
 
     protected function transform($model) {
 
+        if (is_iterable($model)) {
+
+            $newCollection = new Collection();
+
+            foreach ($model as $key => $value) {
+                $newCollection[$key] = $this->transformSingleModel($value);
+            }
+
+            return $newCollection;
+        }
+
+        else {
+            $model = $this->transformSingleModel($model);
+        }
+
+
+        return $model;
+    }
+
+    private function transformSingleModel($model) {
 
         if (!array_key_exists('object', $model)){
             $model['object'] = strtolower((new ReflectionClass($model))->getShortName());
