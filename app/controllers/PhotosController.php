@@ -67,15 +67,19 @@ class PhotosController extends \BaseController
      * Remove the specified resource from storage.
      *
      * @param  int $item_id
+     * @param string $set_id
      * @return Response
      */
-    public function destroy($item_id)
+    public function destroy($item_id, $set_id = null)
     {
         //Validate that there is at least one image
 
+        if (is_null($set_id)) {
+            $set_id = (string) Input::get('set_id');
+        }
         $itemChanged = false;
 
-        $photos = Photo::where('item_id', '=', $item_id)->where('user_id', '=', Auth::user()->id)->where('set_id', '=', (string) Input::get('set_id'))->delete();
+        $photos = Photo::where('item_id', $item_id)->where('user_id', Auth::user()->id)->where('set_id', $set_id)->delete();
         $numberOfPhotos = Photo::where('item_id', '=', $item_id)->count();
 
         if (!$numberOfPhotos > 0) {
