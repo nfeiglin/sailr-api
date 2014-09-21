@@ -55,7 +55,7 @@ class UsersController extends \BaseController
         if (array_key_exists('bio', $input)) {
             $input['bio'] = e($input['bio']);
         }
-        $user = User::create($input);
+        $user = $this->repository->create($input);
         $user_id = $user->getAuthIdentifier();
 
         Queue::push(function($job) use ($user_id){
