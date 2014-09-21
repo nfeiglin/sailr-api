@@ -7,11 +7,19 @@
  */
 use Laracasts\Commander\CommanderTrait;
 use Sailr\Feeds\GetUserFeedCommand;
+use Laracasts\Commander\CommandBus;
 
 class FeedsController extends BaseController {
     use CommanderTrait;
 
-    public function show($id) {
-        return new GetUserFeedCommand($id);
+    protected $commandBus;
+
+    public function __construct(CommandBus $commandBus) {
+        $this->commandBus = $commandBus;
+    }
+    public function show($user_id) {
+
+        $feed = new GetUserFeedCommand($user_id);
+        return $this->commandBus->execute($feed);
     }
 } 
