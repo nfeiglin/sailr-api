@@ -40,7 +40,7 @@ class BaseRepository {
      * Make a new instance of the entity to query on
      *
      * @param array $with
-     * @return Model
+     * @return Eloquent
      */
     public function make(array $with = [])
     {
@@ -83,9 +83,9 @@ class BaseRepository {
      */
     public function getFirstOrFailBy($key, $value, array $fields = ['*'], array $with = array())
     {
-        $this->make($with);
-        return $this->where($key, '=', $value)->getFirstOrFail($fields);
+        return $this->make($with)->where($key, '=', $value)->firstOrFail($fields);
     }
+
 
     /**
      * Find many entities by key value
@@ -104,6 +104,7 @@ class BaseRepository {
      * Return all results that have a required relationship
      *
      * @param string $relation
+     * @param array $with
      * @return Model
      */
     public function has($relation, array $with = array())
@@ -141,37 +142,6 @@ class BaseRepository {
 
           return $results;
 
-    }
-
-    /**
-     * @param $field
-     * @param string $operator
-     * @param $value
-     * @return $this
-     */
-    public function where($field, $operator = '=', $value) {
-        $this->model->where($field, $operator, $value);
-        return $this;
-    }
-
-    /**
-     * @param $id
-     * @return $this
-     * @see where
-     */
-    public function whereId($id) {
-        return $this->where($this->primaryKeyField, '=', $id);
-    }
-
-    /**
-     * @param $field
-     * @param array $values
-     * @return $this
-     */
-    public function whereIn($field, $values = []) {
-        $this->model->whereIn($field, $values);
-        return $this;
-    }
 
     /**
      * @param array $columns
