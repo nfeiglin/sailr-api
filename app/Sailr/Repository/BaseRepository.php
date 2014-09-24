@@ -127,20 +127,21 @@ class BaseRepository {
 
         //Based off http://culttt.com/2014/03/17/eloquent-tricks-better-repositories/
 
-          $results = new \StdClass;
+        $results = new \StdClass;
 
-          $results->page = $page;
-          $results->limit = $limit;
-          $results->totalItems = 0;
-          $results->items = array();
+        $results->page = $page;
+        $results->limit = $limit;
+        $results->totalItems = 0;
+        $results->items = array();
 
-          $users = $this->model->skip($limit * ($page - 1))->take($limit)->get();
+        $users = $this->model->skip($limit * ($page - 1))->take($limit)->get();
 
-           //PHP array count -- not querying the DB for this
-          $results->totalItems = $this->model->count();
-          $results->items = $users->all();
+        //PHP array count -- not querying the DB for this
+        $results->totalItems = $this->model->count();
+        $results->items = $users->all();
 
-          return $results;
+        return $results;
+    }
 
 
     /**
