@@ -57,6 +57,7 @@ Route::resource('relationship', 'RelationshipsController');
 
 /* Feeds Routes */
 Route::resource('feeds', 'FeedsController');
+Route::get('users/feeds/main', 'FeedsController@userFeed');
 
 /* Searches Routes */
 Route::get('/searches/{query}', 'SearchesController@show');
