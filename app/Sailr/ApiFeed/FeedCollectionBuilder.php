@@ -59,7 +59,7 @@ class FeedCollectionBuilder {
 
             $action = new FeedItemAction('item.create', 'added new item', $carbon);
             $user = $model['user'];
-            $actor = new FeedItemActor($user['name'], 'user', $user);
+            $actor = new FeedItemActor($user['username'], 'user', $user);
             $object = new FeedItemObject('item', $model);
 
             $feedItem = new FeedItem($action, $actor, $object);
