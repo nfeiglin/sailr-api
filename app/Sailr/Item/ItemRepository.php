@@ -9,6 +9,7 @@
 namespace Sailr\Item;
 
 
+use Illuminate\Database\Eloquent\Model;
 use Laracasts\Commander\Events\DispatchableTrait;
 use Sailr\Item\Events\ItemWasViewed;
 use Sailr\Repository\BaseRepository;
@@ -82,6 +83,32 @@ class ItemRepository extends BaseRepository {
                  }
 
             ])->where('public', '=', 1)->where('user_id', '=', $user_id)->orderBy('created_at', 'DESC')->simplePaginate(25);
+
+        return (new SailrPaginator($paginatorWithResults->getCollection(), $paginatorWithResults, App::make('Illuminate\Routing\UrlGenerator')));
+    }
+
+    /**
+     * @param array
+     * @return SailrPaginator
+     */
+    public function getAllItemsForUserIdsPaginated($following_user_ids = array()) {
+        $paginatorWithResults = $this->make(
+            [
+                'User' => function($u) {
+                    $u->with(['ProfileImg' => function($p) {
+                       $p->where('type', '=', 'medium');
+                        $p->select(['url', 'user_id']);
+                    }]);
+                    $u->select(['id', 'name', 'username']);
+                },
+                'Photos' => function($y) {
+                    $y->where('type', '=', 'full_res');
+                    $y->select(['url', 'set_id', 'item_id']);
+                }
+
+            ]);
+
+        $paginatorWithResults = $paginatorWithResults->where('public', '=', 1)->whereIn('user_id', $following_user_ids)->orderBy('created_at', 'DESC')->simplePaginate(25);
 
         return (new SailrPaginator($paginatorWithResults->getCollection(), $paginatorWithResults, App::make('Illuminate\Routing\UrlGenerator')));
     }
