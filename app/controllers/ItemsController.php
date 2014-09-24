@@ -38,15 +38,6 @@ class ItemsController extends BaseController
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -198,21 +189,5 @@ class ItemsController extends BaseController
         return Redirect::back()->with('success', $item->title . ' deleted successfully');
 
     }
-
-    public function doItemCreationFromInput(array $input, $user_id)
-    {
-
-        $item = new Item();
-        $item->user_id = $user_id;
-        $item->title = $input['title'];
-        $item->description = $input['description'];
-        $item->price = $input['price'];
-        $item->currency = $input['currency'];
-        $item->initial_units = $input['initial_units'];
-        $item->country = $input['country'];
-        $item->save();
-        return $item;
-    }
-
 
 }
