@@ -187,17 +187,17 @@ class UsersController extends \BaseController
 
     public function update()
     {
-        $forgetKeys = [];
+        $forgetKeys = ['password', 'stripe_active', 'last4', 'last_4'];
         $input = Input::all();
 
         $user = User::findOrFail(Auth::user()->id);
 
         if ($input['username'] == $user->username) {
-            $forgetKeys[0] = 'username';
+            $forgetKeys[] = 'username';
         }
 
         if ($input['email'] == $user->email) {
-            $forgetKeys[1] = 'email';
+            $forgetKeys[] = 'email';
         }
 
         $newInput = Input::except($forgetKeys);
