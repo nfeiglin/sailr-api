@@ -1,7 +1,20 @@
 <?php
 
+use Sailr\Api\Responses\Responder;
+
 class ProfileImageController extends \BaseController
 {
+
+    /**
+     * @var Responder
+     */
+    protected $responder;
+
+    public function __construct(Responder $responder)
+    {
+        $this->responder = $responder;
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -33,30 +46,17 @@ class ProfileImageController extends \BaseController
         //Log::debug(print_r($files, 1));
 
         if(!Photo::validateImages($files)) {
-            $data = ['message' => 'Invalid image'];
-            if (Request::ajax()) {
-                return Response::json(['message' => 'Invalid image'], 400);
-            }
-
-            else {
-                return Redirect::back()->with('fail', 'Invalid photo');
-            }
-
+            return $this->responder->errorMessageResponse("Could not upload Invalid image");
         }
 
         ProfileImg::where('user_id', '=', Auth::user()->id)->delete();
 
         ProfileImg::resizeAndStoreUploadedImages($files, Auth::user());
 
-        $imagesArray = ProfileImg::where('user_id', '=', Auth::user()->id)->get(['type', 'url'])->toArray();
+        $profileImg = ProfileImg::where('user_id', '=', Auth::user()->id)->where('type', 'medium')->get(['url', 'user_id']);
+        $profileImg['object'] = 'profile_img';
 
-        if (Request::ajax()) {
-            return Response::json(['message'=> 'Successfully uploaded', 'profile_img' => $imagesArray]);
-
-        }
-        else {
-            return Redirect::back()->with('success', 'New profile photo set');
-        }
+        return $this->responder->createdModelResponse($profileImg);
 
     }
 
