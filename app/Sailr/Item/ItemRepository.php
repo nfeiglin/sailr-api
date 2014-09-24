@@ -51,6 +51,7 @@ class ItemRepository extends BaseRepository {
             'User' => function ($x) {
                 $x->with(['ProfileImg' => function($p){
                     $p->where('type', 'medium');
+                    $p->select(['url', 'user_id']);
                 }]);
                 $x->select(['id', 'name', 'username']);
             },

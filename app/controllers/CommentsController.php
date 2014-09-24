@@ -70,7 +70,8 @@ class CommentsController extends \BaseController
             'User' => function($u) {
               $u->select(['id', 'name', 'username']);
               $u->with(['ProfileImg' => function($p) {
-                  $p->where('type', '=', 'small');
+                  $p->where('type', '=', 'medium');
+                  $p->select(['url', 'user_id']);
               }]);
             },
         ])->get();

@@ -34,8 +34,7 @@ class SearchesController extends \BaseController {
 
         $userResults = User::whereLike('name', $newQuery)->orWhereLike('username', $newQuery)->with([
             'ProfileImg' => function($q) {
-               $q->where('type', '=', 'small');
-               //$q->first();
+               $q->where('type', '=', 'medium');
                $q->select(['url', 'user_id']);
             }
         ])->get(['id', 'name', 'username', 'bio'])->toArray();

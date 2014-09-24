@@ -90,7 +90,10 @@ class UsersController extends \BaseController
     public function show($id)
     {
 
-        $user = $this->repository->getFirstOrFailBy('id', $id, ['id', 'name', 'username', 'bio'], ['ProfileImg']);
+        $user = $this->repository->getFirstOrFailBy('id', $id, ['id', 'name', 'username', 'bio'], ['ProfileImg' => function ($p){
+            $p->where('type', 'medium');
+            $p->select(['url', 'user_id']);
+        }]);
 
         $follow_you = '';
         $you_follow = '';
