@@ -1,11 +1,21 @@
 <?php
 
+use Sailr\Api\Responses\Responder;
+
 class SessionController extends BaseController
 {
 
-    public function create() {
-        return View::make('session.create')->with('title', 'Login');
+    /**
+     * @var Responder
+     */
+    protected $responder;
+
+    function __construct(Responder $responder)
+    {
+        $this->responder = $responder;
     }
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -19,26 +29,29 @@ class SessionController extends BaseController
         //User::where('username', '=', 'mz');
         //$a = Auth::attempt($input, true, true);
 
-        $a = false;
+        $authenticated = false;
         try {
             if ($input['username'][0] == '@') $input['username'] = ltrim($input['username'], '@');
-            $user = User::where('username', '=', $input['username'])->orWhere('email', '=', $input['username'])->with('ProfileImg')->firstOrFail();
+            $user = User::where('username', '=', $input['username'])->orWhere('email', '=', $input['username'])->with(
+                ['ProfileImg' => function($p) {
+                    $p->where('type', 'medium');
+                    $p->select(['url', 'user_id']);
+            }])->firstOrFail();
+
             if (Hash::check($input['password'], $user->password)) {
                 Auth::login($user, true);
-                if(Auth::check()){
-                    $a = true;
-                }
+                $authenticated = true;
+
+                return $this->responder->showSingleModel($user);
             }
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
 
         }
 
-        if (!$a) {
-            return Redirect::back()->with('message', 'Username, email or password is incorrect')->withInput(Input::only('username'));
+        if (!$authenticated) {
+            return $this->responder->errorMessageResponse("Username, email or password is incorrect");
         }
-
-        return Redirect::to('/');
     }
 
 
@@ -51,7 +64,7 @@ class SessionController extends BaseController
     public function destroy()
     {
         Auth::logout();
-        return Redirect::to('/')->with('success', 'Successfully logged out.');
+        return $this->responder->noContentSuccess();
     }
 
 }
