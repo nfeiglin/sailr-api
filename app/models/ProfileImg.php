@@ -22,7 +22,7 @@ class ProfileImg extends \Eloquent
     public static $photoSizes = array(
         'small' => ['size' => 150, 'quality' => 60],
         'medium' => ['size' => 256, 'quality' => 75],
-        'large' => ['size' => 612, 'quality' => 80]
+        'large' => ['size' => 640, 'quality' => 80]
     );
 
     public static function resizeAndStoreUploadedImages($files, User $user)

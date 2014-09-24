@@ -60,7 +60,7 @@ class Photo extends \Eloquent
     public static function resizeAndStoreUploadedImages ($files, Item $item) {
         $i = 0;
         $photoSizes = array(
-            'full_res' => ['size' => 612, 'quality' => 80],
+            'full_res' => ['size' => 640, 'quality' => 80],
             'thumbnail' => ['size' => 150, 'quality' => 60]
         );
 
