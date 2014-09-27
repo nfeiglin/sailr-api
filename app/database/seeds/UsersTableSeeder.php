@@ -10,7 +10,7 @@ class UsersTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-                foreach(range(1, 10) as $index)
+                foreach(range(1, 11) as $index)
                 {
                     $u = User::create([
                     'name' => $faker->name,
@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
                     ProfileImg::setDefaultProfileImages($u);
                 }
 
+        /*
         $x = User::create([
             'name' => 'Nathan Feiglin',
             'username' => 'nfeiglin',
@@ -31,6 +32,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         ProfileImg::setDefaultProfileImages($x);
+        */
     }
 
 }

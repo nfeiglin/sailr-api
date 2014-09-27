@@ -21,15 +21,17 @@ class DatabaseSeeder extends Seeder
         User::truncate();
         Relationship::truncate();
         
-        $this->call('UsersTableSeeder');
-        $this->call('RelationshipsTableSeeder');
-        $this->call('ItemsTableSeeder');
-        $this->call('ProfileImgsTableSeeder');
+
 
         */
 
         //Collection::truncate();
-        $this->call('CollectionsTableSeeder');
+
+        //$this->call('UsersTableSeeder');
+        //$this->call('RelationshipsTableSeeder');
+        $this->call('ItemsTableSeeder');
+       // $this->call('ProfileImgsTableSeeder');
+        //$this->call('CollectionsTableSeeder');
     }
 
 }

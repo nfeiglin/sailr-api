@@ -8,7 +8,7 @@ class RelationshipsTableSeeder extends Seeder
 
     public function run()
     {
-        DB::table('relationships')->truncate();
+        //DB::table('relationships')->truncate();
         $faker = Faker::create();
 
         foreach (range(1, 19) as $index) {
@@ -17,42 +17,23 @@ class RelationshipsTableSeeder extends Seeder
                 'user_id' => $index,
                 'follows_user_id' => $plusOne
             ]);
+
+            Relationship::create([
+                'user_id' => $index,
+                'follows_user_id' => $index + 2
+            ]);
+
+            Relationship::create([
+                'user_id' => $index,
+                'follows_user_id' => $index + 3
+            ]);
+
+            Relationship::create([
+                'user_id' => $index,
+                'follows_user_id' => $index + 4
+            ]);
+
         }
-
-        Relationship::create([
-            'user_id' => 2,
-            'follows_user_id' => 7
-        ]);
-
-        Relationship::create([
-            'user_id' => 1,
-            'follows_user_id' => 3
-        ]);
-
-        Relationship::create([
-            'user_id' => 3,
-            'follows_user_id' => 1
-        ]);
-
-        Relationship::create([
-            'user_id' => 1,
-            'follows_user_id' => 7
-        ]);
-
-        Relationship::create([
-            'user_id' => 1,
-            'follows_user_id' => 9
-        ]);
-
-        Relationship::create([
-            'user_id' => 9,
-            'follows_user_id' => 7
-        ]);
-
-        Relationship::create([
-            'user_id' => 9,
-            'follows_user_id' => 3
-        ]);
 
 
     }
