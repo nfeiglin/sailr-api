@@ -28,6 +28,8 @@ class FeedsController extends BaseController {
      * Return the user's main timeline with all the items that were added by people they follow in reverse chronological order
      */
     public function userFeed() {
+
+        //TODO: User the logged in user instead!
         //$timeline = new GetMainFeedCommand(Auth::user()->getAuthIdentifier());
         $timeline = new GetMainFeedCommand(12);
         return $this->commandBus->execute($timeline);
