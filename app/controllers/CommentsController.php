@@ -73,8 +73,8 @@ class CommentsController extends \BaseController
                   $p->where('type', '=', 'medium');
                   $p->select(['url', 'user_id']);
               }]);
-            },
-        ])->get();
+            }
+        ])->orderBy('created_at', 'DESC')->get();
 
         return $this->responder->showSingleModel($comments);
     }
